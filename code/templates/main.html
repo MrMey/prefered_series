@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head> <!-- ceci est un commentaire -->
+    <meta charset="UTF-8">
+    <title> Series </title>
+	<link href="{{ url_for('static', filename='site.css') }}" rel="stylesheet" type="text/css" />
+
+  </head>
+
+  <body>
+	{% block header %}
+	<header>
+		<p>Mes series preferees</p>
+	</header>
+	{% endblock %}
+
+	{% block navigation %}
+	<nav>
+		<a href = {{ url_for('main') }}>Accueil</a>
+	</nav>
+	{% endblock %}
+	
+	{% block profile %}
+	<div id = "profile">
+		<form action="{{ url_for('login') }}" method = "Post">
+		  <label>Login:</p><input type="password" name ="login"><br>
+		  <input type="submit" value="Login">
+		</form>
+	</div>
+	{% endblock %}
+	
+	<div class = "title">
+		<h1> Mes series</h1>
+	</div>
+	
+	{% block series %}
+	<div id = "series">
+		<!-- bloc de series -->
+		{% for serie in series %}
+		<div class = "serie">
+		<a href = {{ url_for('details',serie = serie[0]) }}>{{serie[1]}}</a>
+		</div>
+		{% endfor %}
+	</div>
+	{% endblock %}
+	
+	<div id = "search">
+		<form action="{{ url_for('search_serie') }}" method = "Post">
+		 	<label>Rechercher une serie:</p>
+			<input type="text" name ="serie" value="Breaking Bad"><br>
+		  	<input type="submit" value="Submit">
+		</form>
+	</div>
+	
+	<footer>
+	</footer>
+
+
+  </body>
+</html>

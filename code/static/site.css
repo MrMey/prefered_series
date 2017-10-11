@@ -1,0 +1,29 @@
+header{
+	border: 1px solid;
+	font-size: 20px;
+}
+
+#profile{
+	border: 1px solid;
+}
+
+#nav{
+	border: 1px solid;
+}
+
+#search{
+	border: 1px solid;
+}
+
+#series{
+	display:inline-block;
+	margin-left: 100px;
+	border: 1px solid;
+}
+
+.serie{
+	width: 200px;
+	height: 100px;
+	margin: 1em;
+	border: 1px solid;
+}

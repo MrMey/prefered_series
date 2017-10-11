@@ -1,0 +1,8 @@
+{% extends "main.html" %}
+
+{% block series %}
+
+<a href = {{ url_for('details',serie = series_id) }}>
+{{ serie }}
+</a>
+{% endblock series %}
