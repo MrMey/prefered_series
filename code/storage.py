@@ -1,15 +1,96 @@
+# Authors: Elodie Ikkache, Romain Meynard, Jessica Cohen
+#
+# version 1.0
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Oct  8 10:08:33 2017
-
-@author: Mr_Mey
-"""
 
 import sqlite3
 import exceptions as e
 
 class DataBase:
-    """
+    """ Manages requests (read and write) to the sqlite database
+
+    **Parameters**
+     no parameters
+
+     ** Atributes**
+     connector
+     cursor
+     tables
+     
+
+     **Methods**
+
+    - execute(SQL):
+        sends an SQL request to the connector
+        
+    - commit():
+        sends the last executed SQL request to the database
+    
+    - insert(table,insert_dict)
+        insert the content of the dictionnary in the table. the keys of the
+        dict must be the columns of the table
+    
+    - select(SQL):
+        execute an sql request (should be used to select only - should improve 
+        this)
+    
+    - fetchall():
+        returns all the rows of the last request results
+        
+    - fetchone():
+        returns one row of the last request results
+
+    - drop(table):
+        deletes the table in the database
+    
+    -get_tables_name():
+        returns the name of all the existing tables in the database
+    
+    -is_in_table(table,value,attr):
+        checks if there is a row with attr column equal value
+    
+    -get_last_insert_id():
+        returns the row id of the last inserted row
+    
+    -count_rows(table,attr):
+        returns the numbers of row of non-null attribute in the table
+    
+    -create_series_table():
+        creates a series table in the database with the columns as defined in the
+        Table object
+    
+    -drop_series():
+        deletes the series table
+    
+    -create_user_table():
+        creates a user table in the database with the columns as defined in the
+        Table object
+    
+    -drop_user():
+        deletes the series table    
+        
+    -create_users_series_table():
+        creates the users_series relation table between user and series
+    
+    -drop_users_series():
+        deletes the users_series table
+    
+    -add_users(login,name):
+        adds a user row in the users table with parameters: login and name
+        login is the primary key
+
+    -add_series(name):
+        adds a series row in the series table with parameters: name
+        name is the primary key
+    
+    -add_series_to_user(user_id,series_id):
+        adds the relation between a user and the series he watches in the 
+        user_series table using both ids
+    
+    -select_series_from_user(user_id):
+        returns the series a user watches
+    
+    **Comments**
     les ids des tables commencent par defaut a 1
     """
     
@@ -22,16 +103,18 @@ class DataBase:
         self.tables["users"] = Table(["login","name"])
         self.tables["users_series"] = Table(["user_id","series_id"])
 
-    #General methods
-    
-    def commit(self):
-        self.connector.commit()
-    
     def __del__(self):
         """ when you del the table, makes sure the connection is closed, at
         the end of the db call you should del the database"""
         self.connector.close()
         del(self)
+    
+
+    #General methods
+    
+    def commit(self):
+        self.connector.commit()
+
     
     def execute(self,instruction):
         print(instruction)
@@ -54,15 +137,15 @@ class DataBase:
 
     def fetchone(self):
         return(self.cursor.fetchone())
-    
-    def get_tables_name(self):
-        self.execute("""SELECT name FROM sqlite_master WHERE type='table'""")
-        tables_name = self.fetchall()
-        return([x[0] for x in tables_name[1:]])
 
     def drop(self,table):
         """drop one table - DO NOT EXECUTE THIS WITHOUT BEING SURE"""
         self.execute("""DROP TABLE """+ table)
+        
+    def get_tables_name(self):
+        self.execute("""SELECT name FROM sqlite_master WHERE type='table'""")
+        tables_name = self.fetchall()
+        return([x[0] for x in tables_name[1:]])
 
     def is_in_table(self,table,attr,value):
         self.execute("""SELECT * FROM {0} WHERE {1} = '{2}'""".format(table,attr,value))
@@ -149,6 +232,21 @@ class DataBase:
 
     
 class Table:
+    """ Simple class we use to manage some table methods.
+    
+    Especially : it keeps track of the columns of the table and can return it 
+    with different format used in Database.insert
+
+    **Parameters**
+     column names of the table
+
+     ** Atributes**
+     columns : column names
+     comma_columns : string build with column name : 'col1,col2,col3'
+     dot_columns : string build with column name: ':col1,:col2,:col3'
+
+     """
+    
     def __init__(self,columns):
         self._columns = columns
     

@@ -1,12 +1,19 @@
+# Authors: Elodie Ikkache, Romain Meynard, Jessica Cohen
+#
+# version 1.0
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Oct 10 16:45:35 2017
-
-@author: Mr_Mey
-"""
 
 class DataBaseError(Exception):
-    """Exception levée dans un certain contexte… qui reste à définir"""
+    """ manages the database errors
+
+    **Parameters**
+     error message
+
+     ** Atributes**
+     message
+
+     **Methods**
+    """
     def __init__(self, message):
         """On se contente de stocker le message d'erreur"""
         self.message = message
