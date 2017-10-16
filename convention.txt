@@ -1,0 +1,8 @@
+nom de fichier : monfichier.py
+nom de classe : MaClasse
+
+nom de variable ou attribut : ma_variable
+nom de constante : MA_CONSTANTE
+
+comment differencier methode et attribut?
+indentation ? combien d'espaces?
