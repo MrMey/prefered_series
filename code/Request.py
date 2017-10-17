@@ -4,7 +4,9 @@
 # -*- coding: utf-8 -*-
 import requests
 
-class Request:
+
+class RequestAPI:
+
     """ Sends requests to the TV shows API tvmaze
 
     This class makes all the requests to get information about a TV show thanks to http://api.tvmaze.com.
@@ -12,7 +14,7 @@ class Request:
     **Parameters**
      no parameters
 
-     ** Atributes**
+     ** Attributes**
      no attributes
 
      **Methods**
@@ -35,12 +37,52 @@ class Request:
 
     """
     def __init__(self):
-        print('initiating Request')
+        print('initiating RequestAPI')
 
     @staticmethod
-    def get_main_information(series):
-        # TODO : erreurs
-        # TODO : commentaire
+    def get_id_API(series):
+        """
+        Gets the id of the series in the API database in order the make the correct requests
+
+        **Parameters**
+            - series : the series name
+
+        **Returns**
+            - the series id in the API database
+        """
+        id = requests.get('http://api.tvmaze.com/search/shows?q=' + series)
+        assert id.status_code == 200
+        id = id.json()
+        try:
+            id = id[0]['show']['id']
+        except:
+            raise Exception("series not in database")  # TODO : create this exception properly
+        return (str(id))
+
+    @staticmethod
+    def get_basics(series):
+        """
+        Gathers basic information about a series, to be stored in the database.
+
+        **Parameters**
+            - series : name of the selected TV show
+
+        **Returns**
+            - name
+            - image : it's the URL of the selected TV show
+        """
+        response = requests.get('http://api.tvmaze.com/search/shows?q=' + series)
+        assert response.status_code == 200
+        response = response.json()
+        try:
+            name = response[0]['show']['name']
+            image = response[0]['show']['image']['medium']
+        except:
+            raise Exception("series not in database")  # TODO : create this exception properly
+        return ([name, image])
+
+    @staticmethod
+    def get_details(series):
         """
         Gathers the main information about a series. It will be displayed when a series is selected by the user
 
@@ -60,14 +102,8 @@ class Request:
             - the year of the first diffusion
             - the official website
         """
-        id = requests.get('http://api.tvmaze.com/search/shows?q=' + series)
-        assert id.status_code == 200
-        id = id.json()
-        try:
-            id = id[0]['show']['id']
-        except:
-            raise Exception ("series not in database") # TODO : create this exception properly
-        response = requests.get('http://api.tvmaze.com/shows/' + str(id))
+        id = RequestAPI.get_id_API(series)
+        response = requests.get('http://api.tvmaze.com/shows/' + id)
         assert response.status_code == 200
         response = response.json()
 
@@ -87,6 +123,7 @@ class Request:
 
 
 
-r = Request()
-r.get_main_information('game of thrones')
+r = RequestAPI()
+r.get_details('game')
+r.get_basics('game')
 
