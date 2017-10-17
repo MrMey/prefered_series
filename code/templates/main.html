@@ -2,7 +2,7 @@
 <html>
   <head> <!-- ceci est un commentaire -->
     <meta charset="UTF-8">
-    <title> Series </title>
+    <title> Séries </title>
 	<link href="{{ url_for('static', filename='site.css') }}" rel="stylesheet" type="text/css" />
 
   </head>
@@ -10,7 +10,7 @@
   <body>
 	{% block header %}
 	<header>
-		<p>Mes series preferees</p>
+		<p>Mes séries preferees</p>
 	</header>
 	{% endblock %}
 
@@ -36,9 +36,9 @@
 	{% block series %}
 	<div id = "series">
 		<!-- bloc de series -->
-		{% for serie in series %}
+		{% for series in series_list %}
 		<div class = "serie">
-		<a href = {{ url_for('details',serie = serie[0]) }}>{{serie[1]}}</a>
+		<a href = {{ url_for('details',series = series[0]) }}>{{series[1]}}</a>
 		</div>
 		{% endfor %}
 	</div>
