@@ -3,6 +3,7 @@
 # version 1.0
 # -*- coding: utf-8 -*-
 import requests
+import exceptions as e
 
 
 class RequestAPI:
@@ -56,7 +57,7 @@ class RequestAPI:
         try:
             id = id[0]['show']['id']
         except:
-            raise Exception("series not in database")  # TODO : create this exception properly
+            raise e.APIError("series not in database")
         return (str(id))
 
     @staticmethod
@@ -78,7 +79,7 @@ class RequestAPI:
             name = response[0]['show']['name']
             image = response[0]['show']['image']['medium']
         except:
-            raise Exception("series not in database")  # TODO : create this exception properly
+            raise e.APIError("series not in database")
         return ([name, image])
 
     @staticmethod
@@ -124,6 +125,6 @@ class RequestAPI:
 
 
 r = RequestAPI()
-r.get_details('game')
+r.get_details('game of thrones')
 r.get_basics('game')
 
