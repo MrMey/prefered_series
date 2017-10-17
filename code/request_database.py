@@ -221,14 +221,17 @@ class DataBase:
         return (self.cursor.lastrowid)
 
     def select_series_from_user(self, user_id):
-        self.execute("""SELECT S.name FROM 
+        self.execute("""SELECT S.id,S.name,S.image FROM 
                      (SELECT * FROM users_series U WHERE U.id = user_id) U
                      JOIN
                      series S
                      ON
                      U.series_id = S.id
                      """)
-        return (self.fetchall())
+        return (self.tuple_to_list(self.fetchall()))
+    
+    def tuple_to_list(self,list_tuples):
+        return([[x[y] for y in range(len(x))] for x in list_tuples])
 
 
 class Table:
