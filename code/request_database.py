@@ -265,5 +265,5 @@ class Table:
     def is_same_columns(self,columns):
         return(columns == self._columns)
 
-
-a = DataBase()
+if __name__ == '__main__':
+    a = DataBase()
