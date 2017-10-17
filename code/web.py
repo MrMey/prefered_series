@@ -5,7 +5,9 @@
 
 
 from flask import Flask,request,render_template
-
+import request_database
+import user
+import series
 
 class WebSite(Flask):
     def __init__(self):
@@ -22,8 +24,9 @@ class WebSite(Flask):
             '/'
             '/main'
         """
-        return(render_template('main.html',series=[[1,"breaking bad"],[2,"howimetyourmother"]]))
-
+        test = {"series_list":[[1,"breaking bad"],[2,"howimetyourmother"]]}
+        return(render_template('main.html',**test))
+    
     def login(self):
         """ **routes**
             '/login'
@@ -47,6 +50,18 @@ class WebSite(Flask):
             return(render_template('search.html',serie = request.form['serie'],series_id =str(1)))
         return(0)
 
-app = WebSite()
+class Controler():
+    def __init__(self):
+        self.req_database = request_database.DataBase()
+        self.user = user.User("paul",0)
+        self.user.series = self.req_database.select_series_from_user(self.user.user_id)
+        
+class FullControler(WebSite,Controler):
+    def __init__(self):
+        Controler.__init__(self)
+        WebSite.__init__(self)
+
+    
 if __name__ == '__main__':
+    app = FullControler()
     app.run(debug=True)
