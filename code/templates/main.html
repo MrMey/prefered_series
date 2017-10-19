@@ -1,23 +1,43 @@
 <!DOCTYPE html>
+
 <html>
-  <head> <!-- ceci est un commentaire -->
-    <meta charset="UTF-8">
-    <title> Series </title>
+
+  <head> 
+
+	<meta charset="UTF-8">
+
 	<link href="{{ url_for('static', filename='site.css') }}" rel="stylesheet" type="text/css" />
+
+	<title>TrackSeries - Never miss an episode again !</title>
 
   </head>
 
   <body>
-	{% block header %}
+	
 	<header>
-		<p>Mes series preferees</p>
 	</header>
-	{% endblock %}
+	
+	{% block navigation %} <!-- Menu de navigation pour atteindre nos autres pages -->
+	
+	<div id="nav">
 
-	{% block navigation %}
-	<nav>
-		<a href = {{ url_for('main') }}>Accueil</a>
-	</nav>
+		<span id="menu">
+
+		<a class="menu" href={{ url_for('main') }}>Browse
+		</a>
+		<a class="retour"
+		<a class="menu" href={{ url_for('main') }}>Login	
+		</a>
+		<a class="menu" href={{ url_for('main') }}>Next Episode	
+		</a>
+
+		</span>
+
+		<a id="log" href={{ url_for('login') }}>SIGN IN
+		</a>
+	
+	</div>
+	
 	{% endblock %}
 	
 	{% block profile %}
@@ -32,8 +52,25 @@
 	<div class = "title">
 		<h1> Mes series</h1>
 	</div>
+
+	{% block tagline}
+
+	<h1>TRACK SERIES
+	</h1>
+
+	<h2> Keeping track of your favorite shows just became much easier. 
+	</h2>
+
+	<h3>Gather your favorite TV shows and make sure to never miss an episode again.
+	</h3>
+
+	<button type=button>JOIN TRACKSERIES		
+	</button>
+
+	{% endblock %}
 	
 	{% block series %}
+
 	<div id = "series">
 		<!-- bloc de series -->
 		{% for serie in series %}
@@ -42,6 +79,7 @@
 		</div>
 		{% endfor %}
 	</div>
+
 	{% endblock %}
 	
 	<div id = "search">

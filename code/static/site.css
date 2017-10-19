@@ -1,7 +1,40 @@
-header{
-	border: 1px solid;
-	font-size: 20px;
+#nav {
+	font-family: "Consolas", Monospace;
+	font-size: 12px;
 }
+
+a:link {
+	color:black ;
+	text-decoration: none;
+}
+
+a:visited {
+	color:black ;
+	text-decoration: none;
+}
+
+a:hover {
+	color:red ;
+	text-decoration: none;
+}
+
+a:active {
+    color: red;
+	text-decoration: none;
+}
+
+#menu {
+	display: inline-table;
+	text-indent: 400px;
+	padding-right: 300px;
+}
+
+.menu {
+	padding-right: 40px;
+}
+
+#log {
+	text-indent: 800px}
 
 #profile{
 	border: 1px solid;
