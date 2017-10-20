@@ -213,6 +213,12 @@ class DataBase:
     def drop_users_series(self):
         self.drop("users_series")
 
+    def delete_users_series(self, user_id, series_id):
+        self.execute("""DELETE FROM users_series 
+                     WHERE user_id = {} 
+                     AND series_id = {}
+                     """.format(user_id,series_id))
+
     def add_user(self, login, name):
         if (self.is_in_table("users", "login", login)):
             raise (e.DataBaseError("instance already in user table"))
@@ -245,6 +251,15 @@ class DataBase:
                      U.series_id = S.id
                      """.format(user_id))
         return (self.fetchall())
+    
+    def get_series_id_by_name(self,name):
+        self.execute("""SELECT id from series 
+                     WHERE name = '{}'
+                     """.format(name))
+        result = self.fetchall()
+        if(len(result) > 1):
+            raise(e.DataBaseError('Multiple series with the same name'))
+        return(result)
     
     def tuple_to_list(self,list_tuples):
         return([[x[y] for y in range(len(x))] for x in list_tuples])

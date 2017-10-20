@@ -12,23 +12,23 @@ class User:
      """
      
 
-    def __init__(self, login, user_id):
+    def __init__(self, login, id):
 
         if not isinstance(login, str):
             print ("Error : Login must be a string")
         if login == "":
             print ("Error : Enter a correct login")
-        if not isinstance(user_id, int):
+        if not isinstance(id, int):
             print ("Error : Your ID must be a integer")
 
         # Propriétés
         self._login = login
-        self._user_id = user_id
+        self._id = id
         self._series = []
 
     def _get_id(self):
-        return(self._user_id)
-    user_id = property(_get_id)
+        return(self._id)
+    id = property(_get_id)
 
     def _get_login(self):
         return(self._login)

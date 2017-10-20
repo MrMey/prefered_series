@@ -93,3 +93,13 @@ class Series:
     
     def get_basics(self):
         return([self._name,self._image,self._id])
+
+    def missing_basic(series_list):
+        for series in series_list:
+            if(series[0] == None):
+                series[0] = "missing name"
+            if(series[1] == None):
+                series[1] = "http://www.clker.com/cliparts/n/T/5/z/f/Y/image-missing-md.png"
+            if(series[2] == None):
+                series[2] = "missing name"
+        return(series_list)
