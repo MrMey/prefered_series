@@ -41,6 +41,29 @@ class RequestAPI:
         print('initiating RequestAPI')
 
     @staticmethod
+    def research(series):
+        """
+        Search in the API database all the series with a name close to the one specified, for the user to search
+        for an unknown series
+
+        **Parameters**
+            - series : the alledged name of the series
+
+        **Returns**
+            - the list of series with a name that could correspond to the users request
+        """
+        id = requests.get('http://api.tvmaze.com/search/shows?q=' + series)
+        assert id.status_code == 200
+        id = id.json()
+        if id == []:
+            raise e.APIError("no match for this name")
+        else:
+            list_series = []
+            for tvshow in id:
+                list_series.append(tvshow['show']['name'])
+        return list_series
+
+    @staticmethod
     def get_id_API(series):
         """
         Gets the id of the series in the API database in order the make the correct requests
@@ -140,7 +163,8 @@ class RequestAPI:
 
 
 r = RequestAPI()
-r.get_details('game of thrones')
+r.research('game')
+r.get_details('Game of Thrones')
 r.get_basics('game')
 r.get_cast('game of thrones')
 
