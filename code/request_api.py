@@ -64,54 +64,12 @@ class RequestAPI:
         return list_series
 
     @staticmethod
-    def get_id_API(series):
-        """
-        Gets the id of the series in the API database in order the make the correct requests
-
-        **Parameters**
-            - series : the series name
-
-        **Returns**
-            - the series id in the API database
-        """
-        id = requests.get('http://api.tvmaze.com/search/shows?q=' + series)
-        assert id.status_code == 200
-        id = id.json()
-        try:
-            id = id[0]['show']['id']
-        except:
-            raise e.APIError("series not in database")
-        return (str(id))
-
-    @staticmethod
-    def get_basics(series):
-        """
-        Gathers basic information about a series, to be stored in the database.
-
-        **Parameters**
-            - series : name of the selected TV show
-
-        **Returns**
-            - name
-            - image : it's the URL of the selected TV show
-        """
-        response = requests.get('http://api.tvmaze.com/search/shows?q=' + series)
-        assert response.status_code == 200
-        response = response.json()
-        try:
-            name = response[0]['show']['name']
-            image = response[0]['show']['image']['medium']
-        except:
-            raise e.APIError("series not in database")
-        return ([name, image])
-
-    @staticmethod
-    def get_details(series):
+    def get_details(id_series):
         """
         Gathers the main information about a series. It will be displayed when a series is selected by the user
 
         **Parameters**
-            - series : name of the selected TV show
+            - id_series : id of the series in the API database
 
         **Returns**
          attributes :
@@ -126,8 +84,7 @@ class RequestAPI:
             - the year of the first diffusion
             - the official website
         """
-        id = RequestAPI.get_id_API(series)
-        response = requests.get('http://api.tvmaze.com/shows/' + id)
+        response = requests.get('http://api.tvmaze.com/shows/' + id_series)
         assert response.status_code == 200
         response = response.json()
 
@@ -164,7 +121,7 @@ class RequestAPI:
 
 r = RequestAPI()
 r.research('game')
-r.get_details('Game of Thrones')
+r.get_details('game')
 r.get_basics('game')
 r.get_cast('game of thrones')
 
