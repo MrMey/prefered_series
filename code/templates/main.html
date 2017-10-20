@@ -76,7 +76,7 @@
 		<!-- bloc de series -->
 		{% for series in series_list %}
 		<div class = "serie">
-		<a href = {{ url_for('details',series = series[0]) }}>{{series[1]}}</a>
+		<a href = {{ url_for('details',serie = series[0]) }}>{{series[1]}}</a>
 		<img src = {{series[2]}}></img>
 		</div>
 		{% endfor %}
@@ -86,7 +86,7 @@
 	
 	<div id = "search">
 		<form action="{{ url_for('search_serie') }}" method = "Post">
-		 	<label>Rechercher une serie:</p>
+		 	<label>Rechercher une serie:</label>
 			<input type="text" name ="serie" value="Breaking Bad"><br>
 		  	<input type="submit" value="Submit">
 		</form>
