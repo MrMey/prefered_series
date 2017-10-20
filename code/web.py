@@ -60,7 +60,7 @@ class Controler():
         self.user = user.User("paul",1)
     
     def act_series(self):
-        self.user.series = self.req_database.select_series_from_user(self.user.user_id)
+        self.user.series = self.req_database.select_series_from_user(self.user.id)
     
     def add_series(self):
         try:
@@ -69,10 +69,17 @@ class Controler():
         except:
             True
         try:
-            self.req_database.add_series_to_user(self.user.user_id,serie_id)
+            self.req_database.add_series_to_user(self.user.id,serie_id)
         except:
             True
-        
+    
+    def remove_series(self):
+        try:
+            serie_id = self.req_database.get_series_id_by_name(self.series.name)[0][0]
+            self.req_database.delete_users_series(self.user.id,serie_id)
+        except:
+            return(False)
+
 class FullControler(WebSite,Controler):
     def __init__(self):
         Controler.__init__(self)
@@ -90,7 +97,7 @@ class FullControler(WebSite,Controler):
             '/search_serie'
         """
         if request.method == 'POST':
-            series_list = request_api.RequestAPI.research(request.form['serie'])
+            series_list = series.Series.missing_basic(request_api.RequestAPI.research(request.form['serie']))
             return(render_template('search.html',series_list = series_list))
         return(0)
 
@@ -105,7 +112,10 @@ class FullControler(WebSite,Controler):
 
             
         if request.method == "POST":
-            self.add_series()
+            if(request.form['submit'] == "Add to favorites"):
+                self.add_series()
+            if(request.form['submit'] == "Remove from favorites"):
+                self.remove_series()
         else:
             self.series.id = serie
             self.series.initiate_from_details(request_api.RequestAPI.get_details(serie))
