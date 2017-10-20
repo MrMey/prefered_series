@@ -21,7 +21,6 @@ class WebSite(Flask):
 
     def main(self):
         """ **routes**
-            '/'
             '/main'
         """
         test = {"series_list":[[1,"breaking bad"],[2,"howimetyourmother"]]}
@@ -82,7 +81,6 @@ class FullControler(WebSite,Controler):
         
     def main(self):
         """ **routes**
-            '/'
             '/main'
         """ 
         self.act_series()

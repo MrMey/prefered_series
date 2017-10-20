@@ -116,6 +116,12 @@ class DataBase:
         self.connector.commit()
 
     def execute(self, instruction):
+        """
+        sends an SQL request to the connector
+        Warning any sql is accepted for now
+        """
+        if(not isinstance(instruction,str)):
+            raise(e.DataBaseError("instruction must be a sql string in execute"))
         print(instruction)
         self.cursor.execute(instruction)
         self.commit()
@@ -261,6 +267,8 @@ class Table:
      """
 
     def __init__(self, columns):
+        if(not(isinstance(columns,list))):
+            raise(e.DataBaseError("columns must be a list in Table.__init__"))
         self._columns = columns
 
     def _get_columns(self):
@@ -270,15 +278,15 @@ class Table:
 
     def _get_comma_columns(self):
         return (','.join(map(str, self._columns)))
-
     comma_columns = property(_get_comma_columns)
 
     def _get_dot_columns(self):
         return (','.join(map(str, [":" + x for x in self._columns])))
-
     dot_columns = property(_get_dot_columns)
 
     def is_same_columns(self, columns):
+        if(not(isinstance(columns,list))):
+            raise(e.DataBaseError("columns must be a list in is_same_columns parameters"))
         return (columns == self._columns)
 
 if __name__ == '__main__':

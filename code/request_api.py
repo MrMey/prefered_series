@@ -147,7 +147,6 @@ class RequestAPI:
         return list_characters
 
 
-<<<<<<< HEAD
 
 if __name__ == '__main__':
     r = RequestAPI()
@@ -155,9 +154,3 @@ if __name__ == '__main__':
     r.get_details('88')
     r.get_cast('120')
 
-
-=======
-r = RequestAPI()
-r.research("breaking bad")
-r.get_cast(120)
->>>>>>> d8495806d080c6bd4c831d230610f3e2ae825a38

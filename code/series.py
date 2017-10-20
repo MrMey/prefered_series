@@ -1,11 +1,32 @@
 class Series:
-    """Stores the info regarding the TV shows as seen on Page 1
+    """ Stores temporary the data of the series we are manipulating
 
-    Class defining a TV show by :
-    - ID in database
-    - Title
-    - Picture
-    - Next episode out"""
+    **Parameters**
+     no parameters
+
+     ** Attributes**
+     _name
+     _image
+     _id
+     
+     Optional
+    _summary
+    _rating
+    _genre
+    _status
+    _runtime
+    _premiered
+    _website
+     
+
+     **Methods**
+     initiate_from_details:
+         initiate the series with the elements returned by the 
+         request_api.get_details
+     get_basics:
+         return the list of elements (name,image,id_api) needed to add a serie
+         in the database
+     """
 
     def __init__(self):
         
