@@ -39,6 +39,16 @@ class MyTestCase(unittest.TestCase):
             self.assertTrue((isinstance(series[8], str)) or (series[8] is None))
 
         print("Test 3: method get_cast")
+        self.assertTrue(isinstance(r.get_cast(120), list))
+        test_series = [r.get_cast(27845), r.get_cast(120)]
+        for series in test_series:
+            for person in series:
+                self.assertTrue((isinstance(person, tuple)))
+                self.assertEquals(len(person), 3)
+                self.assertTrue(isinstance(person[0], str))
+                self.assertTrue(isinstance(person[1], str))
+                self.assertTrue((isinstance(person[2], str)) or (person[2] is None))
+
 
 test = MyTestCase()
 test.test_request_api()

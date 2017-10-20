@@ -133,10 +133,17 @@ class RequestAPI:
         response = response.json()
         list_characters = []
         for character in response:
-            a = character['person']['name']
-            b = character['character']['name']
-            c = character['person']['image']['medium']
-            list_characters.append((a, b, c))
+            try:
+                a = character['person']['name']
+                b = character['character']['name']
+            except Exception:
+                raise e.APIError("characters mentionned has a name and a role")
+            try:
+                c = character['person']['image']['medium']
+            except Exception:
+                c = None
+            character_tuple = (a, b, c)
+            list_characters.append(character_tuple)
         return list_characters
 
 
