@@ -11,7 +11,7 @@ class Series:
         
         self._name = ""
         self._image = ""
-        self._series_id = None
+        self._id = None
     
     def _get_name(self):
         return(self._name)
@@ -21,9 +21,12 @@ class Series:
         return(self._image)
     image = property(_get_image)
     
-    def _get_series_id(self):
-        return(self._series_id)
-    series_id = property(_get_series_id)
+    def _get_id(self):
+        return(self._id)
+    
+    def _set_id(self,id):
+        self._id = id
+    id = property(_get_id,_set_id)
     
     def initiate_from_basics(self,params):
         self._name = params[0]
@@ -41,4 +44,4 @@ class Series:
         self._website = params[8]
     
     def get_basics(self):
-        return([self._name,self._image,self._id_api])
+        return([self._name,self._image,self._id])
