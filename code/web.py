@@ -57,12 +57,16 @@ class Controler():
         
         self.add_user()
         self.act_series()
+        self.series = series.Series()
         
     def add_user(self):
         self.user = user.User("paul",0)
     
     def act_series(self):
         self.user.series = self.req_database.select_series_from_user(self.user.user_id)
+    
+    def add_series(self):
+        self.req_database.add_series(self.series)
         
 class FullControler(WebSite,Controler):
     def __init__(self):
@@ -81,7 +85,7 @@ class FullControler(WebSite,Controler):
             '/search_serie'
         """
         if request.method == 'POST':
-            series_list = [request_api.RequestAPI.get_basics(request.form['serie'])]
+            series_list = [request_api.RequestAPI.research(request.form['serie'])]
             return(render_template('search.html',series_list = series_list))
         return(0)
 
@@ -92,9 +96,9 @@ class FullControler(WebSite,Controler):
         """
         if serie == "":
             serie = "Veuillez choisir une serie"
-        series_details = request_api.RequestAPI.get_details(serie)
+        self.series.initiate_from_details(request_api.RequestAPI.get_details(serie))
         
-        return(render_template('details.html',serie_name = series_details[1]))
+        return(render_template('details.html',series = self.series))
     
 if __name__ == '__main__':
     app = FullControler()
