@@ -84,7 +84,7 @@ class RequestAPI:
             - the year of the first diffusion
             - the official website
         """
-        response = requests.get('http://api.tvmaze.com/shows/' + id_series)
+        response = requests.get('http://api.tvmaze.com/shows/' + str(id_series))
         assert response.status_code == 200
         response = response.json()
 
@@ -116,8 +116,9 @@ class RequestAPI:
         return list_characters
 
 
-r = RequestAPI()
-r.research('game')
-r.get_details('88')
-r.get_cast('120')
+if __name__ == '__main__':
+    r = RequestAPI()
+    r.research('game')
+    r.get_details('88')
+    r.get_cast('120')
 
