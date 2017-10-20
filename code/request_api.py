@@ -50,7 +50,7 @@ class RequestAPI:
             - series : the alledged name of the series
 
         **Returns**
-            - the list of series with a name that could correspond to the users request
+            - the list of series with a name that could correspond to the users request and a corresponding image
         """
         id = requests.get('http://api.tvmaze.com/search/shows?q=' + series)
         assert id.status_code == 200
@@ -60,7 +60,7 @@ class RequestAPI:
         else:
             list_series = []
             for tvshow in id:
-                list_series.append(tvshow['show']['name'])
+                list_series.append((tvshow['show']['name'], tvshow['show']['image']['medium']))
         return list_series
 
     @staticmethod
