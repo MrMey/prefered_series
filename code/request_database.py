@@ -80,7 +80,7 @@ class DataBase:
         adds a user row in the users table with parameters: login and name
         login is the primary key
 
-    -add_series(name, image):
+    -add_series(name, image, id_api):
         adds a series row in the series table with parameters: name
         name is the primary key
     
@@ -100,7 +100,7 @@ class DataBase:
         self.cursor = self.connector.cursor()
         self.tables = {}
 
-        self.tables["series"] = Table(["name", "image"])
+        self.tables["series"] = Table(["name", "image", "id_api"])
         self.tables["users"] = Table(["login", "name"])
         self.tables["users_series"] = Table(["user_id", "series_id"])
 
@@ -165,7 +165,8 @@ class DataBase:
                      CREATE TABLE IF NOT EXISTS series(
                              id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
                              name TEXT,
-                             image TEXT
+                             image TEXT,
+                             id_api INT
                              )
                      """)
 
@@ -209,11 +210,11 @@ class DataBase:
             self.insert("users", {"login": login, "name": name})
         return (self.cursor.lastrowid)
 
-    def add_series(self, name, image):
+    def add_series(self, name, image, id_api):
         if (self.is_in_table("series", "name", name)):
             raise (e.DataBaseError("instance already in series table"))
         else:
-            self.insert("series", {"name": name, "image": image})
+            self.insert("series", {"name": name, "image": image, "id_api": id_api})
         return (self.cursor.lastrowid)
 
     def add_series_to_user(self, user_id, series_id):
