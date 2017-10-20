@@ -4,6 +4,5 @@ python:
 cache: pip
 install:
   - pip install flask
-  - pip install sqlite3
 script:
   - python code/test_request_api.py
