@@ -15,7 +15,6 @@ class WebSite(Flask):
         Flask.__init__(self,__name__)
         self.add_url_rule(rule = '/main',endpoint = 'main',view_func = self.main)
         self.add_url_rule(rule = '/login',endpoint = 'login',view_func = self.login, methods=['POST'])
-        self.add_url_rule(rule = '/details',endpoint = 'details',view_func = self.details, methods=['GET','POST'])
         self.add_url_rule(rule = '/details/<serie>',endpoint = 'details',view_func = self.details, methods=['GET','POST'])
         self.add_url_rule(rule = '/search_serie',endpoint = 'search_serie',view_func = self.search_serie, methods=['POST'])
 
@@ -97,12 +96,13 @@ class FullControler(WebSite,Controler):
 
     def details(self, serie = ""):
         """ **routes**
-            '/details'
             '/details/<serie>'
         """
-        
-        if serie == "":
-            serie = "Veuillez choisir une serie"
+        try:
+            serie = int(serie)
+        except:
+            raise(TypeError("serie id must be an int"))
+
             
         if request.method == "POST":
             self.add_series()

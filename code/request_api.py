@@ -69,7 +69,7 @@ class RequestAPI:
                     image = tvshow['show']['image']['medium']
                 except:
                     image = None
-                list_series.append((name, image, str(id_api)))
+                list_series.append((name, image, id_api))
         return list_series
 
     @staticmethod
