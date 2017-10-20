@@ -7,7 +7,6 @@ import exceptions as e
 
 
 class RequestAPI:
-
     """ Sends requests to the TV shows API tvmaze
 
     This class makes all the requests to get information about a TV show thanks to http://api.tvmaze.com.
@@ -37,6 +36,7 @@ class RequestAPI:
             - the official website
 
     """
+
     def __init__(self):
         print('initiating RequestAPI')
 
@@ -78,7 +78,7 @@ class RequestAPI:
         Gathers the main information about a series. It will be displayed when a series is selected by the user
 
         **Parameters**
-            - id_series : id of the series in the API database
+            - id_series : id of the series in the API database (int)
 
         **Returns**
          attributes :
@@ -93,20 +93,35 @@ class RequestAPI:
             - the year of the first diffusion
             - the official website
         """
+        if not isinstance(id_series, int):
+            raise e.APIError("series' ids must be integers")
         response = requests.get('http://api.tvmaze.com/shows/' + str(id_series))
         assert response.status_code == 200
         response = response.json()
 
-        name = response['name']
-        image = response['image']['medium']  # we chose medium so that all images have the same size
-        summary = response['summary']  # Watch out! there are some tags!
-        rating = response['rating']['average']  # out of 10
-        genres = response['genres']  # Watch out! It's a list!
-        status = response['status']
-        runtime = response['runtime']
-        premiered = response['premiered'][:4]  # only the year
-        website = response['officialSite']
-
+        try:
+            name = response['name']
+        except Exception:
+            raise e.APIError("all series must have a name in the API database")
+        image = None
+        summary = None
+        rating = None
+        genres = None
+        status = None
+        runtime = None
+        premiered = None
+        website = None
+        try:
+            image = response['image']['medium']  # we chose medium so that all images have the same size
+            summary = response['summary']  # Watch out! there are some tags!
+            rating = response['rating']['average']  # out of 10
+            genres = response['genres']  # Watch out! It's a list!
+            status = response['status']
+            runtime = response['runtime']
+            premiered = response['premiered'][:4]  # only the year
+            website = response['officialSite']
+        except Exception:
+            print('some missing information')
         attributes = [name, image, summary, rating, genres, status, runtime, premiered, website]
         return attributes
 
@@ -121,12 +136,10 @@ class RequestAPI:
             a = character['person']['name']
             b = character['character']['name']
             c = character['person']['image']['medium']
-            list_characters.append((a,b,c))
+            list_characters.append((a, b, c))
         return list_characters
 
 
 r = RequestAPI()
-r.research('game')
 r.get_details(88)
 r.get_cast(120)
-

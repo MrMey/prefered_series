@@ -1,7 +1,7 @@
 import unittest
 
 import request_api as r_api
-import exceptions as e
+import exceptions
 
 
 class MyTestCase(unittest.TestCase):
@@ -11,7 +11,7 @@ class MyTestCase(unittest.TestCase):
         r = r_api.RequestAPI()
 
         print("Test 1: method research")
-        self.assertRaises(e.APIError, r.research, "miyflidyvhxlizhab")
+        self.assertRaises(exceptions.APIError, r.research, "miyflioubiugytfdrxdyvhxlizhab")
         self.assertTrue(isinstance(r.research("game"), list))
         test_series = [r.research("game"), r.research("game of thrones"), r.research("breaking bad")]
         for list_series in test_series:
