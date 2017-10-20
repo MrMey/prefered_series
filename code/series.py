@@ -54,15 +54,42 @@ class Series:
         self._image = params[1]
 
     def initiate_from_details(self,params):
-        self._name = params[0]
-        self._image = params[1]
-        self._summary = params[2]
-        self._rating = params[3]
-        self._genre = params[4]
-        self._status = params[5]
-        self._runtime = params[6]
-        self._premiered = params[7]
-        self._website = params[8]
+        if(params[0] == None):
+            self._name = 'missing name'
+        else:
+            self._name = params[0]
+        if(params[1] == None):
+            self._image = "http://www.clker.com/cliparts/n/T/5/z/f/Y/image-missing-md.png"
+        else:
+            self._image = params[1]
+        if(params[2] == None):
+            self._summary = "missing summary"
+        else:
+            self._summary = params[2]
+        if(params[3] == None):
+            self._rating = "missing rating"
+        else:
+            self._rating = params[3]
+        if(params[4] == None):
+            self._genre = []
+        else:
+            self._genre = params[4]
+        if(params[5] == None):
+            self._status = "missing status"
+        else:
+            self._status = params[5]
+        if(params[6] == None):
+            self._runtime = "missing runtime"
+        else:
+            self._runtime = params[6]
+        if(params[7] == None):
+            self._premiered = "missing premiered"
+        else:
+            self._premiered = params[7]
+        if(params[8] == None):
+            self._website = "missing website"
+        else:
+            self._website = params[8]
     
     def get_basics(self):
         return([self._name,self._image,self._id])
