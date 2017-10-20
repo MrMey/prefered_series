@@ -60,7 +60,7 @@ class RequestAPI:
         else:
             list_series = []
             for tvshow in id:
-                list_series.append((tvshow['show']['name'], tvshow['show']['image']['medium'], tvshow['show']['id']))
+                list_series.append((tvshow['show']['name'], tvshow['show']['image']['medium'], str(tvshow['show']['id'])))
         return list_series
 
     @staticmethod
