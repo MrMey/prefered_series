@@ -3,9 +3,14 @@ import exceptions
 class User:
     """Stores the info about the users of the website
 
-    Class defining a User by :
-        - Login
-        - ID from database"""
+     ** Attributes**
+     _login
+     _user_id
+     _series : 
+         series is a list of 3-element lists containing id, name and image
+     tables
+     """
+     
 
     def __init__(self, login, user_id):
 

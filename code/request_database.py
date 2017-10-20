@@ -80,7 +80,7 @@ class DataBase:
         adds a user row in the users table with parameters: login and name
         login is the primary key
 
-    -add_series(name, image):
+    -add_series(name, image, id_api):
         adds a series row in the series table with parameters: name
         name is the primary key
     
@@ -96,11 +96,11 @@ class DataBase:
     """
 
     def __init__(self):
-        self.connector = sqlite3.connect('../storage/series.db')
+        self.connector = sqlite3.connect('../storage/series.db', check_same_thread=False)
         self.cursor = self.connector.cursor()
         self.tables = {}
 
-        self.tables["series"] = Table(["name", "image"])
+        self.tables["series"] = Table(["name", "image", "id_api"])
         self.tables["users"] = Table(["login", "name"])
         self.tables["users_series"] = Table(["user_id", "series_id"])
 
@@ -116,6 +116,12 @@ class DataBase:
         self.connector.commit()
 
     def execute(self, instruction):
+        """
+        sends an SQL request to the connector
+        Warning any sql is accepted for now
+        """
+        if(not isinstance(instruction,str)):
+            raise(e.DataBaseError("instruction must be a sql string in execute"))
         print(instruction)
         self.cursor.execute(instruction)
         self.commit()
@@ -149,6 +155,10 @@ class DataBase:
     def is_in_table(self, table, attr, value):
         self.execute("""SELECT * FROM {0} WHERE {1} = '{2}'""".format(table, attr, value))
         return (len(self.fetchall()) != 0)
+    
+    def is_not_empty(self,sql):
+        self.execute(sql)
+        return (len(self.fetchall()) != 0)
 
     def get_last_insert_id(self):
         return (self.cursor.lastrowid)
@@ -165,7 +175,8 @@ class DataBase:
                      CREATE TABLE IF NOT EXISTS series(
                              id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
                              name TEXT,
-                             image TEXT
+                             image TEXT,
+                             id_api INT
                              )
                      """)
 
@@ -209,26 +220,31 @@ class DataBase:
             self.insert("users", {"login": login, "name": name})
         return (self.cursor.lastrowid)
 
-    def add_series(self, name, image):
+    def add_series(self, name, image, id_api):
         if (self.is_in_table("series", "name", name)):
             raise (e.DataBaseError("instance already in series table"))
         else:
-            self.insert("series", {"name": name, "image": image})
+            self.insert("series", {"name": name, "image": image, "id_api": id_api})
         return (self.cursor.lastrowid)
 
     def add_series_to_user(self, user_id, series_id):
-        self.insert("users_series", {"user_id": user_id, "series_id": series_id})
+        if(self.is_not_empty("""SELECT * FROM users_series 
+                             WHERE user_id = {}
+                             AND series_id = {}
+                             """.format(user_id,series_id))):
+            raise(e.DataBaseError('instance already in user_series table'))
+        else:
+            self.insert("users_series", {"user_id": user_id, "series_id": series_id})
         return (self.cursor.lastrowid)
 
     def select_series_from_user(self, user_id):
-        self.execute("""SELECT S.id,S.name,S.image FROM 
-                     (SELECT * FROM users_series U WHERE U.id = user_id) U
-                     JOIN
-                     series S
+        self.execute("""SELECT S.id_api,S.name,S.image FROM 
+                     series S JOIN
+                     (SELECT * FROM users_series U WHERE U.user_id = {}) U
                      ON
                      U.series_id = S.id
-                     """)
-        return (self.tuple_to_list(self.fetchall()))
+                     """.format(user_id))
+        return (self.fetchall())
     
     def tuple_to_list(self,list_tuples):
         return([[x[y] for y in range(len(x))] for x in list_tuples])
@@ -251,6 +267,8 @@ class Table:
      """
 
     def __init__(self, columns):
+        if(not(isinstance(columns,list))):
+            raise(e.DataBaseError("columns must be a list in Table.__init__"))
         self._columns = columns
 
     def _get_columns(self):
@@ -260,15 +278,15 @@ class Table:
 
     def _get_comma_columns(self):
         return (','.join(map(str, self._columns)))
-
     comma_columns = property(_get_comma_columns)
 
     def _get_dot_columns(self):
         return (','.join(map(str, [":" + x for x in self._columns])))
-
     dot_columns = property(_get_dot_columns)
 
     def is_same_columns(self, columns):
+        if(not(isinstance(columns,list))):
+            raise(e.DataBaseError("columns must be a list in is_same_columns parameters"))
         return (columns == self._columns)
 
 if __name__ == '__main__':

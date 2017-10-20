@@ -94,11 +94,33 @@
 		  <label>Already a member ? Sign in now :</p><input type="password" name ="login"><br>
 		  <input type="submit" value="Login">
 		</form>
+
+	  	{% endblock %}
 	
 		</blockquote>
+	
+	{% block series %}
+
+	<div id = "series">
+		<!-- bloc de series -->
+		{% for series in series_list %}
+		<div class = "serie">
+		<a href = {{ url_for('details',serie = series[0]) }}>{{series[1]}}</a>
+		<img src = {{series[2]}}></img>
+		</div>
+		{% endfor %}
+
 	</div>
 
 	{% endblock %}
+
+	<div id = "search">
+		<form action="{{ url_for('search_serie') }}" method = "Post">
+		 	<label>Rechercher une serie:</label>
+			<input type="text" name ="serie" value="Breaking Bad"><br>
+		  	<input type="submit" value="Submit">
+		</form>
+	</div>
 	
 	<footer>
 	</footer>

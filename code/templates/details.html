@@ -3,7 +3,12 @@
 {% block series %}
 
 <div>
-{{serie_name}}
+{{series.name}}
 </div>
+<img src={{series.image}}></img>
 
+<form action="{{ url_for('details',serie = series.id) }}" method = "Post">
+  	<input type="submit" value="Add to favorites">
+</form>
 {% endblock series %}
+
