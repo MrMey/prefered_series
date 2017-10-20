@@ -13,11 +13,10 @@ import series
 class WebSite(Flask):
     def __init__(self):
         Flask.__init__(self,__name__)
-        self.add_url_rule(rule = '/',endpoint = 'main',view_func = self.main)
         self.add_url_rule(rule = '/main',endpoint = 'main',view_func = self.main)
         self.add_url_rule(rule = '/login',endpoint = 'login',view_func = self.login, methods=['POST'])
-        self.add_url_rule(rule = '/details',endpoint = 'details',view_func = self.details)
-        self.add_url_rule(rule = '/details/<serie>',endpoint = 'details',view_func = self.details)
+        self.add_url_rule(rule = '/details',endpoint = 'details',view_func = self.details, methods=['GET','POST'])
+        self.add_url_rule(rule = '/details/<serie>',endpoint = 'details',view_func = self.details, methods=['GET','POST'])
         self.add_url_rule(rule = '/search_serie',endpoint = 'search_serie',view_func = self.search_serie, methods=['POST'])
 
     def main(self):
@@ -54,19 +53,27 @@ class WebSite(Flask):
 class Controler():
     def __init__(self):
         self.req_database = request_database.DataBase()
-        
+        self.series = series.Series()
         self.add_user()
         self.act_series()
         self.series = series.Series()
         
     def add_user(self):
-        self.user = user.User("paul",0)
+        self.user = user.User("paul",1)
     
     def act_series(self):
         self.user.series = self.req_database.select_series_from_user(self.user.user_id)
     
     def add_series(self):
-        self.req_database.add_series(self.series)
+        try:
+            [name,image,id] = self.series.get_basics()
+            serie_id = self.req_database.add_series(name,image,id)
+        except:
+            True
+        try:
+            self.req_database.add_series_to_user(self.user.user_id,serie_id)
+        except:
+            True
         
 class FullControler(WebSite,Controler):
     def __init__(self):
@@ -78,6 +85,7 @@ class FullControler(WebSite,Controler):
             '/'
             '/main'
         """ 
+        self.act_series()
         return(render_template('main.html',**{"series_list":self.user.series}))
 
     def search_serie(self):
@@ -85,7 +93,7 @@ class FullControler(WebSite,Controler):
             '/search_serie'
         """
         if request.method == 'POST':
-            series_list = [request_api.RequestAPI.research(request.form['serie'])]
+            series_list = request_api.RequestAPI.research(request.form['serie'])
             return(render_template('search.html',series_list = series_list))
         return(0)
 
@@ -94,10 +102,15 @@ class FullControler(WebSite,Controler):
             '/details'
             '/details/<serie>'
         """
+        
         if serie == "":
             serie = "Veuillez choisir une serie"
-        self.series.initiate_from_details(request_api.RequestAPI.get_details(serie))
-        
+            
+        if request.method == "POST":
+            self.add_series()
+        else:
+            self.series.id = serie
+            self.series.initiate_from_details(request_api.RequestAPI.get_details(serie))
         return(render_template('details.html',series = self.series))
     
 if __name__ == '__main__':
