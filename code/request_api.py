@@ -99,29 +99,25 @@ class RequestAPI:
         website = response['officialSite']
 
         attributes = [name, image, summary, rating, genres, status, runtime, premiered, website]
-        return(attributes)
+        return attributes
 
     @staticmethod
-    def get_cast(series):
+    def get_cast(id_series):
         """ Gets the cast for the series"""
-        id = RequestAPI.get_id_API(series)
-        response = requests.get('http://api.tvmaze.com/shows/' + id + '/cast')
+        response = requests.get('http://api.tvmaze.com/shows/' + id_series + '/cast')
         assert response.status_code == 200
         response = response.json()
         list_characters = []
         for character in response:
             a = character['person']['name']
             b = character['character']['name']
-            c = character['character']['image']['medium']
+            c = character['person']['image']['medium']
             list_characters.append((a,b,c))
-        return(list_characters)
-
-
+        return list_characters
 
 
 r = RequestAPI()
 r.research('game')
-r.get_details('game')
-r.get_basics('game')
-r.get_cast('game of thrones')
+r.get_details('88')
+r.get_cast('120')
 
