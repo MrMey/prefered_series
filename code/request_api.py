@@ -104,7 +104,7 @@ class RequestAPI:
     @staticmethod
     def get_cast(id_series):
         """ Gets the cast for the series"""
-        response = requests.get('http://api.tvmaze.com/shows/' + id_series + '/cast')
+        response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/cast')
         assert response.status_code == 200
         response = response.json()
         list_characters = []
@@ -116,9 +116,11 @@ class RequestAPI:
         return list_characters
 
 
+
 if __name__ == '__main__':
     r = RequestAPI()
     r.research('game')
     r.get_details('88')
     r.get_cast('120')
+
 
