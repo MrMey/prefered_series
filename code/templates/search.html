@@ -1,8 +1,10 @@
 {% extends "main.html" %}
 
 {% block series %}
-
-<a href = {{ url_for('details',serie = series_id) }}>
-{{ serie }}
+{% for series in series_list %}
+<img src= {{series[1]}} alt={{series[0]}}></img>
+<a href = {{ url_for('details',serie = series[0]) }}>
+{{ series[0] }}
 </a>
+{% endfor %}
 {% endblock series %}

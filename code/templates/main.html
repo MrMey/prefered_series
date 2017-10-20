@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 
 <html>
+<<<<<<< HEAD
 
   <head> 
 
 	<meta charset="UTF-8">
 
+=======
+  <head> <!-- ceci est un commentaire -->
+    <meta charset="UTF-8">
+    <title> Séries </title>
+>>>>>>> 5c6bfd742c01fc5e46cd831f5ae0ca37c8229d90
 	<link href="{{ url_for('static', filename='site.css') }}" rel="stylesheet" type="text/css" />
 
 	<title>TrackSeries - Never miss an episode again !</title>
@@ -15,6 +21,10 @@
   <body>
 	
 	<header>
+<<<<<<< HEAD
+=======
+		<p>Mes séries preferees</p>
+>>>>>>> 5c6bfd742c01fc5e46cd831f5ae0ca37c8229d90
 	</header>
 	
 	{% block navigation %} <!-- Menu de navigation pour atteindre nos autres pages -->
@@ -73,9 +83,9 @@
 
 	<div id = "series">
 		<!-- bloc de series -->
-		{% for serie in series %}
+		{% for series in series_list %}
 		<div class = "serie">
-		<a href = {{ url_for('details',serie = serie[0]) }}>{{serie[1]}}</a>
+		<a href = {{ url_for('details',series = series[0]) }}>{{series[1]}}</a>
 		</div>
 		{% endfor %}
 	</div>
