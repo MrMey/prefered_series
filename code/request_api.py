@@ -84,7 +84,7 @@ class RequestAPI:
             - the year of the first diffusion
             - the official website
         """
-        response = requests.get('http://api.tvmaze.com/shows/' + id_series)
+        response = requests.get('http://api.tvmaze.com/shows/' + str(id_series))
         assert response.status_code == 200
         response = response.json()
 
@@ -104,7 +104,7 @@ class RequestAPI:
     @staticmethod
     def get_cast(id_series):
         """ Gets the cast for the series"""
-        response = requests.get('http://api.tvmaze.com/shows/' + id_series + '/cast')
+        response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/cast')
         assert response.status_code == 200
         response = response.json()
         list_characters = []
@@ -118,6 +118,6 @@ class RequestAPI:
 
 r = RequestAPI()
 r.research('game')
-r.get_details('88')
-r.get_cast('120')
+r.get_details(88)
+r.get_cast(120)
 
