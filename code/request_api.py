@@ -141,5 +141,5 @@ class RequestAPI:
 
 
 r = RequestAPI()
-r.get_details(88)
+r.research("breaking bad")
 r.get_cast(120)
