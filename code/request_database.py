@@ -96,7 +96,7 @@ class DataBase:
     """
 
     def __init__(self):
-        self.connector = sqlite3.connect('../storage/series.db')
+        self.connector = sqlite3.connect('../storage/series.db', check_same_thread=False)
         self.cursor = self.connector.cursor()
         self.tables = {}
 
@@ -148,6 +148,10 @@ class DataBase:
 
     def is_in_table(self, table, attr, value):
         self.execute("""SELECT * FROM {0} WHERE {1} = '{2}'""".format(table, attr, value))
+        return (len(self.fetchall()) != 0)
+    
+    def is_not_empty(self,sql):
+        self.execute(sql)
         return (len(self.fetchall()) != 0)
 
     def get_last_insert_id(self):
@@ -218,18 +222,23 @@ class DataBase:
         return (self.cursor.lastrowid)
 
     def add_series_to_user(self, user_id, series_id):
-        self.insert("users_series", {"user_id": user_id, "series_id": series_id})
+        if(self.is_not_empty("""SELECT * FROM users_series 
+                             WHERE user_id = {}
+                             AND series_id = {}
+                             """.format(user_id,series_id))):
+            raise(e.DataBaseError('instance already in user_series table'))
+        else:
+            self.insert("users_series", {"user_id": user_id, "series_id": series_id})
         return (self.cursor.lastrowid)
 
     def select_series_from_user(self, user_id):
-        self.execute("""SELECT S.id,S.name,S.image FROM 
-                     (SELECT * FROM users_series U WHERE U.id = user_id) U
-                     JOIN
-                     series S
+        self.execute("""SELECT S.id_api,S.name,S.image FROM 
+                     series S JOIN
+                     (SELECT * FROM users_series U WHERE U.user_id = {}) U
                      ON
                      U.series_id = S.id
-                     """)
-        return (self.tuple_to_list(self.fetchall()))
+                     """.format(user_id))
+        return (self.fetchall())
     
     def tuple_to_list(self,list_tuples):
         return([[x[y] for y in range(len(x))] for x in list_tuples])
