@@ -1,7 +1,17 @@
 {% extends "main.html" %}
 
+{% block tagline %}
+{% endblock %}
+
+{% block login %}
+{% endblock %}
+
 {% block series %}
+
+<blockquote class="blockquote text-center">
+
 {% for series in series_list %}
+
 
 <img src= {{series[1]}} alt={{series[0]}}></img>
 <a href = {{ url_for('details',serie = series[2]) }}>
@@ -9,4 +19,7 @@
 </a>
 
 {% endfor %}
+
+</blockquote>
+
 {% endblock series %}

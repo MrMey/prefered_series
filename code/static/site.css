@@ -1,25 +1,20 @@
-#nav {
-	font-family: "Consolas", Monospace;
-	font-size: 12px;
+#title:link {
+	color:#3366ff ;
+	text-decoration: underline;
 }
 
-a:link {
-	color:black ;
+#title:visited {
+	color:#3366ff ;
 	text-decoration: none;
 }
 
-a:visited {
-	color:black ;
+#title:hover {
+	color:#3366ff ;
 	text-decoration: none;
 }
 
-a:hover {
-	color:red ;
-	text-decoration: none;
-}
-
-a:active {
-    color: red;
+#title:active {
+    color:#3366ff
 	text-decoration: none;
 }
 
@@ -40,23 +35,10 @@ a:active {
 	border: 1px solid;
 }
 
-#nav{
-	border: 1px solid;
-}
-
 #search{
 	border: 1px solid;
 }
 
 #series{
 	display:inline-block;
-	margin-left: 100px;
-	border: 1px solid;
-}
-
-.serie{
-	width: 200px;
-	height: 100px;
-	margin: 1em;
-	border: 1px solid;
 }

@@ -26,7 +26,7 @@
 	
 	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
 
-  <a class="navbar-brand" href="#">
+  <a class="navbar-brand" href="{{ url_for('main')}}">
   	<img src="http://www.gratisskole.dk/sdata/minipic/008/00816-300.png" width="30" height="30" alt="">
   	Track.Series
   </a>
@@ -59,8 +59,8 @@
       </li>
     </ul>
 
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Look for a TV show..." aria-label="Search">
+    <form class="form-inline my-2 my-lg-0" action="{{ url_for('search_serie') }}" method = "Post">
+      <input class="form-control mr-sm-2" name ="serie" type="search" placeholder="Look for a TV show..." aria-label="Search">
       <button class="btn btn-primary" type="submit">Search</button>
     
     </form>
@@ -86,7 +86,7 @@
     		<a class="btn btn-primary btn-lg" role="button">Join Track.Series</a>
   		</p>
 
-  	{% endblock %}
+  {% endblock %}
 
 	{% block login %}
 
@@ -95,32 +95,30 @@
 		  <input type="submit" value="Login">
 		</form>
 
-	  	{% endblock %}
+	{% endblock %}
 	
 		</blockquote>
 	
 	{% block series %}
 
-	<div id = "series">
+<p>Our members are looking at...</p>
+
 		<!-- bloc de series -->
 		{% for series in series_list %}
-		<div class = "serie">
-		<a href = {{ url_for('details',serie = series[0]) }}>{{series[1]}}</a>
-		<img src = {{series[2]}}></img>
+    <blockquote class="blockquote text-center">
+    <div id = "series" class="card bg-light mb-3" style="width: 13rem;">
+		<img class="card-img-top" alt="Card image cap" src = {{series[2]}}></img>
+    <div class = "serie" class="card-body">
+    <a id="title" class="card-title" href = {{ url_for('details',serie = series[0]) }}>{{series[1]}}</a>
 		</div>
+    </blockquote>
 		{% endfor %}
+	
+  </div>
 
-	</div>
+</div>
 
 	{% endblock %}
-
-	<div id = "search">
-		<form action="{{ url_for('search_serie') }}" method = "Post">
-		 	<label>Rechercher une serie:</label>
-			<input type="text" name ="serie" value="Breaking Bad"><br>
-		  	<input type="submit" value="Submit">
-		</form>
-	</div>
 	
 	<footer>
 	</footer>
