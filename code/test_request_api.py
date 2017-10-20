@@ -5,7 +5,7 @@ import exceptions
 
 
 class MyTestCase(unittest.TestCase):
-
+    """Using Travis CI to run the tests automatically"""
     def test_request_api(self):
         print("Tests for the class RequestAPI: \n")
         r = r_api.RequestAPI()
