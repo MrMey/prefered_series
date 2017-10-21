@@ -14,28 +14,17 @@
 			<img class="card-img-top" alt="Card image cap" src={{series.image}}></img>
 	    	<div class = "serie" class="card-body">
 			{{series.name}}
-			{{series.id}}
 			</div>
 		</div>
 
 		<form class="form-inline my-2 my-lg-0" action="{{ url_for('details',serie = series.id) }}" method = "Post">
-	  	<input class="form-control mr-sm-2" type="submit" value="Add to favorites">
+	  	<input class="form-control mr-sm-2" type="submit" name = "submit" value="Add to favorites">
 		</form>
 
+		<form class="form-inline my-2 my-lg-0" action="{{ url_for('details',serie = series.id) }}" method = "Post">
+	  	<input class="form-control mr-sm-2" type="submit" name = "submit" value="Remove from favorites">
+		</form>
 	</blockquote>
-
-	<div>
-	{{series.name}}
-	</div>
-	<img src={{series.image}}></img>
-
-	<form action="{{ url_for('details',serie = series.id) }}" method = "Post">
-	  	<input type="submit" name = "submit" value="Add to favorites">
-	</form>
-
-	<form action="{{ url_for('details',serie = series.id) }}" method = "Post">
-	  	<input type="submit" name = "submit" value="Remove from favorites">
-	</form>
 
 {% endblock series %}
 
