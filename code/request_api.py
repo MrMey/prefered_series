@@ -69,7 +69,7 @@ class RequestAPI:
                     image = tvshow['show']['image']['medium']
                 except:
                     image = None
-                list_series.append((name, image, id_api))
+                list_series.append([name, image, id_api])
         return list_series
 
     @staticmethod
@@ -147,6 +147,10 @@ class RequestAPI:
         return list_characters
 
 
-r = RequestAPI()
-r.research("breaking bad")
-r.get_cast(120)
+
+if __name__ == '__main__':
+    r = RequestAPI()
+    r.research('game')
+    r.get_details('88')
+    r.get_cast('120')
+

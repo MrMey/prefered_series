@@ -1,9 +1,30 @@
 {% extends "main.html" %}
 
+{% block tagline %}
+{% endblock %}
+
+{% block login %}
+{% endblock %}
+
 {% block series %}
 
-<div>
-{{serie_name}}
-</div>
+	<blockquote class="blockquote text-center">
+
+		<div id = "series" class="card bg-light mb-3" style="width: 13rem;">
+			<img class="card-img-top" alt="Card image cap" src={{series.image}}></img>
+	    	<div class = "serie" class="card-body">
+			{{series.name}}
+			</div>
+		</div>
+
+		<form class="form-inline my-2 my-lg-0" action="{{ url_for('details',serie = series.id) }}" method = "Post">
+	  	<input class="form-control mr-sm-2" type="submit" name = "submit" value="Add to favorites">
+		</form>
+
+		<form class="form-inline my-2 my-lg-0" action="{{ url_for('details',serie = series.id) }}" method = "Post">
+	  	<input class="form-control mr-sm-2" type="submit" name = "submit" value="Remove from favorites">
+		</form>
+	</blockquote>
 
 {% endblock series %}
+
