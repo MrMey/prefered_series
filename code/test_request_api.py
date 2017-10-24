@@ -16,7 +16,7 @@ class MyTestCase(unittest.TestCase):
         test_series = [r.research("game"), r.research("game of thrones"), r.research("breaking bad")]
         for list_series in test_series:
             for series in list_series:
-                self.assertTrue(isinstance(series, tuple))
+                self.assertTrue(isinstance(series, list))
                 self.assertEquals(len(series), 3)
                 self.assertTrue(isinstance(series[0], str))  # the name is always given
                 self.assertTrue((isinstance(series[1], str)) or (series[1] is None))  # the image is optional
