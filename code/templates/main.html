@@ -83,28 +83,23 @@
   		<hr class="my-3">
   		<p class="lead">Gather your favorite TV shows and make sure to never miss an episode again.</p>
   		<p class="lead">
-    		<a class="btn btn-primary btn-lg" role="button">Join Track.Series</a>
+    		<a href = "{{url_for('signup') }}" class="btn btn-primary btn-lg" role="button">Join Track.Series</a>
   		</p>
 
   {% endblock %}
 
 	{% block login %}
-
-		<form action="{{ url_for('login') }}" method = "Post">
-		  <label>Already a member ? Sign in now :</p><input type="password" name ="login"><br>
-		  <input type="submit" value="Login">
-		</form>
-
 	{% endblock %}
 	
 		</blockquote>
 	
 	{% block series %}
 
-<p>Our members are looking at...</p>
+
 
 		<!-- bloc de series -->
 		{% for series in series_list %}
+	<p>Our members are looking at...</p>
     <blockquote class="blockquote text-center">
     <div id = "series" class="card bg-light mb-3" style="width: 13rem;">
 		<img class="card-img-top" alt="Card image cap" src = {{series[2]}}></img>
