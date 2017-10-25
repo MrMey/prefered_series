@@ -171,12 +171,43 @@ class RequestAPI:
             list_crew.append(crew_tuple)
         return list_crew
 
+    @staticmethod
+    def get_seasons(id_series):
+        """ Gets the seasons list for the series, with the number, the name, the summary and the dates"""
+        if not isinstance(id_series, int):
+            raise e.APIError("series' ids must be integers")
+        response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/seasons')
+        assert response.status_code == 200
+        response = response.json()
+        list_seasons = []
+        for season in response:
+            number = None
+            name = None
+            summary = None
+            beginning = None
+            end = None
+            try:
+                number = season['number']
+                name = season['name']
+                if name == '':
+                    name = None
+                summary = season['summary']
+                if summary == '':
+                    summary = None
+                beginning = season['premiereDate']
+                end = season['endDate']
+            except Exception:
+                print('missing information')
+            list_seasons.append([number, name, summary, beginning, end])
+        return list_seasons
+
 
 
 if __name__ == '__main__':
     r = RequestAPI()
-    r.research('game')
-    r.get_details(88)
-    r.get_cast(120)
-    r.get_crew(120)
+    # r.research('game')
+    # r.get_details(88)
+    # r.get_cast(120)
+    # r.get_crew(120)
+    r.get_seasons(568)
 
