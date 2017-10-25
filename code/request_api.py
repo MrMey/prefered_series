@@ -198,7 +198,8 @@ class RequestAPI:
                 end = season['endDate']
             except Exception:
                 print('missing information')
-            list_seasons.append([number, name, summary, beginning, end])
+            s = [number, name, summary, beginning, end]
+            list_seasons.append(s)
         return list_seasons
 
 

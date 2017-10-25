@@ -60,6 +60,19 @@ class MyTestCase(unittest.TestCase):
                 self.assertTrue(isinstance(person[1], str))
                 self.assertTrue((isinstance(person[2], str)) or (person[2] is None))
 
+        print("Test 5: method get_seasons")
+        self.assertTrue(isinstance(r.get_seasons(597), list))
+        test_series = [r.get_seasons(27845), r.get_seasons(120)]
+        for series in test_series:
+            for season in series:
+                self.assertTrue((isinstance(season, list)))
+                self.assertEquals(len(season), 5)
+                self.assertTrue((isinstance(season[0], int)) or (season[2] is None))
+                self.assertTrue((isinstance(season[1], str)) or (season[2] is None))
+                self.assertTrue((isinstance(season[2], str)) or (season[2] is None))
+                self.assertTrue((isinstance(season[3], str)) or (season[3] is None))
+                self.assertTrue((isinstance(season[4], str)) or (season[4] is None))
+
 
 test = MyTestCase()
 test.test_request_api()
