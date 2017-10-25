@@ -169,7 +169,6 @@ class RequestAPI:
                 c = None
             crew_tuple = (a, b, c)
             list_crew.append(crew_tuple)
-        print(list_crew)
         return list_crew
 
 
