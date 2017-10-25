@@ -128,6 +128,8 @@ class RequestAPI:
     @staticmethod
     def get_cast(id_series):
         """ Gets the cast for the series"""
+        if not isinstance(id_series, int):
+            raise e.APIError("series' ids must be integers")
         response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/cast')
         assert response.status_code == 200
         response = response.json()
@@ -146,11 +148,36 @@ class RequestAPI:
             list_characters.append(character_tuple)
         return list_characters
 
+    @staticmethod
+    def get_crew(id_series):
+        """ Gets the crew for the series"""
+        if not isinstance(id_series, int):
+            raise e.APIError("series' ids must be integers")
+        response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/crew')
+        assert response.status_code == 200
+        response = response.json()
+        list_crew = []
+        for person in response:
+            try:
+                a = person['person']['name']
+                b = person['type']
+            except Exception:
+                raise e.APIError("crew members have a name and a job")
+            try:
+                c = person['person']['image']['medium']
+            except Exception:
+                c = None
+            crew_tuple = (a, b, c)
+            list_crew.append(crew_tuple)
+        print(list_crew)
+        return list_crew
+
 
 
 if __name__ == '__main__':
     r = RequestAPI()
     r.research('game')
-    r.get_details('88')
-    r.get_cast('120')
+    r.get_details(88)
+    r.get_cast(120)
+    r.get_crew(120)
 
