@@ -75,4 +75,5 @@ class MyTestCase(unittest.TestCase):
 
 
 test = MyTestCase()
+# r_api.RequestAPI.get_seasons(120)
 test.test_request_api()

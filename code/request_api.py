@@ -202,6 +202,46 @@ class RequestAPI:
             list_seasons.append(s)
         return list_seasons
 
+    @staticmethod
+    def get_episodes(id_series):
+        """ Gets the episodes list for the series, with the number of the season, the number of the episode, the name,
+        the summary, an image, the air date and the runtime"""
+        if not isinstance(id_series, int):
+            raise e.APIError("series' ids must be integers")
+        response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/episodes')
+        assert response.status_code == 200
+        response = response.json()
+        list_episodes = []
+        for episode in response:
+            number_season = None
+            number_episode = None
+            name = None
+            summary = None
+            airdate = None
+            runtime = None
+            image = None
+            try:
+                number_season = episode['season']
+                number_episode = episode['number']
+                # Watch out! Sometimes the episode's number includes the season's number : episode 101 = first episode
+            except Exception:
+                raise e.APIError("all episodes have a number and belong to a season")
+            try:
+                name = episode['name']
+                if name == '':
+                    name = None
+                summary = episode['summary']
+                if summary == '':
+                    summary = None
+                airdate = episode['airdate']
+                runtime = episode['runtime']
+                image = episode['image']
+            except Exception:
+                print('missing information')
+            s = [number_season, number_episode, name, summary, airdate, runtime, image]
+            list_episodes.append(s)
+        return list_episodes
+
 
 
 if __name__ == '__main__':
@@ -210,5 +250,6 @@ if __name__ == '__main__':
     # r.get_details(88)
     # r.get_cast(120)
     # r.get_crew(120)
-    r.get_seasons(568)
+    # r.get_seasons(568)
+    r.get_episodes(261)
 
