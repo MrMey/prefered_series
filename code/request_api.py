@@ -141,7 +141,15 @@ class RequestAPI:
 
     @staticmethod
     def get_cast(id_series):
-        """ Gets the cast for the series"""
+        """ Gets the cast for the series
+
+        **Parameters**
+        id_series is the id of the series in the API database (int)
+
+        **Returns**
+        a list of the characters in a series described by a tuple with the name of the actor, the name of the
+        character and an image of the actor
+        """
         if not isinstance(id_series, int):
             raise e.APIError("series' ids must be integers")
         response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/cast')
@@ -164,7 +172,15 @@ class RequestAPI:
 
     @staticmethod
     def get_crew(id_series):
-        """ Gets the crew for the series"""
+        """ Gets the crew for the series
+
+        **Parameters**
+        id_series is the id of the series in the API database (int)
+
+        **Returns**
+        a list of the crew for a series described by a tuple with the name of the crew member, his or her job and
+        an image
+        """
         if not isinstance(id_series, int):
             raise e.APIError("series' ids must be integers")
         response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/crew')
@@ -187,7 +203,19 @@ class RequestAPI:
 
     @staticmethod
     def get_seasons(id_series):
-        """ Gets the seasons list for the series, with the number, the name, the summary and the dates"""
+        """ Gets the seasons list for the series, with the number, the name, the summary and the dates
+
+        **Parameters**
+        id_series is the id of the series in the API database (int)
+
+        **Returns**
+        a list of the seasons of a series described by a list with
+        - the number
+        - the name
+        - the summary of the season
+        - the date of the beginning of the season
+        - the date of the end of the season
+        """
         if not isinstance(id_series, int):
             raise e.APIError("series' ids must be integers")
         response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/seasons')
@@ -219,7 +247,21 @@ class RequestAPI:
     @staticmethod
     def get_episodes(id_series):
         """ Gets the episodes list for the series, with the number of the season, the number of the episode, the name,
-        the summary, an image, the air date and the runtime"""
+        the summary, an image, the air date and the runtime
+
+        **Parameters**
+        id_series is the id of the series in the API database (int)
+
+        **Returns**
+        a list of the episodes of a series described by a list with
+        - the number of the season
+        - the number of the episode
+        - the name
+        - the summary
+        - an image
+        - the air date
+        - the runtime
+        """
         if not isinstance(id_series, int):
             raise e.APIError("series' ids must be integers")
         response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/episodes')
