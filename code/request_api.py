@@ -303,7 +303,6 @@ class RequestAPI:
             except Exception:
                 print('what do we do??')
 
-        schedule_dictionary
         return schedule_dictionary
 
 
