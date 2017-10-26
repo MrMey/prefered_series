@@ -6,4 +6,4 @@ install:
   - pip install flask
   - pip install requests
 script:
-  - python code/tests
+  - python code/tests.py
