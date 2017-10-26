@@ -107,6 +107,8 @@ class RequestAPI:
         runtime = None
         premiered = None
         website = None
+        schedule_days = None
+        schedule_time = None
         try:
             image = response['image']['medium']  # we chose medium so that all images have the same size
             summary = response['summary']  # Watch out! there are some tags!
@@ -116,9 +118,23 @@ class RequestAPI:
             runtime = response['runtime']
             premiered = response['premiered'][:4]  # only the year
             website = response['officialSite']
+            if status == "Running":
+                schedule_days = response['schedule']['days'] #  it's a list
+                schedule_time = response['schedule']['time']
+
         except Exception:
             print('some missing information')
-        attributes = [name, image, summary, rating, genres, status, runtime, premiered, website]
+        attributes = [name,
+                      image,
+                      summary,
+                      rating,
+                      genres,
+                      status,
+                      runtime,
+                      premiered,
+                      website,
+                      schedule_days,
+                      schedule_time]
         return attributes
 
     @staticmethod
@@ -237,6 +253,7 @@ class RequestAPI:
             s = [number_season, number_episode, name, summary, airdate, runtime, image]
             list_episodes.append(s)
         return list_episodes
+
 
 
 
