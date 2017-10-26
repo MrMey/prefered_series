@@ -4,18 +4,19 @@
 # -*- coding: utf-8 -*-
 
 
-from flask import Flask,request,render_template
+from flask import Flask,request,render_template,session
 import request_database
 import request_api
 import user
 import series
-import exceptions as e
 
 class WebSite(Flask):
     def __init__(self):
         Flask.__init__(self,__name__)
+        self.secret_key = 'super secret key'
         self.add_url_rule(rule = '/main',endpoint = 'main',view_func = self.main)
-        self.add_url_rule(rule = '/login',endpoint = 'login',view_func = self.login, methods=['POST'])
+        self.add_url_rule(rule = '/login',endpoint = 'login',view_func = self.login, methods=['GET','POST'])
+        self.add_url_rule(rule = '/signup',endpoint = 'signup',view_func = self.signup, methods=['GET','POST'])
         self.add_url_rule(rule = '/details/<serie>',endpoint = 'details',view_func = self.details, methods=['GET','POST'])
         self.add_url_rule(rule = '/search_serie',endpoint = 'search_serie',view_func = self.search_serie, methods=['POST'])
 
@@ -51,7 +52,7 @@ class WebSite(Flask):
 
 class Controler():
     def __init__(self):
-        self.req_database = request_database.DataBase()
+        self.req_database = request_database.RequestDB()
         self.series = series.Series()
         self.user = user.User()
         
@@ -59,20 +60,20 @@ class Controler():
         self.user.series = self.req_database.select_series_from_user(self.user.id)
     
     def add_series(self):
+        [name,image,id] = self.series.get_basics()
         try:
-            [name,image,id] = self.series.get_basics()
             serie_id = self.req_database.add_series(name,image,id)
         except:
-            True
+            serie_id = self.req_database.get_series_id_by_name(name)
         try:
             self.req_database.add_series_to_user(self.user.id,serie_id)
         except:
             True
     
-    def remove_series(self,series_name,user_id):
+    def remove_series(self):
         try:
-            serie_id = self.req_database.get_series_id_by_name(series_name)
-            self.req_database.delete_users_series(user_id,serie_id)
+            serie_id = self.req_database.get_series_id_by_name(self.series.name)
+            self.req_database.delete_users_series(self.user.id,serie_id)
         except:
             return(False)
 
@@ -80,19 +81,21 @@ class FullControler(WebSite,Controler):
     def __init__(self):
         Controler.__init__(self)
         WebSite.__init__(self)
-        
+
     def main(self):
         """ **routes**
             '/main'
-        """ 
-        self.act_series()
-        return(render_template('main.html',**{"series_list":self.user.series}))
-
+        """
+        if 'login' not in session:
+            return(render_template('login.html'))
+        else:
+            return(render_template('main.html',**{"series_list":
+                self.req_database.select_series_from_user(session['user_id'])}))
+    
     def search_serie(self):
         """ **routes**
             '/search_serie'
         """
-        
         if request.method == 'POST':
             series_list = series.Series.missing_basic(request_api.RequestAPI.research(request.form['serie']))
             return(render_template('search.html',series_list = series_list))
@@ -134,26 +137,16 @@ class FullControler(WebSite,Controler):
         """ **routes**
             '/details/<serie>'
         """
-
         try:
             serie = int(serie)
         except:
             raise(TypeError("serie id must be an int"))
 
-            
         if request.method == "POST":
             if(request.form['submit'] == "Add to favorites"):
-                try:
-                    assert('login' in session)
-                    self.add_series()
-                except AssertionError:
-                    return(render_template('login.html'))
+                self.add_series()
             if(request.form['submit'] == "Remove from favorites"):
-                try:
-                    assert('login' in session)
-                     self.remove_series(self.series.name,session['user_id'])
-                except AssertionError:
-                    return(render_template('login.html'))
+                self.remove_series()
         else:
             self.series.id = serie
             self.series.initiate_from_details(request_api.RequestAPI.get_details(serie))
