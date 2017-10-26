@@ -36,10 +36,6 @@ class RequestAPI:
             - the official website
 
     """
-
-    def __init__(self):
-        print('initiating RequestAPI')
-
     @staticmethod
     def research(series):
         """
@@ -62,7 +58,7 @@ class RequestAPI:
             for tvshow in id:
                 try:
                     name = tvshow['show']['name']
-                    id_api = tvshow['show']['id']
+                    id_api = int(tvshow['show']['id'])
                 except:
                     raise e.APIError("all series must have a name and an id in the API database")
                 try:
@@ -128,6 +124,8 @@ class RequestAPI:
     @staticmethod
     def get_cast(id_series):
         """ Gets the cast for the series"""
+        if not isinstance(id_series, int):
+            raise e.APIError("series' ids must be integers")
         response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/cast')
         assert response.status_code == 200
         response = response.json()
@@ -146,11 +144,108 @@ class RequestAPI:
             list_characters.append(character_tuple)
         return list_characters
 
+    @staticmethod
+    def get_crew(id_series):
+        """ Gets the crew for the series"""
+        if not isinstance(id_series, int):
+            raise e.APIError("series' ids must be integers")
+        response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/crew')
+        assert response.status_code == 200
+        response = response.json()
+        list_crew = []
+        for person in response:
+            try:
+                a = person['person']['name']
+                b = person['type']
+            except Exception:
+                raise e.APIError("crew members have a name and a job")
+            try:
+                c = person['person']['image']['medium']
+            except Exception:
+                c = None
+            crew_tuple = (a, b, c)
+            list_crew.append(crew_tuple)
+        return list_crew
+
+    @staticmethod
+    def get_seasons(id_series):
+        """ Gets the seasons list for the series, with the number, the name, the summary and the dates"""
+        if not isinstance(id_series, int):
+            raise e.APIError("series' ids must be integers")
+        response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/seasons')
+        assert response.status_code == 200
+        response = response.json()
+        list_seasons = []
+        for season in response:
+            number = None
+            name = None
+            summary = None
+            beginning = None
+            end = None
+            try:
+                number = season['number']
+                name = season['name']
+                if name == '':
+                    name = None
+                summary = season['summary']
+                if summary == '':
+                    summary = None
+                beginning = season['premiereDate']
+                end = season['endDate']
+            except Exception:
+                print('missing information')
+            s = [number, name, summary, beginning, end]
+            list_seasons.append(s)
+        return list_seasons
+
+    @staticmethod
+    def get_episodes(id_series):
+        """ Gets the episodes list for the series, with the number of the season, the number of the episode, the name,
+        the summary, an image, the air date and the runtime"""
+        if not isinstance(id_series, int):
+            raise e.APIError("series' ids must be integers")
+        response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/episodes')
+        assert response.status_code == 200
+        response = response.json()
+        list_episodes = []
+        for episode in response:
+            number_season = None
+            number_episode = None
+            name = None
+            summary = None
+            airdate = None
+            runtime = None
+            image = None
+            try:
+                number_season = episode['season']
+                number_episode = episode['number']
+                # Watch out! Sometimes the episode's number includes the season's number : episode 101 = first episode
+            except Exception:
+                raise e.APIError("all episodes have a number and belong to a season")
+            try:
+                name = episode['name']
+                if name == '':
+                    name = None
+                summary = episode['summary']
+                if summary == '':
+                    summary = None
+                airdate = episode['airdate']
+                runtime = episode['runtime']
+                image = episode['image']['medium']
+            except Exception:
+                print('missing information')
+            s = [number_season, number_episode, name, summary, airdate, runtime, image]
+            list_episodes.append(s)
+        return list_episodes
+
+
 
 
 if __name__ == '__main__':
-    r = RequestAPI()
-    r.research('game')
-    r.get_details('88')
-    r.get_cast('120')
+    # RequestAPI.research('game')
+    # RequestAPI.get_details(88)
+    # RequestAPI.get_cast(120)
+    # RequestAPI.get_crew(120)
+    # RequestAPI.get_seasons(568)
+    RequestAPI.get_episodes(261)
 

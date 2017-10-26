@@ -4,7 +4,7 @@
 # -*- coding: utf-8 -*-
 
 
-from flask import Flask,request,render_template,session
+from flask import Flask,request,render_template
 import request_database
 import request_api
 import user
@@ -14,10 +14,8 @@ import exceptions as e
 class WebSite(Flask):
     def __init__(self):
         Flask.__init__(self,__name__)
-        self.secret_key = 'super secret key'
         self.add_url_rule(rule = '/main',endpoint = 'main',view_func = self.main)
-        self.add_url_rule(rule = '/login',endpoint = 'login',view_func = self.login, methods=['GET','POST'])
-        self.add_url_rule(rule = '/signup',endpoint = 'signup',view_func = self.signup, methods=['GET','POST'])
+        self.add_url_rule(rule = '/login',endpoint = 'login',view_func = self.login, methods=['POST'])
         self.add_url_rule(rule = '/details/<serie>',endpoint = 'details',view_func = self.details, methods=['GET','POST'])
         self.add_url_rule(rule = '/search_serie',endpoint = 'search_serie',view_func = self.search_serie, methods=['POST'])
 
@@ -53,7 +51,7 @@ class WebSite(Flask):
 
 class Controler():
     def __init__(self):
-        self.req_database = request_database.RequestDB()
+        self.req_database = request_database.DataBase()
         self.series = series.Series()
         self.user = user.User()
         
@@ -61,11 +59,11 @@ class Controler():
         self.user.series = self.req_database.select_series_from_user(self.user.id)
     
     def add_series(self):
-        [name,image,id] = self.series.get_basics()
         try:
+            [name,image,id] = self.series.get_basics()
             serie_id = self.req_database.add_series(name,image,id)
         except:
-            serie_id = self.req_database.get_series_id_by_name(name)
+            True
         try:
             self.req_database.add_series_to_user(self.user.id,serie_id)
         except:
@@ -82,17 +80,14 @@ class FullControler(WebSite,Controler):
     def __init__(self):
         Controler.__init__(self)
         WebSite.__init__(self)
-
+        
     def main(self):
         """ **routes**
             '/main'
-        """
-        if 'login' not in session:
-            return(render_template('login.html'))
-        else:
-            return(render_template('main.html',**{"series_list":
-                self.req_database.select_series_from_user(session['user_id'])}))
-    
+        """ 
+        self.act_series()
+        return(render_template('main.html',**{"series_list":self.user.series}))
+
     def search_serie(self):
         """ **routes**
             '/search_serie'
@@ -145,6 +140,7 @@ class FullControler(WebSite,Controler):
         except:
             raise(TypeError("serie id must be an int"))
 
+            
         if request.method == "POST":
             if(request.form['submit'] == "Add to favorites"):
                 try:
