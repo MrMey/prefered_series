@@ -7,4 +7,5 @@ install:
   - pip install requests
 script:
   - python code/test_request_api.py
-  - python test_request_database.py
+  - cd ~/
+  - python code/test_request_database.py
