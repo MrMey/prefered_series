@@ -36,10 +36,6 @@ class RequestAPI:
             - the official website
 
     """
-
-    def __init__(self):
-        print('initiating RequestAPI')
-
     @staticmethod
     def research(series):
         """
@@ -62,7 +58,7 @@ class RequestAPI:
             for tvshow in id:
                 try:
                     name = tvshow['show']['name']
-                    id_api = tvshow['show']['id']
+                    id_api = int(tvshow['show']['id'])
                 except:
                     raise e.APIError("all series must have a name and an id in the API database")
                 try:
@@ -235,7 +231,7 @@ class RequestAPI:
                     summary = None
                 airdate = episode['airdate']
                 runtime = episode['runtime']
-                image = episode['image']
+                image = episode['image']['medium']
             except Exception:
                 print('missing information')
             s = [number_season, number_episode, name, summary, airdate, runtime, image]
@@ -244,12 +240,12 @@ class RequestAPI:
 
 
 
+
 if __name__ == '__main__':
-    r = RequestAPI()
-    # r.research('game')
-    # r.get_details(88)
-    # r.get_cast(120)
-    # r.get_crew(120)
-    # r.get_seasons(568)
-    r.get_episodes(261)
+    # RequestAPI.research('game')
+    # RequestAPI.get_details(88)
+    # RequestAPI.get_cast(120)
+    # RequestAPI.get_crew(120)
+    # RequestAPI.get_seasons(568)
+    RequestAPI.get_episodes(261)
 

@@ -8,12 +8,13 @@ class MyTestCase(unittest.TestCase):
     """Using Travis CI to run the tests automatically"""
     def test_request_api(self):
         print("Tests for the class RequestAPI: \n")
-        r = r_api.RequestAPI()
 
         print("Test 1: method research")
-        self.assertRaises(exceptions.APIError, r.research, "miyflioubiugytfdrxdyvhxlizhab")
-        self.assertTrue(isinstance(r.research("game"), list))
-        test_series = [r.research("game"), r.research("game of thrones"), r.research("breaking bad")]
+        self.assertRaises(exceptions.APIError, r_api.RequestAPI.research, "miyflioubiugytfdrxdyvhxlizhab")
+        self.assertTrue(isinstance(r_api.RequestAPI.research("game"), list))
+        test_series = [r_api.RequestAPI.research("game"),
+                       r_api.RequestAPI.research("game of thrones"),
+                       r_api.RequestAPI.research("breaking bad")]
         for list_series in test_series:
             for series in list_series:
                 self.assertTrue(isinstance(series, list))
@@ -23,9 +24,9 @@ class MyTestCase(unittest.TestCase):
                 self.assertTrue((isinstance(series[2], int)))  # the id is always given
 
         print("Test 2: method get_details")
-        self.assertRaises(exceptions.APIError, r.get_details, "12")
-        self.assertTrue(isinstance(r.get_details(12), list))
-        test_series = [r.get_details(27845), r.get_details(120)]
+        self.assertRaises(exceptions.APIError, r_api.RequestAPI.get_details, "12")
+        self.assertTrue(isinstance(r_api.RequestAPI.get_details(12), list))
+        test_series = [r_api.RequestAPI.get_details(27845), r_api.RequestAPI.get_details(120)]
         for series in test_series:
             self.assertEquals(len(series), 9)
             self.assertTrue(isinstance(series[0], str))
@@ -39,8 +40,8 @@ class MyTestCase(unittest.TestCase):
             self.assertTrue((isinstance(series[8], str)) or (series[8] is None))
 
         print("Test 3: method get_cast")
-        self.assertTrue(isinstance(r.get_cast(120), list))
-        test_series = [r.get_cast(27845), r.get_cast(120)]
+        self.assertTrue(isinstance(r_api.RequestAPI.get_cast(120), list))
+        test_series = [r_api.RequestAPI.get_cast(27845), r_api.RequestAPI.get_cast(120)]
         for series in test_series:
             for person in series:
                 self.assertTrue((isinstance(person, tuple)))
@@ -50,8 +51,8 @@ class MyTestCase(unittest.TestCase):
                 self.assertTrue((isinstance(person[2], str)) or (person[2] is None))
 
         print("Test 4: method get_crew")
-        self.assertTrue(isinstance(r.get_crew(120), list))
-        test_series = [r.get_crew(27845), r.get_crew(120)]
+        self.assertTrue(isinstance(r_api.RequestAPI.get_crew(120), list))
+        test_series = [r_api.RequestAPI.get_crew(27845), r_api.RequestAPI.get_crew(120)]
         for series in test_series:
             for person in series:
                 self.assertTrue((isinstance(person, tuple)))
@@ -61,8 +62,8 @@ class MyTestCase(unittest.TestCase):
                 self.assertTrue((isinstance(person[2], str)) or (person[2] is None))
 
         print("Test 5: method get_seasons")
-        self.assertTrue(isinstance(r.get_seasons(597), list))
-        test_series = [r.get_seasons(27845), r.get_seasons(120)]
+        self.assertTrue(isinstance(r_api.RequestAPI.get_seasons(597), list))
+        test_series = [r_api.RequestAPI.get_seasons(27845), r_api.RequestAPI.get_seasons(120)]
         for series in test_series:
             for season in series:
                 self.assertTrue((isinstance(season, list)))
@@ -73,7 +74,21 @@ class MyTestCase(unittest.TestCase):
                 self.assertTrue((isinstance(season[3], str)) or (season[3] is None))
                 self.assertTrue((isinstance(season[4], str)) or (season[4] is None))
 
+        print("Test 6: method get_episodes")
+        self.assertTrue(isinstance(r_api.RequestAPI.get_episodes(12), list))
+        test_series = [r_api.RequestAPI.get_episodes(27845), r_api.RequestAPI.get_episodes(120)]
+        for series in test_series:
+            for episode in series:
+                self.assertEquals(len(episode), 7)
+                self.assertTrue(isinstance(episode[0], int))
+                self.assertTrue(isinstance(episode[1], int))
+                self.assertTrue((isinstance(episode[2], str)) or (episode[2] is None))
+                self.assertTrue((isinstance(episode[3], str)) or (episode[3] is None))
+                self.assertTrue((isinstance(episode[4], str)) or (episode[4] is None))
+                self.assertTrue((isinstance(episode[5], int)) or (episode[5] is None))
+                self.assertTrue((isinstance(episode[6], str)) or (episode[6] is None))
+
+
 
 test = MyTestCase()
-# r_api.RequestAPI.get_seasons(120)
 test.test_request_api()
