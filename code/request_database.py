@@ -151,7 +151,7 @@ class RequestDB:
             raise (e.DataBaseError("wrong columns for the table {}".format(table)))
         keys = self.tables[table].comma_columns
         self.execute("INSERT INTO " + table + " (" + keys + ") VALUES(" +
-                     ",".join(map(str, ["'" + str(x) + "'" for x in insert_dict.values()])) +
+                     ",".join(map(str,["'" + str(x) + "'" for x in insert_dict.values()])) +
                      ")")
 
     def select(self, sql):
@@ -313,7 +313,8 @@ class RequestDB:
                              """.format(user_id,series_id))):
             raise(e.DataBaseError('instance already in user_series table'))
         else:
-            self.insert("users_series", {"user_id": user_id, "series_id": series_id})
+            self.insert("users_series",
+                        {"user_id": user_id, "series_id": series_id})
         return (self.__cursor.lastrowid)
 
     def select_series_from_user(self, user_id):
