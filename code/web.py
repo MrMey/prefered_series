@@ -17,6 +17,8 @@ class WebSite(Flask):
         self.add_url_rule(rule = '/login',endpoint = 'login',view_func = self.login, methods=['POST'])
         self.add_url_rule(rule = '/details/<serie>',endpoint = 'details',view_func = self.details, methods=['GET','POST'])
         self.add_url_rule(rule = '/search_serie',endpoint = 'search_serie',view_func = self.search_serie, methods=['POST'])
+        self.add_url_rule(rule = '/browse',endpoint = 'browse',view_func = self.browse)
+        self.add_url_rule(rule = '/signup',endpoint = 'signup',view_func = self.signup)
 
     def main(self):
         """ **routes**
@@ -24,13 +26,13 @@ class WebSite(Flask):
         """
         test = {"series_list":[[1,"breaking bad"],[2,"howimetyourmother"]]}
         return(render_template('main.html',**test))
-    
+
     def login(self):
         """ **routes**
             '/login'
         """
         return(render_template('login.html'))
-    
+
     def details(self, serie = ""):
         """ **routes**
             '/details'
@@ -39,7 +41,7 @@ class WebSite(Flask):
         if serie == "":
             serie = "Veuillez choisir une serie"
         return(render_template('details.html',serie_name = serie))
-    
+
     def search_serie(self):
         """ **routes**
             '/search_serie'
@@ -48,6 +50,18 @@ class WebSite(Flask):
             return(render_template('search.html',serie = request.form['serie'],series_id =str(1)))
         return(0)
 
+    def browse(self):
+        """ **routes**
+            '/browse'
+        """
+        return(render_template('browse.html'))
+
+    def signup(self):
+        """ **routes**
+            '/signup'
+        """
+        return(render_template('signup.html'))
+
 class Controler():
     def __init__(self):
         self.req_database = request_database.DataBase()
@@ -55,13 +69,13 @@ class Controler():
         self.add_user()
         self.act_series()
         self.series = series.Series()
-        
+
     def add_user(self):
         self.user = user.User("paul",1)
-    
+
     def act_series(self):
         self.user.series = self.req_database.select_series_from_user(self.user.id)
-    
+
     def add_series(self):
         try:
             [name,image,id] = self.series.get_basics()
@@ -72,7 +86,7 @@ class Controler():
             self.req_database.add_series_to_user(self.user.id,serie_id)
         except:
             True
-    
+
     def remove_series(self):
         try:
             serie_id = self.req_database.get_series_id_by_name(self.series.name)[0][0]
@@ -84,11 +98,11 @@ class FullControler(WebSite,Controler):
     def __init__(self):
         Controler.__init__(self)
         WebSite.__init__(self)
-        
+
     def main(self):
         """ **routes**
             '/main'
-        """ 
+        """
         self.act_series()
         return(render_template('main.html',**{"series_list":self.user.series}))
 
@@ -110,7 +124,7 @@ class FullControler(WebSite,Controler):
         except:
             raise(TypeError("serie id must be an int"))
 
-            
+
         if request.method == "POST":
             if(request.form['submit'] == "Add to favorites"):
                 self.add_series()
@@ -120,7 +134,7 @@ class FullControler(WebSite,Controler):
             self.series.id = serie
             self.series.initiate_from_details(request_api.RequestAPI.get_details(serie))
         return(render_template('details.html',series = self.series))
-    
+
 if __name__ == '__main__':
     app = FullControler()
     app.run(debug=True)
