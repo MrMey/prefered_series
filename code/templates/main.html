@@ -84,24 +84,15 @@
   		<p class="lead">Gather your favorite TV shows and make sure to never miss an episode again.</p>
   		<p class="lead">
     		  <a class="btn btn-primary btn-lg" role="button" href="{{ url_for('signup')}}">Join Track.Series</a>
-      </p>
-
+  		</p>
   {% endblock %}
 
 	{% block login %}
-
-		<form action="{{ url_for('login') }}" method = "Post">
-		  <label>Already a member ? Sign in now :</p><input type="password" name ="login"><br>
-		  <input type="submit" value="Login">
-		</form>
-
 	{% endblock %}
 
 		</blockquote>
 
 	{% block series %}
-
-<p>Our members are looking at...</p>
 
 		<!-- bloc de series -->
 		{% for series in series_list %}

@@ -6,6 +6,4 @@ install:
   - pip install flask
   - pip install requests
 script:
-  - python code/test_request_api.py
-  - cd ~/
-  - python code/test_request_database.py
+  - python code/tests.py

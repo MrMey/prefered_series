@@ -5,9 +5,9 @@
 
 import sqlite3
 import exceptions as e
+import re
 
-
-class DataBase:
+class RequestDB:
     """ Manages requests (read and write) to the sqlite database
 
     **Parameters**
@@ -96,8 +96,8 @@ class DataBase:
     """
 
     def __init__(self):
-        self.connector = sqlite3.connect('../storage/series.db', check_same_thread=False)
-        self.cursor = self.connector.cursor()
+        self.__connector = sqlite3.connect('../storage/series.db', check_same_thread=False)
+        self.__cursor = self.__connector.cursor()
         self.tables = {}
 
         self.tables["series"] = Table(["name", "image", "id_api"])
@@ -107,53 +107,89 @@ class DataBase:
     def __del__(self):
         """ when you del the table, makes sure the connection is closed, at
         the end of the db call you should delete the database"""
-        self.connector.close()
+        self.__connector.close()
         del (self)
 
     # General methods
 
-    def commit(self):
-        self.connector.commit()
+    def __commit(self):
+        """ apply on the database the instruction that was send to the cursor
+        """
+        self.__connector.commit()
 
     def execute(self, instruction):
         """
         sends an SQL request to the connector
-        Warning any sql is accepted for now
+        Warning any sql is accepted for now (DROP...)
+        
+        Parameters:
+            instruction : sql request
         """
         if(not isinstance(instruction,str)):
             raise(e.DataBaseError("instruction must be a sql string in execute"))
         print(instruction)
-        self.cursor.execute(instruction)
-        self.commit()
+        self.__cursor.execute(instruction)
+        self.__commit()
 
     def insert(self, table, insert_dict):
+        """ insert a row in the chosen table with the values from insert_dict
+        
+        Parameters:
+            table(string):
+                table from the database
+            insert_dict (dict):
+                dictionary where the keys are the columns of the database and
+                the values are the values you want to insert
+        """
+        if not isinstance(insert_dict,dict):
+            raise(TypeError("insert_dict must be a dict"))
+        if not table in self.tables:
+            raise(e.DataBaseError("table is not set in DataBase.tables"))
+        if not table in self.get_tables_name():
+            raise(e.DataBaseError("table does not exist"))
         if not self.tables[table].is_same_columns(list(insert_dict.keys())):
-            raise (ValueError("wrong columns for the table {}".format(table)))
+            raise (e.DataBaseError("wrong columns for the table {}".format(table)))
         keys = self.tables[table].comma_columns
         self.execute("INSERT INTO " + table + " (" + keys + ") VALUES(" +
                      ",".join(map(str, ["'" + str(x) + "'" for x in insert_dict.values()])) +
                      ")")
 
     def select(self, sql):
+        """ execute a SELECT sql query
+        """
+        if re.match("^[Ss][Ee][Ll][Ee][Cc][Tt]",sql) == None:
+            raise(e.DataBaseError("invalid SELECT request"))
         self.execute(sql)
 
     def fetchall(self):
-        return (self.cursor.fetchall())
+        """ returns all the result rows from the last execute command
+        """
+        return (self.__cursor.fetchall())
 
     def fetchone(self):
-        return (self.cursor.fetchone())
+        """ returns the first result rows from the last execute command
+        """
+        return (self.__cursor.fetchone())
 
-    def drop(self, table):
-        """drop one table - DO NOT EXECUTE THIS WITHOUT BEING SURE"""
+    def __drop(self, table):
+        """drop table - DO NOT EXECUTE THIS WITHOUT BEING SURE"""
+        if not isinstance(table,str):
+            raise(TypeError('table must be a string'))
         self.execute("""DROP TABLE """ + table)
 
     def get_tables_name(self):
+        """ returns the name of the existing tables in the .db file
+        """
+        
         self.execute("""SELECT name FROM sqlite_master WHERE type='table'""")
         tables_name = self.fetchall()
         return ([x[0] for x in tables_name[1:]])
 
     def is_in_table(self, table, attr, value):
-        self.execute("""SELECT * FROM {0} WHERE {1} = '{2}'""".format(table, attr, value))
+        self.execute("""
+                     SELECT * FROM {0} 
+                     WHERE {1} = '{2}'
+                     """.format(table, attr, value))
         return (len(self.fetchall()) != 0)
     
     def is_not_empty(self,sql):
@@ -161,7 +197,7 @@ class DataBase:
         return (len(self.fetchall()) != 0)
 
     def get_last_insert_id(self):
-        return (self.cursor.lastrowid)
+        return (self.__cursor.lastrowid)
 
     def count_rows(self, table, attr):
         self.execute("""SELECT COUNT({0}) FROM {1}""".format(attr, table))
@@ -170,7 +206,8 @@ class DataBase:
     # table Specific methods
     def create_series_table(self):
         """create a series table which contains all details about series"""
-
+        if "series" in self.get_tables_name():
+            raise(e.DataBaseError("series table already exists"))
         self.execute("""
                      CREATE TABLE IF NOT EXISTS series(
                              id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
@@ -181,14 +218,15 @@ class DataBase:
                      """)
 
     def drop_series(self):
-        self.drop("series")
+        self.__drop("series")
 
     def create_users_table(self):
         """create a users table which contains all details about users and 
         link to the series they watch
         primary key : login
         """
-
+        if "users" in self.get_tables_name():
+            raise(e.DataBaseError("users table already exists"))
         self.execute("""
                      CREATE TABLE IF NOT EXISTS users(
                              id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
@@ -198,10 +236,12 @@ class DataBase:
                      """)
 
     def drop_users(self):
-        self.drop("users")
+        self.__drop("users")
 
     def create_users_series_table(self):
         """create a users-series relation table"""
+        if "users_series" in self.get_tables_name():
+            raise(e.DataBaseError("users_series table already exists"))
         self.execute("""
                      CREATE TABLE IF NOT EXISTS users_series(
                              id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
@@ -211,27 +251,60 @@ class DataBase:
                      """)
 
     def drop_users_series(self):
-        self.drop("users_series")
+        self.__drop("users_series")
 
     def delete_users_series(self, user_id, series_id):
+        try:
+            user_id = int(user_id)
+        except:
+            raise(ValueError("user_id must be an int or a string that could be\
+                             cast into an int"))
+        try:
+            series_id = int(series_id)
+        except:
+            raise(ValueError("series_id must be an int or a string that could be\
+                             cast into an int"))
         self.execute("""DELETE FROM users_series 
                      WHERE user_id = {} 
                      AND series_id = {}
                      """.format(user_id,series_id))
 
     def add_user(self, login, name):
-        if (self.is_in_table("users", "login", login)):
+        if not isinstance(login,str):
+            raise(TypeError('login must be a string'))
+        if not isinstance(name, str):
+            raise(TypeError('name must be a string'))
+        if self.is_in_table("users", "login", login):
             raise (e.DataBaseError("instance already in user table"))
         else:
             self.insert("users", {"login": login, "name": name})
-        return (self.cursor.lastrowid)
+        return (self.__cursor.lastrowid)
+    
+    def delete_users(self, login):
+        if not isinstance(login,str):
+            raise(TypeError('login must be a string'))
+        if not self.is_in_table("users", "login", login):
+            raise (e.DataBaseError("this user does not exist in the table"))
+
+        self.execute("""DELETE FROM users 
+                     WHERE login = '{}'
+                     """.format(login))
 
     def add_series(self, name, image, id_api):
+        if not isinstance(name,str):
+            raise(TypeError('name must be a string'))
+        if not isinstance(image, str):
+            raise(TypeError('image must be a string'))
+        try:
+            id_api = int(id_api)
+        except:
+            raise(ValueError("id_api must be an int or a string that could be\
+                             cast into an int"))
         if (self.is_in_table("series", "name", name)):
             raise (e.DataBaseError("instance already in series table"))
         else:
             self.insert("series", {"name": name, "image": image, "id_api": id_api})
-        return (self.cursor.lastrowid)
+        return (self.__cursor.lastrowid)
 
     def add_series_to_user(self, user_id, series_id):
         if(self.is_not_empty("""SELECT * FROM users_series 
@@ -241,7 +314,7 @@ class DataBase:
             raise(e.DataBaseError('instance already in user_series table'))
         else:
             self.insert("users_series", {"user_id": user_id, "series_id": series_id})
-        return (self.cursor.lastrowid)
+        return (self.__cursor.lastrowid)
 
     def select_series_from_user(self, user_id):
         self.execute("""SELECT S.id_api,S.name,S.image FROM 
@@ -259,7 +332,18 @@ class DataBase:
         result = self.fetchall()
         if(len(result) > 1):
             raise(e.DataBaseError('Multiple series with the same name'))
-        return(result)
+        if(len(result) < 1):
+            raise(e.DataBaseError('No instance with this name'))
+        return(result[0][0])
+    
+    def get_users_by_login(self,attr,login):
+        self.execute("""SELECT {} from users 
+                     WHERE login = '{}'
+                     """.format(attr,login))
+        result = self.fetchall()
+        if(len(result) > 1):
+            raise(e.DataBaseError('Multiple series with the same name'))
+        return(result[0][0])
     
     def tuple_to_list(self,list_tuples):
         return([[x[y] for y in range(len(x))] for x in list_tuples])
@@ -302,7 +386,7 @@ class Table:
     def is_same_columns(self, columns):
         if(not(isinstance(columns,list))):
             raise(e.DataBaseError("columns must be a list in is_same_columns parameters"))
-        return (columns == self._columns)
+        return (sorted(columns) == sorted(self._columns))
 
 if __name__ == '__main__':
-    a = DataBase()
+    a = RequestDB()
