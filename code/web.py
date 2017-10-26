@@ -74,21 +74,21 @@ class Controler():
     def act_series(self):
         self.user.series = self.req_database.select_series_from_user(self.user.id)
 
-    def add_series(self):
+    def add_series(self,user_id):
         [name,image,id] = self.series.get_basics()
         try:
             serie_id = self.req_database.add_series(name,image,id)
         except:
             serie_id = self.req_database.get_series_id_by_name(name)
         try:
-            self.req_database.add_series_to_user(self.user.id,serie_id)
+            self.req_database.add_series_to_user(user_id,serie_id)
         except:
             True
 
-    def remove_series(self):
+    def remove_series(self,user_id):
         try:
             serie_id = self.req_database.get_series_id_by_name(self.series.name)
-            self.req_database.delete_users_series(self.user.id,serie_id)
+            self.req_database.delete_users_series(user_id,serie_id)
         except:
             return(False)
 
@@ -159,13 +159,19 @@ class FullControler(WebSite,Controler):
             serie = int(serie)
         except:
             raise(TypeError("serie id must be an int"))
+        
+        # add/remove from favorites buttons
         if request.method == "POST":
+            if('login' not in session):
+                return(render_template('login.html'))
             if(request.form['submit'] == "Add to favorites"):
-                self.add_series()
+                self.add_series(session['user_id'])
             if(request.form['submit'] == "Remove from favorites"):
-                self.remove_series()
+                self.remove_series(session['user_id'])
         else:
+            # set the current serie_id in the series class
             self.series.id = serie
+            # set the rest of the attributes
             self.series.initiate_from_details(request_api.RequestAPI.get_details(serie))
         return(render_template('details.html',series = self.series))
 
