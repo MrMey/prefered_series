@@ -1,4 +1,4 @@
-import exceptions
+import exceptions as e
 
 class User:
     """Stores the info about the users of the website
@@ -10,10 +10,13 @@ class User:
          series is a list of 3-element lists containing id, name and image
      tables
      """
-     
 
-    def __init__(self, login, id):
-
+    def __init__(self):
+        self._login = None
+        self._id = None
+        self._series = []
+    
+    def initiate(self,login,id):
         if not isinstance(login, str):
             print ("Error : Login must be a string")
         if login == "":
@@ -27,10 +30,14 @@ class User:
         self._series = []
 
     def _get_id(self):
+        if self._id == None:
+            raise(e.UndefinedUserError('missing id'))
         return(self._id)
     id = property(_get_id)
 
     def _get_login(self):
+        if self._login == None:
+            raise(e.UndefinedUserError('missing login'))
         return(self._login)
     login = property(_get_login)
     

@@ -3,18 +3,7 @@
 # version 1.0
 # -*- coding: utf-8 -*-
 
-
-class DataBaseError(Exception):
-    """ manages the database errors
-
-    **Parameters**
-     error message
-
-     ** Attributes**
-     message
-
-     **Methods**
-    """
+class Error(Exception):
     def __init__(self, message):
         """We simply store the error message"""
         self.message = message
@@ -22,24 +11,21 @@ class DataBaseError(Exception):
     def __str__(self):
         """Sends the error message"""
         return self.message
+    
+class DataBaseError(Error):
+    """ manages the database errors
+    """
+    pass
 
-
-class APIError(Exception):
+class APIError(Error):
     """ manages the errors linked to API requests
-
-        **Parameters**
-         error message
-
-         ** Attributes**
-         message
-
-         **Methods**
         """
+    pass
 
-    def __init__(self, message):
-        """We simply store the error message"""
-        self.message = message
+class UserError(Error):
+    """ manages the errors linked to API requests
+    """
+    pass
 
-    def __str__(self):
-        """Sends the error message"""
-        return self.message
+class UndefinedUserError(UserError):
+    pass
