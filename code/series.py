@@ -90,6 +90,14 @@ class Series:
             self._website = "missing website"
         else:
             self._website = params[8]
+        if(params[9] == None):
+            self._website = "missing scheduled_days"
+        else:
+            self._website = params[9]
+        if(params[10] == None):
+            self._website = "missing scheduled_hours"
+        else:
+            self._website = params[10]
     
     def get_basics(self):
         return([self._name,self._image,self._id])
