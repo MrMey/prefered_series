@@ -7,3 +7,4 @@ install:
   - pip install requests
 script:
   - python code/test_request_api.py
+  - python code/test_request_database.py
