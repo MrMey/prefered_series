@@ -9,6 +9,7 @@ import request_database
 import request_api
 import user
 import series
+import exceptions as e
 
 class WebSite(Flask):
     def __init__(self):
@@ -54,7 +55,8 @@ class Controler():
     def __init__(self):
         self.req_database = request_database.RequestDB()
         self.series = series.Series()
-    
+        self.user = user.User()
+        
     def act_series(self):
         self.user.series = self.req_database.select_series_from_user(self.user.id)
     
@@ -69,10 +71,10 @@ class Controler():
         except:
             True
     
-    def remove_series(self):
+    def remove_series(self,series_name,user_id):
         try:
-            serie_id = self.req_database.get_series_id_by_name(self.series.name)
-            self.req_database.delete_users_series(self.user.id,serie_id)
+            serie_id = self.req_database.get_series_id_by_name(series_name)
+            self.req_database.delete_users_series(user_id,serie_id)
         except:
             return(False)
 
@@ -95,6 +97,7 @@ class FullControler(WebSite,Controler):
         """ **routes**
             '/search_serie'
         """
+        
         if request.method == 'POST':
             series_list = series.Series.missing_basic(request_api.RequestAPI.research(request.form['serie']))
             return(render_template('search.html',series_list = series_list))
@@ -108,7 +111,7 @@ class FullControler(WebSite,Controler):
             if self.req_database.is_in_table("users","login",request.form["login"]):
                 session['login'] = request.form["login"]
                 session['user_id'] = self.req_database.get_users_by_login('id',session['login'])
-                self.user =user.User(session['login'],session['user_id'])
+                self.user.initiate(session['login'],session['user_id'])
                 return(render_template('main.html'))
             else:
                 return(render_template('login.html', message = "invalid login"))
@@ -127,7 +130,7 @@ class FullControler(WebSite,Controler):
             self.req_database.add_user(request.form['login'],request.form['last_name'])
             session['login'] = request.form["login"]
             session['user_id'] = self.req_database.get_users_by_login('id',session['login'])
-            self.user =user.User(session['login'],session['user_id'])
+            self.user.initiate(session['login'],session['user_id'])
             return(render_template('main.html'))
                 
         return(render_template('signup.html'))
@@ -136,6 +139,7 @@ class FullControler(WebSite,Controler):
         """ **routes**
             '/details/<serie>'
         """
+
         try:
             serie = int(serie)
         except:
@@ -143,9 +147,17 @@ class FullControler(WebSite,Controler):
 
         if request.method == "POST":
             if(request.form['submit'] == "Add to favorites"):
-                self.add_series()
+                try:
+                    assert('login' in session)
+                    self.add_series()
+                except AssertionError:
+                    return(render_template('login.html'))
             if(request.form['submit'] == "Remove from favorites"):
-                self.remove_series()
+                try:
+                    assert('login' in session)
+                     self.remove_series(self.series.name,session['user_id'])
+                except AssertionError:
+                    return(render_template('login.html'))
         else:
             self.series.id = serie
             self.series.initiate_from_details(request_api.RequestAPI.get_details(serie))
