@@ -1,3 +1,5 @@
+import re 
+
 class Series:
     """ Stores temporary the data of the series we are manipulating
 
@@ -33,6 +35,14 @@ class Series:
         self._name = ""
         self._image = ""
         self._id = None
+        self._summary = ""
+        self._rating = ""
+        self._genre = []
+        self._status = ""
+        self._runtime = ""
+        self._premiered = ""
+        self._website = ""
+        
     
     def _get_name(self):
         return(self._name)
@@ -48,6 +58,36 @@ class Series:
     def _set_id(self,id):
         self._id = id
     id = property(_get_id,_set_id)
+
+    def _get_summary(self):
+        return(self._summary)
+    summary = property(_get_summary)
+
+    def _get_rating(self):
+        return(self._rating)
+    rating = property(_get_rating)
+
+    def _get_genre(self):
+        return(self._genre)
+    genre = property(_get_genre)
+    
+    def _get_status(self):
+        return(self._status)
+    status = property(_get_status)
+
+    def _get_runtime(self):
+        return(self._runtime)
+    runtime = property(_get_runtime)
+    
+    def _get_premiered(self):
+        return(self._premiered)
+    premiered = property(_get_premiered)
+
+    def _get_website(self):
+        return(self._website)
+    website = property(_get_website)
+
+ 
     
     def initiate_from_basics(self,params):
         self._name = params[0]
@@ -65,7 +105,7 @@ class Series:
         if(params[2] == None):
             self._summary = "missing summary"
         else:
-            self._summary = params[2]
+            self._summary = re.sub("(?s)<[^>]*>|&#?\w+;", "", params[2])
         if(params[3] == None):
             self._rating = "missing rating"
         else:
@@ -90,14 +130,7 @@ class Series:
             self._website = "missing website"
         else:
             self._website = params[8]
-        if(params[9] == None):
-            self._website = "missing scheduled_days"
-        else:
-            self._website = params[9]
-        if(params[10] == None):
-            self._website = "missing scheduled_hours"
-        else:
-            self._website = params[10]
+
     
     def get_basics(self):
         return([self._name,self._image,self._id])
