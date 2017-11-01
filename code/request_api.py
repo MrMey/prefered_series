@@ -333,15 +333,16 @@ class RequestAPI:
             schedule_time = None
             try:
                 name = response['name']
-                status = response['status']
+                status = response['status'] 
                 if status == "Running":
-                    schedule_days = response['schedule']['days']  # it's a list
-                    schedule_time = response['schedule']['time']
+                    if len(response['schedule']['time'])>0:
+                        schedule_days = response['schedule']['days']  # it's a list
+                        schedule_time = response['schedule']['time']
 
-                    dict_series = {'name': name, 'time': schedule_time}
-
-                    for day in schedule_days:
-                        schedule_dictionary[day].append(dict_series)
+                        dict_series = {'name': name, 'time': schedule_time}
+    
+                        for day in schedule_days:
+                            schedule_dictionary[day].append(dict_series)
             except Exception:
                 print('what do we do??')
 

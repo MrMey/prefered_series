@@ -16,3 +16,5 @@ class MyTestCase(unittest.TestCase):
         self.assertRaises(TypeError,r.insert,"user",[])
         self.assertRaises(exceptions.DataBaseError,r.insert,"user",{"login":"paul","name":"paul"})
         self.assertRaises(exceptions.DataBaseError,r.insert,"users",{"logi":"paul","name":"paul"})
+        
+        
