@@ -18,9 +18,21 @@ class DataBaseError(Error):
     pass
 
 class APIError(Error):
-    """ manages the errors linked to API requests
-        """
+    """ manages the errors linked to API requests"""
     pass
+
+class MissingCrucialInformationAPI(APIError):
+    """error when the API database misses some crucial information like the name or id of a series"""
+    pass
+
+class NoMatchInAPIDatabase(APIError):
+    """error when the wanted series in not in tha API Database"""
+    pass
+
+class SeriesIdAreIntegers(APIError):
+    """error if functions are called with a series id that is not of type int"""
+    pass
+
 
 class UserError(Error):
     """ manages the errors linked to API requests
