@@ -67,9 +67,7 @@ class Controler():
     def __init__(self):
         self.req_database = request_database.RequestDB()
         self.series = series.Series()
-
-    def add_user(self):
-        self.user = user.User("paul",1)
+        self.user = user.User()
 
     def act_series(self):
         self.user.series = self.req_database.select_series_from_user(self.user.id)
@@ -101,8 +99,6 @@ class FullControler(WebSite,Controler):
         """ **routes**
             '/main'
         """
-        self.act_series()
-        return(render_template('main.html',**{"series_list":self.user.series}))
 
         if 'login' not in session:
             return(render_template('login.html'))
@@ -139,9 +135,9 @@ class FullControler(WebSite,Controler):
         """
         if request.method == 'POST':
             if self.req_database.is_in_table("users","login",request.form["login"]):
-                return(render_template('signup.html',message = "login not available"))
+                return(render_template('signup.html',message = "Login not available"))
             if request.form["login"] != request.form["login_confirmation"]:
-                return(render_template('signup.html',message = "login confirmation does not match"))
+                return(render_template('signup.html',message = "Login confirmation does not match"))
 
             self.req_database.add_user(request.form['login'],request.form['last_name'])
             session['login'] = request.form["login"]
@@ -159,7 +155,7 @@ class FullControler(WebSite,Controler):
             serie = int(serie)
         except:
             raise(TypeError("serie id must be an int"))
-        
+
         # add/remove from favorites buttons
         if request.method == "POST":
             if('login' not in session):

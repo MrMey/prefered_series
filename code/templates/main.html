@@ -59,11 +59,26 @@
       </li>
     </ul>
 
-    <form class="form-inline my-2 my-lg-0" action="{{ url_for('search_serie') }}" method = "Post">
-      <input class="form-control mr-sm-2" name ="serie" type="search" placeholder="Look for a TV show..." aria-label="Search">
-      <button class="btn btn-primary" type="submit">Search</button>
+    {% block loginmenu %}
 
-    </form>
+    {% if True: %}
+
+          <p>{{message}}</p>
+          <form class="form-inline my-2 my-lg-0" action="{{ url_for('login') }}" method = "Post">
+            <input class="form-control mr-sm-2" placeholder="Input your login" type="password" name ="login">
+            <button class="btn btn-primary" type="submit">Login</button>
+          </form>
+
+    {% else: %}
+
+    {% endif %}
+
+    {% endblock %}
+
+        <form class="form-inline my-2 my-lg-0" action="{{ url_for('search_serie') }}" method = "Post">
+          <input class="form-control mr-sm-2" name ="serie" type="search" placeholder="Look for a TV show..." aria-label="Search">
+          <button class="btn btn-primary" type="submit">Search</button>
+        </form>
 
   </div>
 
