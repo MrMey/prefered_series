@@ -10,7 +10,7 @@ class MyTestCase(unittest.TestCase):
         print("Tests for the class RequestAPI: \n")
 
         print("Test 1: method research")
-        self.assertRaises(exceptions.APIError, r_api.RequestAPI.research, "miyflioubiugytfdrxdyvhxlizhab")
+        self.assertRaises(exceptions.NoMatchInAPIDatabase, r_api.RequestAPI.research, "miyflioubiugytfdrxdyvhxlizhab")
         self.assertTrue(isinstance(r_api.RequestAPI.research("game"), list))
         test_series = [r_api.RequestAPI.research("game"),
                        r_api.RequestAPI.research("game of thrones"),
@@ -24,7 +24,7 @@ class MyTestCase(unittest.TestCase):
                 self.assertTrue((isinstance(series[2], int)))  # the id is always given
 
         print("Test 2: method get_details")
-        self.assertRaises(exceptions.APIError, r_api.RequestAPI.get_details, "12")
+        self.assertRaises(exceptions.SeriesIdAreIntegers, r_api.RequestAPI.get_details, "12")
         self.assertTrue(isinstance(r_api.RequestAPI.get_details(12), list))
         test_series = [r_api.RequestAPI.get_details(27845), r_api.RequestAPI.get_details(120)]
         for series in test_series:
