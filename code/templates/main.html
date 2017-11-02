@@ -3,27 +3,27 @@
 
 
   <head>
-    
+
     <title>TrackSeries - Never miss an episode again !</title>
-    
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <!-- viewport meta tag for proper responsive behaviors -->
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">   <!-- Bootstrap CSS -->
 
     <link href="{{ url_for('static', filename='site.css') }}" rel="stylesheet" type="text/css" /> <!-- My CSS file -->
-  
+
   </head>
-  
+
 
   <body>
-	
+
 	<header>
 
 	</header>
-	
+
 	{% block navigation %} <!-- Menu de navigation pour atteindre nos autres pages -->
-	
+
 	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
 
   <a class="navbar-brand" href="{{ url_for('main')}}">
@@ -38,7 +38,7 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="{{ url_for('main')}}" >Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="{{ url_for('main')}}">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Browse</a>
@@ -59,62 +59,78 @@
       </li>
     </ul>
 
-    <form class="form-inline my-2 my-lg-0" action="{{ url_for('search_serie') }}" method = "Post">
-      <input class="form-control mr-sm-2" name ="serie" type="search" placeholder="Look for a TV show..." aria-label="Search">
-      <button class="btn btn-primary" type="submit">Search</button>
-    
-    </form>
-  
+    {% block loginmenu %}
+
+    {% if True: %}
+
+          <p>{{message}}</p>
+          <form class="form-inline my-2 my-lg-0" action="{{ url_for('login') }}" method = "Post">
+            <input class="form-control mr-sm-2" placeholder="Input your login" type="password" name ="login">
+            <button class="btn btn-primary" type="submit">Login</button>
+          </form>
+
+    {% else: %}
+
+    {% endif %}
+
+    {% endblock %}
+
+        <form class="form-inline my-2 my-lg-0" action="{{ url_for('search_serie') }}" method = "Post">
+          <input class="form-control mr-sm-2" name ="serie" type="search" placeholder="Look for a TV show..." aria-label="Search">
+          <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+
   </div>
 
 </nav>
 
 	{% endblock %}
 
-	{% block tagline %}
+	{% block message %}
+		{{message}}
+	{% endblock message %}
 
-	<div class="jumbotron jumbotron-fluid">
-		<blockquote class="blockquote text-center">
-  		
-  		<h1 class="display-3"> 
-  			<img src="http://www.gratisskole.dk/sdata/minipic/008/00816-300.png" width="70" height="70" alt="">
-  		Track.Series</h1>
-  		<p class="lead">Keeping track of your favorite shows just became much easier.</p>
-  		<hr class="my-3">
-  		<p class="lead">Gather your favorite TV shows and make sure to never miss an episode again.</p>
-  		<p class="lead">
-            <a href = "{{url_for('signup') }}" class="btn btn-primary btn-lg" role="button">Join Track.Series</a>
-  		</p>
+	{% block tagline %}
+  <div class="jumbotron jumbotron-fluid">
+    <blockquote class="blockquote text-center">
+    		<h1 class="display-3">
+  			<img src="http://www.gratisskole.dk/sdata/minipic/008/00816-300.png" width="70" height="70" alt=""></img>
+  			Track.Series
+  		</h1>
+    		<p class="lead">Keeping track of your favorite shows just became much easier.</p>
+    		<hr class="my-3">
+    		<p class="lead">Gather your favorite TV shows and make sure to never miss an episode again.</p>
+    		<p class="lead">
+      		  <a class="btn btn-primary btn-lg" role="button" href="{{ url_for('signup')}}">Join Track.Series</a>
+    		</p>
+    </blockquote>
 
   {% endblock %}
 
 	{% block login %}
 	{% endblock %}
-	
-		</blockquote>
-	
-	{% block series %}
 
+	{% block series %}
+	<blockquote id = "blockquote text-center">
 		<!-- bloc de series -->
 		{% for series in series_list %}
-    <blockquote class="blockquote text-center">
-    <div id = "series" class="card bg-light mb-3" style="width: 13rem;">
-		<img class="card-img-top" alt="Card image cap" src = {{series[2]}}></img>
-    <div class = "serie" class="card-body">
-    <a id="title" class="card-title" href = {{ url_for('details',serie = series[0]) }}>{{series[1]}}</a>
+
+		<div class = "series" class="card bg-light mb-3" style="width: 13rem;">
+			<img class="card-img-top" alt="Card image cap" src = {{series[2]}}></img>
+			<div class = "serie" class="card-body">
+				<a id="title" class="card-title" href = {{ url_for('details',serie = series[0]) }}>{{series[1]}}</a>
+			</div>
 		</div>
-    </blockquote>
+
 		{% endfor %}
-	
-  </div>
 
-</div>
-
+	</blockquote>
 	{% endblock %}
-	
+
 	<footer>
 	</footer>
 
+	</div>
 
 <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

@@ -295,13 +295,14 @@ class RequestDB:
             raise(TypeError('name must be a string'))
         if not isinstance(image, str):
             raise(TypeError('image must be a string'))
+        
         try:
             id_api = int(id_api)
         except:
             raise(ValueError("id_api must be an int or a string that could be\
                              cast into an int"))
         if (self.is_in_table("series", "name", name)):
-            raise (e.DataBaseError("instance already in series table"))
+            raise (e.AlreadyExistingInstanceError("instance already in series table"))
         else:
             self.insert("series", {"name": name, "image": image, "id_api": id_api})
         return (self.__cursor.lastrowid)
@@ -345,7 +346,7 @@ class RequestDB:
         return(result[0][0])
     
     def get_users_by_login(self,attr,login):
-        if not attr in self.tables['users'].columns:
+        if not attr in self.tables['users'].columns + ['id']:
             raise(e.InvalidFieldError('attr must be a column in users'))
         if not isinstance(login,str):
             raise(e.DataBaseError('login must be a string'))

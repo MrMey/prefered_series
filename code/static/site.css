@@ -39,6 +39,28 @@
 	border: 1px solid;
 }
 
-#series{
+.series{
 	display:inline-block;
 }
+
+<<<<<<< HEAD
+#butt {
+	float:left;
+	margin-top:150px;
+	margin-left:400px;
+}
+
+#signup {
+    background-color: #525252;
+}
+
+.centered-form {
+	margin-top: 60px;
+}
+
+.centered-form .panel {
+	background: rgba(255, 255, 255, 0.8);
+	box-shadow: rgba(0, 0, 0, 0.3) 20px 20px 20px;
+}
+=======
+>>>>>>> 491ce646dcaeaa39d990b1adbc27c4473ea3d233

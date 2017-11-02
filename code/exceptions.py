@@ -52,3 +52,6 @@ class UndefinedUserError(UserError):
 
 class InvalidFieldError(DataBaseError):
     pass
+
+class AlreadyExistingInstanceError(DataBaseError):
+    pass
