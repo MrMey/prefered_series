@@ -29,58 +29,7 @@ class WebSite(Flask):
         self.add_url_rule(rule = '/signup',endpoint = 'signup',view_func = self.signup, methods=['GET','POST'])
         self.add_url_rule(rule = '/details/<serie>',endpoint = 'details',view_func = self.details, methods=['GET','POST'])
         self.add_url_rule(rule = '/search_serie',endpoint = 'search_serie',view_func = self.search_serie, methods=['POST'])
-        self.add_url_rule(rule = '/browse',endpoint = 'browse',view_func = self.browse)
 
-<<<<<<< HEAD
-    def main(self):
-        """ **routes**
-            '/main'
-        """
-        test = {"series_list":[[1,"breaking bad"],[2,"howimetyourmother"]]}
-        return(render_template('main.html',**test))
-
-    def login(self):
-        """ **routes**
-            '/login'
-        """
-        return(render_template('login.html'))
-
-    def details(self, serie = ""):
-        """ **routes**
-            '/details'
-            '/details/<serie>'
-        """
-        if serie == "":
-            serie = "Veuillez choisir une serie"
-        return(render_template('details.html',serie_name = serie))
-
-    def search_serie(self):
-        """ **routes**
-            '/search_serie'
-        """
-        if request.method == 'POST':
-            return(render_template('search.html',serie = request.form['serie'],series_id =str(1)))
-        return(0)
-
-    def browse(self):
-        """ **routes**
-            '/browse'
-        """
-        return(render_template('browse.html'))
-
-    def signup(self):
-        """ **routes**
-            '/signup'
-        """
-        return(render_template('signup.html'))
-
-class Controler():
-    def __init__(self):
-        self.req_database = request_database.RequestDB()
-        self.series = series.Series()
-        self.user = user.User()
-
-=======
 class Controler():
     """ Class which creates and manages the non-web object (RequestDB, Series,
     User)
@@ -108,7 +57,6 @@ class Controler():
         self.series = series.Series()
         self.user = User()
         
->>>>>>> 491ce646dcaeaa39d990b1adbc27c4473ea3d233
     def act_series(self):
         self.user.series = self.req_database.select_series_from_user(self.user.id)
 
@@ -221,15 +169,7 @@ class FullControler(WebSite,Controler):
         """ **routes**
             '/main'
         """
-<<<<<<< HEAD
 
-        if 'login' not in session:
-            return(render_template('login.html'))
-        else:
-            return(render_template('main.html',**{"series_list":
-                self.req_database.select_series_from_user(session['user_id'])}))
-
-=======
         if not self.user.is_logged():
             return(redirect(url_for('login')))
         else:
@@ -250,19 +190,12 @@ class FullControler(WebSite,Controler):
             self.user.schedule = request_api.RequestAPI.schedule(id_list)
             
             return(render_template('calendar.html',**{"schedule":self.user.schedule}))
-            
->>>>>>> 491ce646dcaeaa39d990b1adbc27c4473ea3d233
+
     def search_serie(self):
         """ **routes**
             '/search_serie'
         """
         if request.method == 'POST':
-<<<<<<< HEAD
-            series_list = series.Series.missing_basic(request_api.RequestAPI.research(request.form['serie']))
-            return(render_template('search.html',series_list = series_list))
-        return(0)
-
-=======
             try:
                 series_list = series.Series.missing_basic(request_api.RequestAPI.research(request.form['serie']))
                 return(render_template('search.html',series_list = series_list))
@@ -273,7 +206,7 @@ class FullControler(WebSite,Controler):
         else:
             return(redirect(url_for('login')))
     
->>>>>>> 491ce646dcaeaa39d990b1adbc27c4473ea3d233
+
     def login(self):
         """ **routes**
             '/login'
@@ -330,14 +263,10 @@ class FullControler(WebSite,Controler):
             self.series.id = serie
             # set the rest of the attributes
             self.series.initiate_from_details(request_api.RequestAPI.get_details(serie))
-<<<<<<< HEAD
-        return(render_template('details.html',series = self.series))
-
-=======
         return(render_template('details.html',series = self.series,
                                logged = self.user.is_logged()))
     
->>>>>>> 491ce646dcaeaa39d990b1adbc27c4473ea3d233
+
 if __name__ == '__main__':
     app = FullControler()
     app.run(debug=True)
