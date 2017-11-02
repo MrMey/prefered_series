@@ -88,6 +88,8 @@ class RequestAPI:
             - the average runtime for episodes
             - the year of the first diffusion
             - the official website
+            - the days of diffusion (list)
+            - the time of diffusion
         """
         if not isinstance(id_series, int):
             raise e.APIError("series' ids must be integers")
@@ -139,7 +141,15 @@ class RequestAPI:
 
     @staticmethod
     def get_cast(id_series):
-        """ Gets the cast for the series"""
+        """ Gets the cast for the series
+
+        **Parameters**
+        id_series is the id of the series in the API database (int)
+
+        **Returns**
+        a list of the characters in a series described by a tuple with the name of the actor, the name of the
+        character and an image of the actor
+        """
         if not isinstance(id_series, int):
             raise e.APIError("series' ids must be integers")
         response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/cast')
@@ -162,7 +172,15 @@ class RequestAPI:
 
     @staticmethod
     def get_crew(id_series):
-        """ Gets the crew for the series"""
+        """ Gets the crew for the series
+
+        **Parameters**
+        id_series is the id of the series in the API database (int)
+
+        **Returns**
+        a list of the crew for a series described by a tuple with the name of the crew member, his or her job and
+        an image
+        """
         if not isinstance(id_series, int):
             raise e.APIError("series' ids must be integers")
         response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/crew')
@@ -185,7 +203,19 @@ class RequestAPI:
 
     @staticmethod
     def get_seasons(id_series):
-        """ Gets the seasons list for the series, with the number, the name, the summary and the dates"""
+        """ Gets the seasons list for the series, with the number, the name, the summary and the dates
+
+        **Parameters**
+        id_series is the id of the series in the API database (int)
+
+        **Returns**
+        a list of the seasons of a series described by a list with
+        - the number
+        - the name
+        - the summary of the season
+        - the date of the beginning of the season
+        - the date of the end of the season
+        """
         if not isinstance(id_series, int):
             raise e.APIError("series' ids must be integers")
         response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/seasons')
@@ -217,7 +247,21 @@ class RequestAPI:
     @staticmethod
     def get_episodes(id_series):
         """ Gets the episodes list for the series, with the number of the season, the number of the episode, the name,
-        the summary, an image, the air date and the runtime"""
+        the summary, an image, the air date and the runtime
+
+        **Parameters**
+        id_series is the id of the series in the API database (int)
+
+        **Returns**
+        a list of the episodes of a series described by a list with
+        - the number of the season
+        - the number of the episode
+        - the name
+        - the summary
+        - an image
+        - the air date
+        - the runtime
+        """
         if not isinstance(id_series, int):
             raise e.APIError("series' ids must be integers")
         response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/episodes')
@@ -254,15 +298,64 @@ class RequestAPI:
             list_episodes.append(s)
         return list_episodes
 
+    @staticmethod
+    def schedule(list_ids):
+        """
+        For a list of series identified by their id in the API database, the schedule of the week is build.
 
+        **Parameters**
+            - list_ids : list of the series' id
+
+        **Returns**
+            - dictionary of the diffusion in the week : {"monday" : [{"name": "Bones", "time" : "22:00"}, ... ], ...}
+        """
+        schedule_dictionary = {"Monday": [],
+                               "Tuesday": [],
+                               "Wednesday": [],
+                               "Thursday": [],
+                               "Friday": [],
+                               "Saturday": [],
+                               "Sunday": []}
+        for series in list_ids:
+            if not isinstance(series, int):
+                raise e.APIError("series' ids must be integers")
+            response = requests.get('http://api.tvmaze.com/shows/' + str(series))
+            assert response.status_code == 200
+            response = response.json()
+
+            try:
+                name = response['name']
+            except Exception:
+                raise e.APIError("all series must have a name in the API database")
+            name = None
+            status = None
+            schedule_days = None
+            schedule_time = None
+            try:
+                name = response['name']
+                status = response['status'] 
+                if status == "Running":
+                    if len(response['schedule']['time'])>0:
+                        schedule_days = response['schedule']['days']  # it's a list
+                        schedule_time = response['schedule']['time']
+
+                        dict_series = {'name': name, 'time': schedule_time}
+    
+                        for day in schedule_days:
+                            schedule_dictionary[day].append(dict_series)
+            except Exception:
+                print('what do we do??')
+
+        return schedule_dictionary
 
 
 
 if __name__ == '__main__':
     # RequestAPI.research('game')
-    # RequestAPI.get_details(88)
+    # RequestAPI.get_details(48)
     # RequestAPI.get_cast(120)
     # RequestAPI.get_crew(120)
     # RequestAPI.get_seasons(568)
-    RequestAPI.get_episodes(261)
+    # RequestAPI.get_episodes
+    RequestAPI.schedule([45, 49, 48, 43])
 

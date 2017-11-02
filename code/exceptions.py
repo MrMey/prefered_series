@@ -29,3 +29,9 @@ class UserError(Error):
 
 class UndefinedUserError(UserError):
     pass
+
+class InvalidFieldError(DataBaseError):
+    pass
+
+class AlreadyExistingInstanceError(DataBaseError):
+    pass

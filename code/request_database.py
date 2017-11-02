@@ -295,18 +295,23 @@ class RequestDB:
             raise(TypeError('name must be a string'))
         if not isinstance(image, str):
             raise(TypeError('image must be a string'))
+        
         try:
             id_api = int(id_api)
         except:
             raise(ValueError("id_api must be an int or a string that could be\
                              cast into an int"))
         if (self.is_in_table("series", "name", name)):
-            raise (e.DataBaseError("instance already in series table"))
+            raise (e.AlreadyExistingInstanceError("instance already in series table"))
         else:
             self.insert("series", {"name": name, "image": image, "id_api": id_api})
         return (self.__cursor.lastrowid)
 
     def add_series_to_user(self, user_id, series_id):
+        if not isinstance(user_id,int):
+            raise(TypeError('user_id must be an int'))
+        if not isinstance(series_id,int):
+            raise(TypeError('series_id must be an int'))
         if(self.is_not_empty("""SELECT * FROM users_series 
                              WHERE user_id = {}
                              AND series_id = {}
@@ -317,6 +322,8 @@ class RequestDB:
         return (self.__cursor.lastrowid)
 
     def select_series_from_user(self, user_id):
+        if not isinstance(user_id,int):
+            raise(TypeError('user_id must be an int'))
         self.execute("""SELECT S.id_api,S.name,S.image FROM 
                      series S JOIN
                      (SELECT * FROM users_series U WHERE U.user_id = {}) U
@@ -326,6 +333,8 @@ class RequestDB:
         return (self.fetchall())
     
     def get_series_id_by_name(self,name):
+        if not isinstance(name,str):
+            raise(TypeError('name must be an string'))
         self.execute("""SELECT id from series 
                      WHERE name = '{}'
                      """.format(name))
@@ -337,12 +346,18 @@ class RequestDB:
         return(result[0][0])
     
     def get_users_by_login(self,attr,login):
+        if not attr in self.tables['users'].columns + ['id']:
+            raise(e.InvalidFieldError('attr must be a column in users'))
+        if not isinstance(login,str):
+            raise(e.DataBaseError('login must be a string'))
         self.execute("""SELECT {} from users 
                      WHERE login = '{}'
                      """.format(attr,login))
         result = self.fetchall()
         if(len(result) > 1):
-            raise(e.DataBaseError('Multiple series with the same name'))
+            raise(e.DataBaseError("Multiple series with the same name"))
+        if(len(result) < 1):
+            raise(e.DataBaseError("User doesn't exist"))
         return(result[0][0])
     
     def tuple_to_list(self,list_tuples):
