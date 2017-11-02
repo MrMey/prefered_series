@@ -71,47 +71,51 @@
 
 	{% endblock %}
 
-	{% block tagline %}
-
+	{% block message %}
+		{{message}}
+	{% endblock message %}
+	
 	<div class="jumbotron jumbotron-fluid">
-		<blockquote class="blockquote text-center">
-  		
+	
+	{% block tagline %}
+	<blockquote class="blockquote text-center">
   		<h1 class="display-3"> 
-  			<img src="http://www.gratisskole.dk/sdata/minipic/008/00816-300.png" width="70" height="70" alt="">
-  		Track.Series</h1>
+			<img src="http://www.gratisskole.dk/sdata/minipic/008/00816-300.png" width="70" height="70" alt=""></img>
+			Track.Series
+		</h1>
   		<p class="lead">Keeping track of your favorite shows just became much easier.</p>
   		<hr class="my-3">
   		<p class="lead">Gather your favorite TV shows and make sure to never miss an episode again.</p>
   		<p class="lead">
             <a href = "{{url_for('signup') }}" class="btn btn-primary btn-lg" role="button">Join Track.Series</a>
   		</p>
+	</blockquote>
+	
+	{% endblock %}
 
-  {% endblock %}
-
+	
 	{% block login %}
 	{% endblock %}
 	
-		</blockquote>
+	
 	
 	{% block series %}
-
+	<div id = "blockquote text-center">
 		<!-- bloc de series -->
 		{% for series in series_list %}
-    <blockquote class="blockquote text-center">
-    <div id = "series" class="card bg-light mb-3" style="width: 13rem;">
-		<img class="card-img-top" alt="Card image cap" src = {{series[2]}}></img>
-    <div class = "serie" class="card-body">
-    <a id="title" class="card-title" href = {{ url_for('details',serie = series[0]) }}>{{series[1]}}</a>
+		
+		<div class = "series" class="card bg-light mb-3" style="width: 13rem;">
+			<img class="card-img-top" alt="Card image cap" src = {{series[2]}}></img>
+			<div class = "serie" class="card-body">
+				<a id="title" class="card-title" href = {{ url_for('details',serie = series[0]) }}>{{series[1]}}</a>
+			</div>
 		</div>
-    </blockquote>
+		
 		{% endfor %}
-	
-  </div>
-
-</div>
-
+	</div>
 	{% endblock %}
 	
+	</div>
 	<footer>
 	</footer>
 

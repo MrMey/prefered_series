@@ -10,9 +10,17 @@ import datetime
 import request_database
 import request_api
 import series
+import exceptions as e
 
 class WebSite(Flask):
+    """ class which manages the web routes definition. It is basicially
+    equivalent to the Flask class
+    """
     def __init__(self):
+        """
+        Every route must be defined here with the endpoint, the corresponding
+        function and the authorized methods
+        """
         Flask.__init__(self,__name__)
         self.secret_key = 'super secret key'
         self.add_url_rule(rule = '/main',endpoint = 'main',view_func = self.main)
@@ -22,37 +30,28 @@ class WebSite(Flask):
         self.add_url_rule(rule = '/details/<serie>',endpoint = 'details',view_func = self.details, methods=['GET','POST'])
         self.add_url_rule(rule = '/search_serie',endpoint = 'search_serie',view_func = self.search_serie, methods=['POST'])
 
-    def main(self):
-        """ **routes**
-            '/main'
-        """
-        test = {"series_list":[[1,"breaking bad"],[2,"howimetyourmother"]]}
-        return(render_template('main.html',**test))
-    
-    def login(self):
-        """ **routes**
-            '/login'
-        """
-        return(render_template('login.html'))
-    
-    def details(self, serie = ""):
-        """ **routes**
-            '/details'
-            '/details/<serie>'
-        """
-        if serie == "":
-            serie = "Veuillez choisir une serie"
-        return(render_template('details.html',serie_name = serie))
-    
-    def search_serie(self):
-        """ **routes**
-            '/search_serie'
-        """
-        if request.method == 'POST':
-            return(render_template('search.html',serie = request.form['serie'],series_id =str(1)))
-        return(0)
-
 class Controler():
+    """ Class which creates and manages the non-web object (RequestDB, Series,
+    User)
+    
+    **Parameters**
+
+     **Attributes**
+     req_database : RequestDB object
+     series : Series object
+     user : User object
+
+    **Methods**
+    act_series: 
+        set the user.series to the the values currently stored in the 
+        DB. user.series is a list of 3-element lists containing the api_id,name,
+        image url of the user's favorite series
+    add_series:
+        Add a series and bind it to the user
+    remove_series:
+        Unbind a series from a user
+     """
+    
     def __init__(self):
         self.req_database = request_database.RequestDB()
         self.series = series.Series()
@@ -65,8 +64,9 @@ class Controler():
         [name,image,id] = self.series.get_basics()
         try:
             serie_id = self.req_database.add_series(name,image,id)
-        except:
+        except e.AlreadyExistingInstanceError:
             serie_id = self.req_database.get_series_id_by_name(name)
+
         try:
             self.req_database.add_series_to_user(user_id,serie_id)
         except:
@@ -124,7 +124,7 @@ class User:
             raise(TypeError("series must be a list of 3-element lists"))
         
         # for now we don't check the size of the inner lists
-        self._series = series
+        self._series = sorted(series, key = lambda k : k[1])
     series = property(_get_series,_set_series)
     
     def _get_schedule(self):
@@ -140,8 +140,26 @@ class User:
         """
         for day in self._schedule.keys():
             self._schedule[day] = sorted(self._schedule[day],key = lambda k:datetime.datetime.strptime(k['time'],'%H:%M').time())
+     
         
 class FullControler(WebSite,Controler):
+    """class we use to manage all the objects.
+
+    **Parameters**
+    
+
+    **Attributes**
+     user : User object
+
+    **Methods**
+    main :
+    calendar :
+    search_serie :
+    login :
+    signup :
+    details :
+    """
+    
     def __init__(self):
         Controler.__init__(self)
         WebSite.__init__(self)
@@ -177,8 +195,13 @@ class FullControler(WebSite,Controler):
             '/search_serie'
         """
         if request.method == 'POST':
-            series_list = series.Series.missing_basic(request_api.RequestAPI.research(request.form['serie']))
-            return(render_template('search.html',series_list = series_list))
+            try:
+                series_list = series.Series.missing_basic(request_api.RequestAPI.research(request.form['serie']))
+                return(render_template('search.html',series_list = series_list))
+            except e.APIError:
+                message = " missing search field"
+                return(render_template('search.html',series_list = [],
+                                       message = message))
         else:
             return(redirect(url_for('login')))
     
