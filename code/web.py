@@ -24,7 +24,6 @@ class WebSite(Flask):
         Flask.__init__(self,__name__)
         self.secret_key = 'super secret key'
         self.add_url_rule(rule = '/main',endpoint = 'main',view_func = self.main)
-        self.add_url_rule(rule = '/calendar',endpoint = 'calendar',view_func = self.calendar)
         self.add_url_rule(rule = '/login',endpoint = 'login',view_func = self.login, methods=['GET','POST'])
         self.add_url_rule(rule = '/signup',endpoint = 'signup',view_func = self.signup, methods=['GET','POST'])
         self.add_url_rule(rule = '/details/<serie>',endpoint = 'details',view_func = self.details, methods=['GET','POST'])
@@ -33,7 +32,7 @@ class WebSite(Flask):
 class Controler():
     """ Class which creates and manages the non-web object (RequestDB, Series,
     User)
-
+    
     **Parameters**
 
      **Attributes**
@@ -42,8 +41,8 @@ class Controler():
      user : User object
 
     **Methods**
-    act_series:
-        set the user.series to the the values currently stored in the
+    act_series: 
+        set the user.series to the the values currently stored in the 
         DB. user.series is a list of 3-element lists containing the api_id,name,
         image url of the user's favorite series
     add_series:
@@ -51,12 +50,12 @@ class Controler():
     remove_series:
         Unbind a series from a user
      """
-
+    
     def __init__(self):
         self.req_database = request_database.RequestDB()
         self.series = series.Series()
         self.user = User()
-
+        
     def act_series(self):
         self.user.series = self.req_database.select_series_from_user(self.user.id)
 
@@ -83,7 +82,7 @@ class User:
     """class we use to manage the session we settled in the user browser.
 
     **Parameters**
-
+    
 
     **Attributes**
      session : a flask-session
@@ -96,57 +95,63 @@ class User:
         self._session = session
         self._series = []
         self._schedule = {}
-
+        
     def is_logged(self):
         return('login' in self._session)
-
+    
     def log_out(self):
-        for key in self._session.keys():
+        keys = list(self._session.keys())
+        for key in keys:
             del(self._session[key])
-
+    
     def log_in(self,login,user_id):
         self._session['login'] = login
         self._session['user_id'] = user_id
-
+    
     def _get_user_id(self):
         return(self._session['user_id'])
     user_id = property(_get_user_id)
-
+    
     def _get_login(self):
         return(self._session['login'])
     login = property(_get_login)
-
+    
     def _get_series(self):
         return(self._series)
-
+    
     def _set_series(self,series):
         if not isinstance(series,list):
             raise(TypeError("series must be a list of 3-element lists"))
-
+        
         # for now we don't check the size of the inner lists
         self._series = sorted(series, key = lambda k : k[1])
     series = property(_get_series,_set_series)
-
+    
     def _get_schedule(self):
         return(self._schedule)
-
+    
     def _set_schedule(self, schedule):
         self._schedule = schedule
         self.order_schedule()
     schedule = property(_get_schedule,_set_schedule)
-
+    
     def order_schedule(self):
         """ order schedule by hour
         """
         for day in self._schedule.keys():
             self._schedule[day] = sorted(self._schedule[day],key = lambda k:datetime.datetime.strptime(k['time'],'%H:%M').time())
-
-
+     
+    def is_subscribed(self, api_id):
+        for series in self._series:
+            if series[0] == api_id:
+                return(True)
+        return(False)
+        
 class FullControler(WebSite,Controler):
     """class we use to manage all the objects.
 
     **Parameters**
-
+    
 
     **Attributes**
      user : User object
@@ -159,12 +164,12 @@ class FullControler(WebSite,Controler):
     signup :
     details :
     """
-
+    
     def __init__(self):
         Controler.__init__(self)
         WebSite.__init__(self)
         self.user = User()
-
+        
     def main(self):
         """ **routes**
             '/main'
@@ -174,29 +179,21 @@ class FullControler(WebSite,Controler):
             return(redirect(url_for('login')))
         else:
             self.user.series = self.req_database.select_series_from_user(self.user.user_id)
-            return(render_template('main.html',**{"series_list":self.user.series}))
 
-    def calendar(self):
-        """ **routes**
-            '/calendar'
-        """
-        if not self.user.is_logged():
-            return(redirect(url_for('login')))
-        else:
-            self.user.series = self.req_database.select_series_from_user(self.user.user_id)
             id_list = []
             for item in self.user.series:
                 id_list.append(item[0])
             self.user.schedule = request_api.RequestAPI.schedule(id_list)
-
-            return(render_template('calendar.html',**{"schedule":self.user.schedule}))
+            
+            return(render_template('main.html',series_list=self.user.series,
+                                   schedule=self.user.schedule,
+                                   logged=self.user.is_logged()))
 
     def search_serie(self):
         """ **routes**
             '/search_serie'
         """
         if request.method == 'POST':
-
             try:
                 series_list = series.Series.missing_basic(request_api.RequestAPI.research(request.form['serie']))
                 return(render_template('search.html',series_list = series_list))
@@ -206,22 +203,26 @@ class FullControler(WebSite,Controler):
                                        message = message))
         else:
             return(redirect(url_for('login')))
+    
 
     def login(self):
         """ **routes**
             '/login'
         """
-
-        if self.user.is_logged():
-            return(redirect(url_for('main')))
+        
 
         if request.method == 'POST':
-            if self.req_database.is_in_table("users","login",request.form["login"]):
-                self.user.log_in(request.form["login"],
-                                   self.req_database.get_users_by_login('id',request.form["login"]))
-                return(render_template('main.html'))
+            if 'login' in request.form.keys():
+                if self.req_database.is_in_table("users","login",request.form["login"]):
+                    self.user.log_in(request.form["login"],
+                                       self.req_database.get_users_by_login('id',request.form["login"]))
+                    return(redirect(url_for('main')))
+                else:
+                    return(render_template('login.html', message = "invalid login"))
             else:
-                return(render_template('login.html', message = "invalid login"))
+                self.user.log_out()
+
+                
         return(render_template('login.html', message = "please login or sign in"))
 
     def signup(self):
@@ -237,7 +238,7 @@ class FullControler(WebSite,Controler):
             self.req_database.add_user(request.form['login'],request.form['last_name'])
             self.user.log_in(request.form["login"],
                                self.req_database.get_users_by_login('id',request.form["login"]))
-            return(render_template('main.html'))
+            return(redirect(url_for('main')))
 
         return(render_template('signup.html'))
 
@@ -258,13 +259,19 @@ class FullControler(WebSite,Controler):
                 self.add_series(session['user_id'])
             if(request.form['submit'] == "Remove from favorites"):
                 self.remove_series(session['user_id'])
+
         else:
             # set the current serie_id in the series class
             self.series.id = serie
             # set the rest of the attributes
             self.series.initiate_from_details(request_api.RequestAPI.get_details(serie))
+        if self.user.is_logged():
+            self.user.series = self.req_database.select_series_from_user(self.user.user_id)
         return(render_template('details.html',series = self.series,
-                               logged = self.user.is_logged()))
+                               episodes=request_api.RequestAPI.get_episodes(serie),
+                               logged = self.user.is_logged(),
+                               subscribed = self.user.is_subscribed(serie)))
+    
 
 if __name__ == '__main__':
     app = FullControler()

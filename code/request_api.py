@@ -52,7 +52,7 @@ class RequestAPI:
         assert id.status_code == 200
         id = id.json()
         if id == []:
-            raise e.APIError("no match for this name")
+            raise e.NoMatchInAPIDatabase("no match for this name")
         else:
             list_series = []
             for tvshow in id:
@@ -60,7 +60,7 @@ class RequestAPI:
                     name = tvshow['show']['name']
                     id_api = int(tvshow['show']['id'])
                 except:
-                    raise e.APIError("all series must have a name and an id in the API database")
+                    raise e.MissingCrucialInformationAPI("all series must have a name and an id in the API database")
                 try:
                     image = tvshow['show']['image']['medium']
                 except:
@@ -92,7 +92,7 @@ class RequestAPI:
             - the time of diffusion
         """
         if not isinstance(id_series, int):
-            raise e.APIError("series' ids must be integers")
+            raise e.SeriesIdAreIntegers("")
         response = requests.get('http://api.tvmaze.com/shows/' + str(id_series))
         assert response.status_code == 200
         response = response.json()
@@ -100,7 +100,7 @@ class RequestAPI:
         try:
             name = response['name']
         except Exception:
-            raise e.APIError("all series must have a name in the API database")
+            raise e.MissingCrucialInformationAPI("all series must have a name in the API database")
         image = None
         summary = None
         rating = None
@@ -123,9 +123,8 @@ class RequestAPI:
             if status == "Running":
                 schedule_days = response['schedule']['days'] #  it's a list
                 schedule_time = response['schedule']['time']
-
         except Exception:
-            print('some missing information')
+            pass
         attributes = [name,
                       image,
                       summary,
@@ -151,7 +150,7 @@ class RequestAPI:
         character and an image of the actor
         """
         if not isinstance(id_series, int):
-            raise e.APIError("series' ids must be integers")
+            raise e.SeriesIdAreIntegers("")
         response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/cast')
         assert response.status_code == 200
         response = response.json()
@@ -161,7 +160,7 @@ class RequestAPI:
                 a = character['person']['name']
                 b = character['character']['name']
             except Exception:
-                raise e.APIError("characters mentionned has a name and a role")
+                raise e.MissingCrucialInformationAPI("characters mentionned has a name and a role")
             try:
                 c = character['person']['image']['medium']
             except Exception:
@@ -182,7 +181,7 @@ class RequestAPI:
         an image
         """
         if not isinstance(id_series, int):
-            raise e.APIError("series' ids must be integers")
+            raise e.SeriesIdAreIntegers("")
         response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/crew')
         assert response.status_code == 200
         response = response.json()
@@ -192,7 +191,7 @@ class RequestAPI:
                 a = person['person']['name']
                 b = person['type']
             except Exception:
-                raise e.APIError("crew members have a name and a job")
+                raise e.MissingCrucialInformationAPI("crew members have a name and a job")
             try:
                 c = person['person']['image']['medium']
             except Exception:
@@ -217,7 +216,7 @@ class RequestAPI:
         - the date of the end of the season
         """
         if not isinstance(id_series, int):
-            raise e.APIError("series' ids must be integers")
+            raise e.SeriesIdAreIntegers("")
         response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/seasons')
         assert response.status_code == 200
         response = response.json()
@@ -239,7 +238,7 @@ class RequestAPI:
                 beginning = season['premiereDate']
                 end = season['endDate']
             except Exception:
-                print('missing information')
+                pass
             s = [number, name, summary, beginning, end]
             list_seasons.append(s)
         return list_seasons
@@ -263,7 +262,7 @@ class RequestAPI:
         - the runtime
         """
         if not isinstance(id_series, int):
-            raise e.APIError("series' ids must be integers")
+            raise e.SeriesIdAreIntegers("")
         response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/episodes')
         assert response.status_code == 200
         response = response.json()
@@ -281,7 +280,7 @@ class RequestAPI:
                 number_episode = episode['number']
                 # Watch out! Sometimes the episode's number includes the season's number : episode 101 = first episode
             except Exception:
-                raise e.APIError("all episodes have a number and belong to a season")
+                raise e.MissingCrucialInformationAPI("all episodes have a number and belong to a season")
             try:
                 name = episode['name']
                 if name == '':
@@ -293,7 +292,7 @@ class RequestAPI:
                 runtime = episode['runtime']
                 image = episode['image']['medium']
             except Exception:
-                print('missing information')
+                pass
             s = [number_season, number_episode, name, summary, airdate, runtime, image]
             list_episodes.append(s)
         return list_episodes
@@ -318,7 +317,7 @@ class RequestAPI:
                                "Sunday": []}
         for series in list_ids:
             if not isinstance(series, int):
-                raise e.APIError("series' ids must be integers")
+                raise e.SeriesIdAreIntegers("")
             response = requests.get('http://api.tvmaze.com/shows/' + str(series))
             assert response.status_code == 200
             response = response.json()
@@ -326,14 +325,14 @@ class RequestAPI:
             try:
                 name = response['name']
             except Exception:
-                raise e.APIError("all series must have a name in the API database")
+                raise e.MissingCrucialInformationAPI("all series must have a name in the API database")
             name = None
             status = None
             schedule_days = None
             schedule_time = None
             try:
                 name = response['name']
-                status = response['status'] 
+                status = response['status']
                 if status == "Running":
                     if len(response['schedule']['time'])>0:
                         schedule_days = response['schedule']['days']  # it's a list
@@ -344,7 +343,7 @@ class RequestAPI:
                         for day in schedule_days:
                             schedule_dictionary[day].append(dict_series)
             except Exception:
-                print('what do we do??')
+                pass
 
         return schedule_dictionary
 
@@ -357,5 +356,5 @@ if __name__ == '__main__':
     # RequestAPI.get_crew(120)
     # RequestAPI.get_seasons(568)
     # RequestAPI.get_episodes
-    RequestAPI.schedule([45, 49, 48, 43])
+    RequestAPI.schedule([45, 49, 48, 43, 1])
 

@@ -61,23 +61,24 @@
 
     {% block loginmenu %}
 
-    {% if True: %}
-
-          <p>{{message}}</p>
-          <form class="form-inline my-2 my-lg-0" action="{{ url_for('login') }}" method = "Post">
-            <input class="form-control mr-sm-2" placeholder="Input your login" type="password" name ="login">
-            <button class="btn btn-primary" type="submit">Login</button>
-          </form>
+    {% if logged: %}
+		<form class="form-inline my-2 my-lg-0" action="{{ url_for('login') }}" method = "Post">
+        	<button class="btn btn-primary" type="submit" name = "logout">Logout</button>
+		</form>
 
     {% else: %}
+		<form class="form-inline my-2 my-lg-0" action="{{ url_for('login') }}" method = "Post">
+			<input class="form-control mr-sm-2" placeholder="Input your login" type="password" name ="login">
+			<button class="btn btn-primary" type="submit">Login</button>
+		</form>
 
     {% endif %}
 
     {% endblock %}
 
         <form class="form-inline my-2 my-lg-0" action="{{ url_for('search_serie') }}" method = "Post">
-          <input class="form-control mr-sm-2" name ="serie" type="search" placeholder="Look for a TV show..." aria-label="Search">
-          <button class="btn btn-primary" type="submit">Search</button>
+			<input class="form-control mr-sm-2" name ="serie" type="search" placeholder="Look for a TV show..." aria-label="Search">
+			<button class="btn btn-primary" type="submit">Search</button>
         </form>
 
   </div>
@@ -91,6 +92,7 @@
 	{% endblock message %}
 
 	{% block tagline %}
+	{% if not logged %}
   <div class="jumbotron jumbotron-fluid">
     <blockquote class="blockquote text-center">
     		<h1 class="display-3">
@@ -105,12 +107,14 @@
     		</p>
     </blockquote>
 
-  {% endblock %}
-
+	{% endif %}
+	{% endblock tagline %}
+	
 	{% block login %}
 	{% endblock %}
 
 	{% block series %}
+	<h3> Favorite Series </h3>
 	<blockquote id = "blockquote text-center">
 		<!-- bloc de series -->
 		{% for series in series_list %}
@@ -125,6 +129,34 @@
 		{% endfor %}
 
 	</blockquote>
+	
+	<h3> Calendar </h3>
+	<table>
+	<tr>
+		{% for day in ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'] :%}
+		<td>{{day}}</td>
+		{% endfor %}
+	</tr>
+		<!-- bloc de series -->
+	<tr>
+		{% for day in schedule.keys() :%}
+		<td>
+		<ul>
+			{% for series in schedule[day] %}
+			<li>
+			{{series['name']}}
+			{{series['time']}}
+			</li>
+			{% endfor %}
+		</ul>
+		
+		</td>
+		{% endfor %}
+	</tr>
+
+	
+	</table>
+	
 	{% endblock %}
 
 	<footer>
