@@ -15,9 +15,9 @@
 	    	<div class = "serie" class="card-body">
 			<p>{{series.name}}</p>
 			<p>{{series.summary}}</p>
-			
+
 			<p>Ratings : {{series.rating}}</p>
-			
+
 			<p> Genres :
 			{% for genre in series.genre: %}
 			{{genre}}
@@ -35,12 +35,11 @@
 		<form class="form-inline my-2 my-lg-0" action="{{ url_for('details',serie = series.id) }}" method = "Post">
 	  	<input class="form-control mr-sm-2" type="submit" name = "submit" value="Remove from favorites">
 		</form>
-		
+
 		{% else: %}
 		<p> You need to login to access advanded features </p>
-		
+
 		{% endif %}
 	</blockquote>
 
 {% endblock series %}
-
