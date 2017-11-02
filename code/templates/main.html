@@ -41,7 +41,7 @@
         <a class="nav-link" href="{{ url_for('main')}}">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('browse')}}">Browse</a>
+        <a class="nav-link" href="#">Browse</a>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -86,31 +86,23 @@
 
 	{% endblock %}
 
-
-
-	<div class="jumbotron jumbotron-fluid">
-		<blockquote class="blockquote text-center">
-
-  		<h1 class="display-3">
-  			<img src="http://www.gratisskole.dk/sdata/minipic/008/00816-300.png" width="70" height="70" alt="">
-  		Track.Series</h1>
-
 	{% block message %}
 		{{message}}
 	{% endblock message %}
 
 	{% block tagline %}
-	<blockquote class="blockquote text-center">
-  		<h1 class="display-3">
-			<img src="http://www.gratisskole.dk/sdata/minipic/008/00816-300.png" width="70" height="70" alt=""></img>
-			Track.Series
-		</h1>
-  		<p class="lead">Keeping track of your favorite shows just became much easier.</p>
-  		<hr class="my-3">
-  		<p class="lead">Gather your favorite TV shows and make sure to never miss an episode again.</p>
-  		<p class="lead">
-    		  <a class="btn btn-primary btn-lg" role="button" href="{{ url_for('signup')}}">Join Track.Series</a>
-  		</p>
+  <div class="jumbotron jumbotron-fluid">
+    <blockquote class="blockquote text-center">
+    		<h1 class="display-3">
+  			<img src="http://www.gratisskole.dk/sdata/minipic/008/00816-300.png" width="70" height="70" alt=""></img>
+  			Track.Series
+  		</h1>
+    		<p class="lead">Keeping track of your favorite shows just became much easier.</p>
+    		<hr class="my-3">
+    		<p class="lead">Gather your favorite TV shows and make sure to never miss an episode again.</p>
+    		<p class="lead">
+      		  <a class="btn btn-primary btn-lg" role="button" href="{{ url_for('signup')}}">Join Track.Series</a>
+    		</p>
     </blockquote>
 
   {% endblock %}
