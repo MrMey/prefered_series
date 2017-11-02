@@ -29,62 +29,11 @@ class WebSite(Flask):
         self.add_url_rule(rule = '/signup',endpoint = 'signup',view_func = self.signup, methods=['GET','POST'])
         self.add_url_rule(rule = '/details/<serie>',endpoint = 'details',view_func = self.details, methods=['GET','POST'])
         self.add_url_rule(rule = '/search_serie',endpoint = 'search_serie',view_func = self.search_serie, methods=['POST'])
-        self.add_url_rule(rule = '/browse',endpoint = 'browse',view_func = self.browse)
 
-<<<<<<< HEAD
-    def main(self):
-        """ **routes**
-            '/main'
-        """
-        test = {"series_list":[[1,"breaking bad"],[2,"howimetyourmother"]]}
-        return(render_template('main.html',**test))
-
-    def login(self):
-        """ **routes**
-            '/login'
-        """
-        return(render_template('login.html'))
-
-    def details(self, serie = ""):
-        """ **routes**
-            '/details'
-            '/details/<serie>'
-        """
-        if serie == "":
-            serie = "Veuillez choisir une serie"
-        return(render_template('details.html',serie_name = serie))
-
-    def search_serie(self):
-        """ **routes**
-            '/search_serie'
-        """
-        if request.method == 'POST':
-            return(render_template('search.html',serie = request.form['serie'],series_id =str(1)))
-        return(0)
-
-    def browse(self):
-        """ **routes**
-            '/browse'
-        """
-        return(render_template('browse.html'))
-
-    def signup(self):
-        """ **routes**
-            '/signup'
-        """
-        return(render_template('signup.html'))
-
-class Controler():
-    def __init__(self):
-        self.req_database = request_database.RequestDB()
-        self.series = series.Series()
-        self.user = user.User()
-
-=======
 class Controler():
     """ Class which creates and manages the non-web object (RequestDB, Series,
     User)
-    
+
     **Parameters**
 
      **Attributes**
@@ -93,8 +42,8 @@ class Controler():
      user : User object
 
     **Methods**
-    act_series: 
-        set the user.series to the the values currently stored in the 
+    act_series:
+        set the user.series to the the values currently stored in the
         DB. user.series is a list of 3-element lists containing the api_id,name,
         image url of the user's favorite series
     add_series:
@@ -102,13 +51,12 @@ class Controler():
     remove_series:
         Unbind a series from a user
      """
-    
+
     def __init__(self):
         self.req_database = request_database.RequestDB()
         self.series = series.Series()
         self.user = User()
-        
->>>>>>> 491ce646dcaeaa39d990b1adbc27c4473ea3d233
+
     def act_series(self):
         self.user.series = self.req_database.select_series_from_user(self.user.id)
 
@@ -135,7 +83,7 @@ class User:
     """class we use to manage the session we settled in the user browser.
 
     **Parameters**
-    
+
 
     **Attributes**
      session : a flask-session
@@ -148,57 +96,57 @@ class User:
         self._session = session
         self._series = []
         self._schedule = {}
-        
+
     def is_logged(self):
         return('login' in self._session)
-    
+
     def log_out(self):
         for key in self._session.keys():
             del(self._session[key])
-    
+
     def log_in(self,login,user_id):
         self._session['login'] = login
         self._session['user_id'] = user_id
-    
+
     def _get_user_id(self):
         return(self._session['user_id'])
     user_id = property(_get_user_id)
-    
+
     def _get_login(self):
         return(self._session['login'])
     login = property(_get_login)
-    
+
     def _get_series(self):
         return(self._series)
-    
+
     def _set_series(self,series):
         if not isinstance(series,list):
             raise(TypeError("series must be a list of 3-element lists"))
-        
+
         # for now we don't check the size of the inner lists
         self._series = sorted(series, key = lambda k : k[1])
     series = property(_get_series,_set_series)
-    
+
     def _get_schedule(self):
         return(self._schedule)
-    
+
     def _set_schedule(self, schedule):
         self._schedule = schedule
         self.order_schedule()
     schedule = property(_get_schedule,_set_schedule)
-    
+
     def order_schedule(self):
         """ order schedule by hour
         """
         for day in self._schedule.keys():
             self._schedule[day] = sorted(self._schedule[day],key = lambda k:datetime.datetime.strptime(k['time'],'%H:%M').time())
-     
-        
+
+
 class FullControler(WebSite,Controler):
     """class we use to manage all the objects.
 
     **Parameters**
-    
+
 
     **Attributes**
      user : User object
@@ -211,31 +159,23 @@ class FullControler(WebSite,Controler):
     signup :
     details :
     """
-    
+
     def __init__(self):
         Controler.__init__(self)
         WebSite.__init__(self)
         self.user = User()
-        
+
     def main(self):
         """ **routes**
             '/main'
         """
-<<<<<<< HEAD
 
-        if 'login' not in session:
-            return(render_template('login.html'))
-        else:
-            return(render_template('main.html',**{"series_list":
-                self.req_database.select_series_from_user(session['user_id'])}))
-
-=======
         if not self.user.is_logged():
             return(redirect(url_for('login')))
         else:
             self.user.series = self.req_database.select_series_from_user(self.user.user_id)
             return(render_template('main.html',**{"series_list":self.user.series}))
-    
+
     def calendar(self):
         """ **routes**
             '/calendar'
@@ -248,21 +188,15 @@ class FullControler(WebSite,Controler):
             for item in self.user.series:
                 id_list.append(item[0])
             self.user.schedule = request_api.RequestAPI.schedule(id_list)
-            
+
             return(render_template('calendar.html',**{"schedule":self.user.schedule}))
-            
->>>>>>> 491ce646dcaeaa39d990b1adbc27c4473ea3d233
+
     def search_serie(self):
         """ **routes**
             '/search_serie'
         """
         if request.method == 'POST':
-<<<<<<< HEAD
-            series_list = series.Series.missing_basic(request_api.RequestAPI.research(request.form['serie']))
-            return(render_template('search.html',series_list = series_list))
-        return(0)
 
-=======
             try:
                 series_list = series.Series.missing_basic(request_api.RequestAPI.research(request.form['serie']))
                 return(render_template('search.html',series_list = series_list))
@@ -272,13 +206,12 @@ class FullControler(WebSite,Controler):
                                        message = message))
         else:
             return(redirect(url_for('login')))
-    
->>>>>>> 491ce646dcaeaa39d990b1adbc27c4473ea3d233
+
     def login(self):
         """ **routes**
             '/login'
         """
-        
+
         if self.user.is_logged():
             return(redirect(url_for('main')))
 
@@ -330,14 +263,9 @@ class FullControler(WebSite,Controler):
             self.series.id = serie
             # set the rest of the attributes
             self.series.initiate_from_details(request_api.RequestAPI.get_details(serie))
-<<<<<<< HEAD
-        return(render_template('details.html',series = self.series))
-
-=======
         return(render_template('details.html',series = self.series,
                                logged = self.user.is_logged()))
-    
->>>>>>> 491ce646dcaeaa39d990b1adbc27c4473ea3d233
+
 if __name__ == '__main__':
     app = FullControler()
     app.run(debug=True)
