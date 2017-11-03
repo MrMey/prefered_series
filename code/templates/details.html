@@ -1,9 +1,5 @@
 {% extends "main.html" %}
 
-{% block tagline %}
-{% endblock %}
-
-
 {% block series %}
 
 	<blockquote class="blockquote text-center">
@@ -13,9 +9,9 @@
 	    	<div class = "serie" class="card-body">
 			<p>{{series.name}}</p>
 			<p>{{series.summary}}</p>
-			
+
 			<p>Ratings : {{series.rating}}</p>
-			
+
 			<p> Genres :
 			{% for genre in series.genre: %}
 			{{genre}}
@@ -23,22 +19,24 @@
 			</p>
 			<p><a href = "{{series.website}}"}>Lien externe </a></p>
 
+
 		</div>
 
 		{% if logged :%}
-		<form class="form-inline my-2 my-lg-0" action="{{ url_for('details',serie = series.id) }}" method = "Post">
-	  		<input class="form-control mr-sm-2" type="submit" name = "submit" value="Add to favorites">
-		</form>
 
-		<form class="form-inline my-2 my-lg-0" action="{{ url_for('details',serie = series.id) }}" method = "Post">
-	  		<input class="form-control mr-sm-2" type="submit" name = "submit" value="Remove from favorites">
-		</form>
-		
+			{% if subscribed %}
+				<form class="form-inline my-2 my-lg-0" action="{{ url_for('details',serie = series.id) }}" method = "Post">
+		  		<input class="form-control mr-sm-2" type="submit" name = "submit" value="Remove from favorites">
+				</form>
+			{% else %}
+				<form class="form-inline my-2 my-lg-0" action="{{ url_for('details',serie = series.id) }}" method = "Post">
+			  		<input class="form-control mr-sm-2" type="submit" name = "submit" value="Add to favorites">
+				</form>
+			{% endif %}
 		{% else: %}
 		<p> You need to login to access advanded features </p>
-		
+
 		{% endif %}
 	</blockquote>
 
 {% endblock series %}
-
