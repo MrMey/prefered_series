@@ -96,7 +96,7 @@ class RequestDB:
     """
 
     def __init__(self):
-        self.__connector = sqlite3.connect('../storage/series.db', check_same_thread=False)
+        self.__connector = sqlite3.connect('$Home/storage/series.db', check_same_thread=False)
         self.__cursor = self.__connector.cursor()
         self.tables = {}
 

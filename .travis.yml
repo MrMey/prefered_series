@@ -5,6 +5,5 @@ cache: pip
 install:
   - pip install flask
   - pip install requests
-  - python storage/series.db -q install
 script:
   - python code/tests.py
