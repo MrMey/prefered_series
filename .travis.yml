@@ -2,8 +2,12 @@ language: python
 python:
   - "3.6"
 cache: pip
+  yarn: true
+  directories:
+    - $HOME/storage/series.db
 install:
   - pip install flask
   - pip install requests
+  
 script:
   - python code/tests.py
