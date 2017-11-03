@@ -56,15 +56,15 @@ class RequestAPI:
         else:
             list_series = []
             for tvshow in id:
+                name = None
+                id_api = None
+                image = None
                 try:
                     name = tvshow['show']['name']
                     id_api = int(tvshow['show']['id'])
-                except:
-                    raise e.MissingCrucialInformationAPI("all series must have a name and an id in the API database")
-                try:
                     image = tvshow['show']['image']['medium']
                 except:
-                    image = None
+                    pass
                 list_series.append([name, image, id_api])
         return list_series
 
