@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5c693dd8-629b-459d-ab93-0456d7c95cb4" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/code/request_api.py" afterPath="$PROJECT_DIR$/code/request_api.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/code/templates/details.html" afterPath="$PROJECT_DIR$/code/templates/details.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/code/templates/main.html" afterPath="$PROJECT_DIR$/code/templates/main.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/code/web.py" afterPath="$PROJECT_DIR$/code/web.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -16,20 +19,19 @@
       <file leaf-file-name="request_api.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/code/request_api.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-487">
+            <state relative-caret-position="-11">
               <caret line="60" column="28" lean-forward="false" selection-start-line="60" selection-start-column="28" selection-end-line="60" selection-end-column="28" />
               <folding>
                 <element signature="n#!!doc" expanded="false" />
-                <element signature="e#160#1044#1" expanded="false" />
-                <element signature="e#2235#4731#0" expanded="false" />
-                <element signature="e#2235#2959#1" expanded="false" />
-                <element signature="e#4788#5919#0" expanded="false" />
-                <element signature="e#5976#7022#0" expanded="false" />
-                <element signature="e#7082#8518#0" expanded="false" />
-                <element signature="e#7082#7538#1" expanded="false" />
-                <element signature="e#8579#9118#1" expanded="false" />
-                <element signature="e#10642#12545#0" expanded="false" />
-                <element signature="e#10642#10976#1" expanded="false" />
+                <element signature="e#11462#13365#0" expanded="false" />
+                <marker date="1509976131462" expanded="true" signature="11396:11406" ph="..." />
+                <marker date="1509976131462" expanded="true" signature="11396:13365" ph="..." />
+                <marker date="1509976131462" expanded="false" signature="11462:11796" ph="&quot;&quot;&quot;For a list of series identified by their id in the API database, the schedule of the week is build....&quot;&quot;&quot;" />
+                <marker date="1509976131462" expanded="true" signature="11828:12118" ph="..." />
+                <marker date="1509976131462" expanded="true" signature="12151:13329" ph="..." />
+                <marker date="1509976131462" expanded="true" signature="12736:13278" ph="..." />
+                <marker date="1509976131462" expanded="true" signature="12860:13278" ph="..." />
+                <marker date="1509976131462" expanded="true" signature="12920:13278" ph="..." />
               </folding>
             </state>
           </provider>
@@ -39,8 +41,11 @@
         <entry file="file://$PROJECT_DIR$/code/web.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-1537">
-              <caret line="163" column="12" lean-forward="true" selection-start-line="163" selection-start-column="12" selection-end-line="163" selection-end-column="12" />
-              <folding />
+              <caret line="163" column="12" lean-forward="false" selection-start-line="163" selection-start-column="12" selection-end-line="163" selection-end-column="12" />
+              <folding>
+                <marker date="1509976131481" expanded="true" signature="4775:9251" ph="..." />
+                <marker date="1509976131481" expanded="true" signature="7992:9251" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -48,9 +53,11 @@
       <file leaf-file-name="main.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/code/templates/main.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="140">
-              <caret line="41" column="11" lean-forward="true" selection-start-line="41" selection-start-column="11" selection-end-line="41" selection-end-column="11" />
-              <folding />
+            <state relative-caret-position="207">
+              <caret line="109" column="14" lean-forward="true" selection-start-line="109" selection-start-column="14" selection-end-line="109" selection-end-column="14" />
+              <folding>
+                <marker date="1509976188266" expanded="false" signature="3510:3523" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -374,16 +381,15 @@
           <caret line="264" column="35" lean-forward="false" selection-start-line="264" selection-start-column="35" selection-end-line="264" selection-end-column="35" />
           <folding>
             <element signature="n#!!doc" expanded="false" />
-            <element signature="e#160#1044#1" expanded="false" />
-            <element signature="e#2235#4731#0" expanded="false" />
-            <element signature="e#2235#2959#1" expanded="false" />
-            <element signature="e#4788#5919#0" expanded="false" />
-            <element signature="e#5976#7022#0" expanded="false" />
-            <element signature="e#7082#8518#0" expanded="false" />
-            <element signature="e#7082#7538#1" expanded="false" />
-            <element signature="e#8579#9118#1" expanded="false" />
-            <element signature="e#10642#12545#0" expanded="false" />
-            <element signature="e#10642#10976#1" expanded="false" />
+            <element signature="e#11462#13365#0" expanded="false" />
+            <marker date="1509976131462" expanded="true" signature="11396:11406" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="11396:13365" ph="..." />
+            <marker date="1509976131462" expanded="false" signature="11462:11796" ph="&quot;&quot;&quot;For a list of series identified by their id in the API database, the schedule of the week is build....&quot;&quot;&quot;" />
+            <marker date="1509976131462" expanded="true" signature="11828:12118" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12151:13329" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12736:13278" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12860:13278" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12920:13278" ph="..." />
           </folding>
         </state>
       </provider>
@@ -394,16 +400,15 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="false" />
-            <element signature="e#160#1044#1" expanded="false" />
-            <element signature="e#2235#4731#0" expanded="false" />
-            <element signature="e#2235#2959#1" expanded="false" />
-            <element signature="e#4788#5919#0" expanded="false" />
-            <element signature="e#5976#7022#0" expanded="false" />
-            <element signature="e#7082#8518#0" expanded="false" />
-            <element signature="e#7082#7538#1" expanded="false" />
-            <element signature="e#8579#9118#1" expanded="false" />
-            <element signature="e#10642#12545#0" expanded="false" />
-            <element signature="e#10642#10976#1" expanded="false" />
+            <element signature="e#11462#13365#0" expanded="false" />
+            <marker date="1509976131462" expanded="true" signature="11396:11406" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="11396:13365" ph="..." />
+            <marker date="1509976131462" expanded="false" signature="11462:11796" ph="&quot;&quot;&quot;For a list of series identified by their id in the API database, the schedule of the week is build....&quot;&quot;&quot;" />
+            <marker date="1509976131462" expanded="true" signature="11828:12118" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12151:13329" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12736:13278" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12860:13278" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12920:13278" ph="..." />
           </folding>
         </state>
       </provider>
@@ -421,16 +426,15 @@
           <caret line="138" column="21" lean-forward="false" selection-start-line="138" selection-start-column="21" selection-end-line="138" selection-end-column="21" />
           <folding>
             <element signature="n#!!doc" expanded="false" />
-            <element signature="e#160#1044#1" expanded="false" />
-            <element signature="e#2235#4731#0" expanded="false" />
-            <element signature="e#2235#2959#1" expanded="false" />
-            <element signature="e#4788#5919#0" expanded="false" />
-            <element signature="e#5976#7022#0" expanded="false" />
-            <element signature="e#7082#8518#0" expanded="false" />
-            <element signature="e#7082#7538#1" expanded="false" />
-            <element signature="e#8579#9118#1" expanded="false" />
-            <element signature="e#10642#12545#0" expanded="false" />
-            <element signature="e#10642#10976#1" expanded="false" />
+            <element signature="e#11462#13365#0" expanded="false" />
+            <marker date="1509976131462" expanded="true" signature="11396:11406" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="11396:13365" ph="..." />
+            <marker date="1509976131462" expanded="false" signature="11462:11796" ph="&quot;&quot;&quot;For a list of series identified by their id in the API database, the schedule of the week is build....&quot;&quot;&quot;" />
+            <marker date="1509976131462" expanded="true" signature="11828:12118" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12151:13329" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12736:13278" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12860:13278" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12920:13278" ph="..." />
           </folding>
         </state>
       </provider>
@@ -529,16 +533,15 @@
           <caret line="264" column="35" lean-forward="false" selection-start-line="264" selection-start-column="35" selection-end-line="264" selection-end-column="35" />
           <folding>
             <element signature="n#!!doc" expanded="false" />
-            <element signature="e#160#1044#1" expanded="false" />
-            <element signature="e#2235#4731#0" expanded="false" />
-            <element signature="e#2235#2959#1" expanded="false" />
-            <element signature="e#4788#5919#0" expanded="false" />
-            <element signature="e#5976#7022#0" expanded="false" />
-            <element signature="e#7082#8518#0" expanded="false" />
-            <element signature="e#7082#7538#1" expanded="false" />
-            <element signature="e#8579#9118#1" expanded="false" />
-            <element signature="e#10642#12545#0" expanded="false" />
-            <element signature="e#10642#10976#1" expanded="false" />
+            <element signature="e#11462#13365#0" expanded="false" />
+            <marker date="1509976131462" expanded="true" signature="11396:11406" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="11396:13365" ph="..." />
+            <marker date="1509976131462" expanded="false" signature="11462:11796" ph="&quot;&quot;&quot;For a list of series identified by their id in the API database, the schedule of the week is build....&quot;&quot;&quot;" />
+            <marker date="1509976131462" expanded="true" signature="11828:12118" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12151:13329" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12736:13278" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12860:13278" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12920:13278" ph="..." />
           </folding>
         </state>
       </provider>
@@ -556,16 +559,15 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="false" />
-            <element signature="e#160#1044#1" expanded="false" />
-            <element signature="e#2235#4731#0" expanded="false" />
-            <element signature="e#2235#2959#1" expanded="false" />
-            <element signature="e#4788#5919#0" expanded="false" />
-            <element signature="e#5976#7022#0" expanded="false" />
-            <element signature="e#7082#8518#0" expanded="false" />
-            <element signature="e#7082#7538#1" expanded="false" />
-            <element signature="e#8579#9118#1" expanded="false" />
-            <element signature="e#10642#12545#0" expanded="false" />
-            <element signature="e#10642#10976#1" expanded="false" />
+            <element signature="e#11462#13365#0" expanded="false" />
+            <marker date="1509976131462" expanded="true" signature="11396:11406" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="11396:13365" ph="..." />
+            <marker date="1509976131462" expanded="false" signature="11462:11796" ph="&quot;&quot;&quot;For a list of series identified by their id in the API database, the schedule of the week is build....&quot;&quot;&quot;" />
+            <marker date="1509976131462" expanded="true" signature="11828:12118" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12151:13329" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12736:13278" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12860:13278" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12920:13278" ph="..." />
           </folding>
         </state>
       </provider>
@@ -583,16 +585,15 @@
           <caret line="138" column="21" lean-forward="false" selection-start-line="138" selection-start-column="21" selection-end-line="138" selection-end-column="21" />
           <folding>
             <element signature="n#!!doc" expanded="false" />
-            <element signature="e#160#1044#1" expanded="false" />
-            <element signature="e#2235#4731#0" expanded="false" />
-            <element signature="e#2235#2959#1" expanded="false" />
-            <element signature="e#4788#5919#0" expanded="false" />
-            <element signature="e#5976#7022#0" expanded="false" />
-            <element signature="e#7082#8518#0" expanded="false" />
-            <element signature="e#7082#7538#1" expanded="false" />
-            <element signature="e#8579#9118#1" expanded="false" />
-            <element signature="e#10642#12545#0" expanded="false" />
-            <element signature="e#10642#10976#1" expanded="false" />
+            <element signature="e#11462#13365#0" expanded="false" />
+            <marker date="1509976131462" expanded="true" signature="11396:11406" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="11396:13365" ph="..." />
+            <marker date="1509976131462" expanded="false" signature="11462:11796" ph="&quot;&quot;&quot;For a list of series identified by their id in the API database, the schedule of the week is build....&quot;&quot;&quot;" />
+            <marker date="1509976131462" expanded="true" signature="11828:12118" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12151:13329" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12736:13278" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12860:13278" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12920:13278" ph="..." />
           </folding>
         </state>
       </provider>
@@ -650,8 +651,11 @@
     <entry file="file://$PROJECT_DIR$/code/web.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1537">
-          <caret line="163" column="12" lean-forward="true" selection-start-line="163" selection-start-column="12" selection-end-line="163" selection-end-column="12" />
-          <folding />
+          <caret line="163" column="12" lean-forward="false" selection-start-line="163" selection-start-column="12" selection-end-line="163" selection-end-column="12" />
+          <folding>
+            <marker date="1509976131481" expanded="true" signature="4775:9251" ph="..." />
+            <marker date="1509976131481" expanded="true" signature="7992:9251" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -678,20 +682,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/code/request_api.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-487">
+        <state relative-caret-position="-11">
           <caret line="60" column="28" lean-forward="false" selection-start-line="60" selection-start-column="28" selection-end-line="60" selection-end-column="28" />
           <folding>
             <element signature="n#!!doc" expanded="false" />
-            <element signature="e#160#1044#1" expanded="false" />
-            <element signature="e#2235#4731#0" expanded="false" />
-            <element signature="e#2235#2959#1" expanded="false" />
-            <element signature="e#4788#5919#0" expanded="false" />
-            <element signature="e#5976#7022#0" expanded="false" />
-            <element signature="e#7082#8518#0" expanded="false" />
-            <element signature="e#7082#7538#1" expanded="false" />
-            <element signature="e#8579#9118#1" expanded="false" />
-            <element signature="e#10642#12545#0" expanded="false" />
-            <element signature="e#10642#10976#1" expanded="false" />
+            <element signature="e#11462#13365#0" expanded="false" />
+            <marker date="1509976131462" expanded="true" signature="11396:11406" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="11396:13365" ph="..." />
+            <marker date="1509976131462" expanded="false" signature="11462:11796" ph="&quot;&quot;&quot;For a list of series identified by their id in the API database, the schedule of the week is build....&quot;&quot;&quot;" />
+            <marker date="1509976131462" expanded="true" signature="11828:12118" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12151:13329" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12736:13278" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12860:13278" ph="..." />
+            <marker date="1509976131462" expanded="true" signature="12920:13278" ph="..." />
           </folding>
         </state>
       </provider>

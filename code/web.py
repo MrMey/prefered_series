@@ -268,7 +268,7 @@ class FullControler(WebSite,Controler):
         if self.user.is_logged():
             self.user.series = self.req_database.select_series_from_user(self.user.user_id)
         return(render_template('details.html',series = self.series,
-                               episodes=request_api.RequestAPI.get_episodes(serie),
+                               dict_episodes=request_api.RequestAPI.get_episodes(serie),
                                logged = self.user.is_logged(),
                                subscribed = self.user.is_subscribed(serie)))
     

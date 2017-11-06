@@ -4,7 +4,7 @@
 # -*- coding: utf-8 -*-
 import requests
 import exceptions as e
-
+import re 
 
 class RequestAPI:
     """ Sends requests to the TV shows API tvmaze
@@ -267,6 +267,8 @@ class RequestAPI:
         assert response.status_code == 200
         response = response.json()
         list_episodes = []
+        dict_episodes = {}
+        
         for episode in response:
             number_season = None
             number_episode = None
@@ -278,6 +280,11 @@ class RequestAPI:
             try:
                 number_season = episode['season']
                 number_episode = episode['number']
+                if episode['season'] not in dict_episodes.keys():
+                    dict_episodes[episode['season']] = {}
+                if episode['number'] not in dict_episodes[episode['season']].keys():
+                    dict_episodes[episode['season']][episode['number']] = {}
+                
                 # Watch out! Sometimes the episode's number includes the season's number : episode 101 = first episode
             except Exception:
                 raise e.MissingCrucialInformationAPI("all episodes have a number and belong to a season")
@@ -285,17 +292,23 @@ class RequestAPI:
                 name = episode['name']
                 if name == '':
                     name = None
-                summary = episode['summary']
+                summary = re.sub("(?s)<[^>]*>|&#?\w+;", "", episode['summary'])
                 if summary == '':
                     summary = None
                 airdate = episode['airdate']
                 runtime = episode['runtime']
                 image = episode['image']['medium']
+
+                dict_episodes[episode['season']][episode['number']]['name'] = name
+                dict_episodes[episode['season']][episode['number']]['summary'] = summary
+                dict_episodes[episode['season']][episode['number']]['airdate'] = airdate
+                dict_episodes[episode['season']][episode['number']]['runtime'] = runtime
+                dict_episodes[episode['season']][episode['number']]['image'] = image
             except Exception:
                 pass
             s = [number_season, number_episode, name, summary, airdate, runtime, image]
             list_episodes.append(s)
-        return list_episodes
+        return dict_episodes
 
     @staticmethod
     def schedule(list_ids):
