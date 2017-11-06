@@ -7,3 +7,4 @@
 /user.cpython-36
 /web.cpython-36
 *.pyc
+storage/series.db
