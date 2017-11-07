@@ -66,6 +66,7 @@
 	{% endblock %}
 	
 	<div class = "main_frame">
+	<div class="jumbotron jumbotron-fluid">
 	{% block message %}
 	<div class ="message">
 		{{message}}
@@ -74,7 +75,7 @@
 
 	{% block tagline %}
 	{% if not logged %}
-  <div class="jumbotron jumbotron-fluid">
+
     <blockquote class="blockquote text-center">
     		<h1 class="display-3">
   			<img src="http://www.gratisskole.dk/sdata/minipic/008/00816-300.png" width="70" height="70" alt=""></img>
