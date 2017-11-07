@@ -17,11 +17,6 @@
 
 
   <body>
-
-	<header>
-
-	</header>
-
 	{% block navigation %} <!-- Menu de navigation pour atteindre nos autres pages -->
 
 	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -69,9 +64,12 @@
 </nav>
 
 	{% endblock %}
-
+	
+	<div class = "main_frame">
 	{% block message %}
+	<div class ="message">
 		{{message}}
+	</div>
 	{% endblock message %}
 
 	{% block tagline %}
@@ -97,6 +95,7 @@
 	{% endblock %}
 
 	{% block series %}
+
 	<h3> Favorite Series </h3>
 	<blockquote id = "blockquote text-center">
 		<!-- bloc de series -->
@@ -112,23 +111,26 @@
 		{% endfor %}
 
 	</blockquote>
-	
+
 	<h3> Calendar </h3>
-	<table>
+	<table class="timetable">
+	<thead class "timetable_header">
 	<tr>
 		{% for day in ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'] :%}
-		<td>{{day}}</td>
+		<th class = "timetable_header_cell">{{day}}</th>
 		{% endfor %}
 	</tr>
+	</thead>
+	<tbody>
 		<!-- bloc de series -->
-	<tr>
+	<tr class = "day">
 		{% for day in schedule.keys() :%}
-		<td>
+		<td class ="cell">
 		<ul>
 			{% for series in schedule[day] %}
 			<li>
-			{{series['name']}}
 			{{series['time']}}
+			{{series['name']}}
 			</li>
 			{% endfor %}
 		</ul>
@@ -136,15 +138,13 @@
 		</td>
 		{% endfor %}
 	</tr>
-
+	</tbody>
 	
 	</table>
 	
 	{% endblock %}
-
-	<footer>
-	</footer>
-
+	
+	</div>
 	</div>
 
 <!-- Optional JavaScript -->

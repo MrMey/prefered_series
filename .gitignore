@@ -6,3 +6,5 @@
 /test_request_database.cpython-36
 /user.cpython-36
 /web.cpython-36
+*.pyc
+storage/series.db

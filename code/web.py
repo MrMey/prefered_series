@@ -218,12 +218,12 @@ class FullControler(WebSite,Controler):
                                        self.req_database.get_users_by_login('id',request.form["login"]))
                     return(redirect(url_for('main')))
                 else:
-                    return(render_template('login.html', message = "invalid login"))
+                    return(render_template('login.html', message = "Invalid login, try to login again or sign in"))
             else:
                 self.user.log_out()
 
                 
-        return(render_template('login.html', message = "please login or sign in"))
+        return(render_template('login.html', message = "Please login or sign in"))
 
     def signup(self):
         """ **routes**
@@ -246,6 +246,7 @@ class FullControler(WebSite,Controler):
         """ **routes**
             '/details/<serie>'
         """
+        message = ""
         try:
             serie = int(serie)
         except:
@@ -264,7 +265,10 @@ class FullControler(WebSite,Controler):
             # set the current serie_id in the series class
             self.series.id = serie
             # set the rest of the attributes
-            self.series.initiate_from_details(request_api.RequestAPI.get_details(serie))
+            try:
+                self.series.initiate_from_details(request_api.RequestAPI.get_details(serie))
+            except e.UnavailableService:
+                message = "API is unavailable, please try later"
         if self.user.is_logged():
             self.user.series = self.req_database.select_series_from_user(self.user.user_id)
         return(render_template('details.html',series = self.series,
@@ -273,7 +277,8 @@ class FullControler(WebSite,Controler):
                                crew=request_api.RequestAPI.get_crew(serie),
                                cast=request_api.RequestAPI.get_cast(serie),
                                logged = self.user.is_logged(),
-                               subscribed = self.user.is_subscribed(serie)))
+                               subscribed = self.user.is_subscribed(serie),
+                               message = message))
     
 
 if __name__ == '__main__':

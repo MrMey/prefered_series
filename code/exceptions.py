@@ -29,6 +29,8 @@ class MissingCrucialInformationAPI(APIError):
     """error when the API database misses some crucial information like the name or id of a series"""
     pass
 
+class UnavailableService(APIError):
+    pass
 
 class NoMatchInAPIDatabase(APIError):
     """error when the wanted series in not in tha API Database"""
