@@ -2,12 +2,9 @@ language: python
 python:
   - "3.6"
 cache: pip
-test:
-  adapter: sqlite3
-  database: ":storage/series:"
-  timeout: 500
 install:
   - pip install flask
   - pip install requests
+  
 script:
   - python code/tests.py

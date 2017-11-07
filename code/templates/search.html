@@ -2,18 +2,20 @@
 
 {% block series %}
 
-<blockquote class="blockquote text-center">
+<div>
 
 {% for series in series_list %}
 
-
-<img src= {{series[1]}} alt={{series[0]}}></img>
-<a href = {{ url_for('details',serie = series[2]) }}>
-{{ series[0] }}
-</a>
-
+<div class = "series" class="card bg-light mb-3" style="width: 13rem;">
+	<img class="card-img-top" alt="Card image cap" src= {{series[1]}} alt={{series[0]}}></img>
+		<div class = "serie" class="card-body">
+		<a href = {{ url_for('details',serie = series[2]) }}>
+		{{ series[0] }}
+		</a>
+	</div>
+</div>
 {% endfor %}
 
-</blockquote>
+</div>
 
 {% endblock series %}

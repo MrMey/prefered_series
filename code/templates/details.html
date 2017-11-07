@@ -9,7 +9,7 @@
 	    	<div class = "serie" class="card-body">
 			<p>{{series.name}}</p>
 			<p>{{series.summary}}</p>
-
+			<p>{{series.status}}</p>
 			<p>Ratings : {{series.rating}}</p>
 
 			<p> Genres :
@@ -19,9 +19,14 @@
 			</p>
 			<p><a href = "{{series.website}}"}>Lien externe </a></p>
 
-
 		</div>
-
+		<div>
+		{% for season in dict_episodes: %}
+		{% for episode in dict_episodes[season] %}
+			{{dict_episodes[season][episode]}}
+		{% endfor %}
+		{% endfor %}
+		</div>
 		{% if logged :%}
 
 			{% if subscribed %}

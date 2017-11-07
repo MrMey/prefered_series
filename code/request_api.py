@@ -4,7 +4,7 @@
 # -*- coding: utf-8 -*-
 import requests
 import exceptions as e
-
+import re 
 
 class RequestAPI:
     """ Sends requests to the TV shows API tvmaze
@@ -56,15 +56,15 @@ class RequestAPI:
         else:
             list_series = []
             for tvshow in id:
+                name = None
+                id_api = None
+                image = None
                 try:
                     name = tvshow['show']['name']
                     id_api = int(tvshow['show']['id'])
-                except:
-                    raise e.MissingCrucialInformationAPI("all series must have a name and an id in the API database")
-                try:
                     image = tvshow['show']['image']['medium']
                 except:
-                    image = None
+                    pass
                 list_series.append([name, image, id_api])
         return list_series
 
@@ -94,7 +94,8 @@ class RequestAPI:
         if not isinstance(id_series, int):
             raise e.SeriesIdAreIntegers("")
         response = requests.get('http://api.tvmaze.com/shows/' + str(id_series))
-        assert response.status_code == 200
+        if response.status_code != 200:
+            raise e.UnavailableService('API service is unavailable, try later')
         response = response.json()
 
         try:
@@ -152,7 +153,8 @@ class RequestAPI:
         if not isinstance(id_series, int):
             raise e.SeriesIdAreIntegers("")
         response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/cast')
-        assert response.status_code == 200
+        if response.status_code != 200:
+            raise e.UnavailableService('API service is unavailable, try later')
         response = response.json()
         list_characters = []
         for character in response:
@@ -183,7 +185,8 @@ class RequestAPI:
         if not isinstance(id_series, int):
             raise e.SeriesIdAreIntegers("")
         response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/crew')
-        assert response.status_code == 200
+        if response.status_code != 200:
+            raise e.UnavailableService('API service is unavailable, try later')
         response = response.json()
         list_crew = []
         for person in response:
@@ -218,7 +221,8 @@ class RequestAPI:
         if not isinstance(id_series, int):
             raise e.SeriesIdAreIntegers("")
         response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/seasons')
-        assert response.status_code == 200
+        if response.status_code != 200:
+            raise e.UnavailableService('API service is unavailable, try later')
         response = response.json()
         list_seasons = []
         for season in response:
@@ -264,38 +268,45 @@ class RequestAPI:
         if not isinstance(id_series, int):
             raise e.SeriesIdAreIntegers("")
         response = requests.get('http://api.tvmaze.com/shows/' + str(id_series) + '/episodes')
-        assert response.status_code == 200
+        if response.status_code != 200:
+            raise e.UnavailableService('API service is unavailable, try later')
         response = response.json()
-        list_episodes = []
+        dict_episodes = {}
+        
         for episode in response:
-            number_season = None
-            number_episode = None
             name = None
             summary = None
             airdate = None
             runtime = None
             image = None
             try:
-                number_season = episode['season']
-                number_episode = episode['number']
+                if episode['season'] not in dict_episodes.keys():
+                    dict_episodes[episode['season']] = {}
+                if episode['number'] not in dict_episodes[episode['season']].keys():
+                    dict_episodes[episode['season']][episode['number']] = {}
+                
                 # Watch out! Sometimes the episode's number includes the season's number : episode 101 = first episode
-            except Exception:
-                raise e.MissingCrucialInformationAPI("all episodes have a number and belong to a season")
-            try:
-                name = episode['name']
-                if name == '':
-                    name = None
-                summary = episode['summary']
-                if summary == '':
-                    summary = None
-                airdate = episode['airdate']
-                runtime = episode['runtime']
-                image = episode['image']['medium']
+                try:
+                    name = episode['name']
+                    if name == '':
+                        name = None
+                    summary = re.sub("(?s)<[^>]*>|&#?\w+;", "", episode['summary'])
+                    if summary == '':
+                        summary = None
+                    airdate = episode['airdate']
+                    runtime = episode['runtime']
+                    image = episode['image']['medium']
+    
+                    dict_episodes[episode['season']][episode['number']]['name'] = name
+                    dict_episodes[episode['season']][episode['number']]['summary'] = summary
+                    dict_episodes[episode['season']][episode['number']]['airdate'] = airdate
+                    dict_episodes[episode['season']][episode['number']]['runtime'] = runtime
+                    dict_episodes[episode['season']][episode['number']]['image'] = image
+                except Exception:
+                    pass
             except Exception:
                 pass
-            s = [number_season, number_episode, name, summary, airdate, runtime, image]
-            list_episodes.append(s)
-        return list_episodes
+        return dict_episodes
 
     @staticmethod
     def schedule(list_ids):
@@ -322,10 +333,6 @@ class RequestAPI:
             assert response.status_code == 200
             response = response.json()
 
-            try:
-                name = response['name']
-            except Exception:
-                raise e.MissingCrucialInformationAPI("all series must have a name in the API database")
             name = None
             status = None
             schedule_days = None

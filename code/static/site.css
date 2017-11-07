@@ -1,3 +1,11 @@
+.main_frame{
+	margin : 1%;
+}
+
+h3{
+	padding: 1%;
+}
+
 #title:link {
 	color:#3366ff ;
 	text-decoration: underline;
@@ -17,6 +25,8 @@
     color:#3366ff
 	text-decoration: none;
 }
+
+
 
 #menu {
 	display: inline-table;
@@ -40,5 +50,31 @@
 }
 
 .series{
+	
 	display:inline-block;
+	margin: 5px;
+}
+
+.timetable{
+	border: solid 1px;
+	width: 100%;
+
+	margin-bottom: 5%;
+}
+
+.timetable_header_cell{
+	background-color: #D3D3D3;
+	border: solid 1px;
+}
+
+.cell{
+	border: solid 1px;
+	vertical-align: text-top;
+	width: 10%;
+}
+
+.message{
+	font-size: 40px;
+	text-align: center;
+	font-style: italic;
 }
