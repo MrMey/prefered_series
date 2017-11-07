@@ -273,6 +273,9 @@ class FullControler(WebSite,Controler):
             self.user.series = self.req_database.select_series_from_user(self.user.user_id)
         return(render_template('details.html',series = self.series,
                                dict_episodes=request_api.RequestAPI.get_episodes(serie),
+                               seasons=request_api.RequestAPI.get_seasons(serie),
+                               crew=request_api.RequestAPI.get_crew(serie),
+                               cast=request_api.RequestAPI.get_cast(serie),
                                logged = self.user.is_logged(),
                                subscribed = self.user.is_subscribed(serie),
                                message = message))
