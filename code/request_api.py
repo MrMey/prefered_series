@@ -236,7 +236,7 @@ class RequestAPI:
                 name = season['name']
                 if name == '':
                     name = None
-                summary = season['summary']
+                summary = re.sub("(?s)<[^>]*>|&#?\w+;", "", season['summary'])
                 if summary == '':
                     summary = None
                 beginning = season['premiereDate']
