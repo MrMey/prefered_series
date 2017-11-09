@@ -354,6 +354,49 @@ class RequestAPI:
 
         return schedule_dictionary
 
+    @staticmethod
+    def notification_schedule(list_ids, list_dates):
+        """
+            For a list of series identified by their id in the API database, the schedule of the week is build.
+
+            **Parameters**
+                - list_ids : list of the series' id
+                - the dates
+
+            **Returns**
+                - list of the diffusion in the week with the date + the list of dictionaries of diffusion
+        """
+        L = []
+        for date in list_dates:
+            l = [date, []]
+            for series in list_ids:
+                if not isinstance(series, int):
+                    raise e.SeriesIdAreIntegers("")
+                response = requests.get('http://api.tvmaze.com/shows/' + str(series) + '/episodesbydate?date=' + date)
+                # requests.get('http://api.tvmaze.com/shows/' + str(series) + '/episodesbydate?date=' + date)
+                try:
+                    assert response.status_code == 200
+                    response = response.json()
+
+                    name = None
+                    air_time = None
+                    season = None
+                    number = None
+                    try:
+                        name = response['name']
+                        season = response['season']
+                        number = response['number']
+                        air_time = response['air_time']
+
+                        dict_series = {'name': name, 'time': air_time, 'season': season, 'episode': number}
+                        l[1].append(dict_series)
+                    except Exception:
+                        pass
+                except Exception:
+                    pass
+            L.append(l)
+        print(L)
+
 
 
 if __name__ == '__main__':
@@ -363,5 +406,5 @@ if __name__ == '__main__':
     # RequestAPI.get_crew(120)
     # RequestAPI.get_seasons(568)
     # RequestAPI.get_episodes
-    RequestAPI.schedule([45, 49, 48, 43, 1])
+    RequestAPI.notification_schedule([1, 30, 450, 3500], ['2017-07-01', '2017-07-02'])
 
