@@ -42,6 +42,23 @@
 				<hr>
 				<div>
 					<h3>Cast:</h3>
+					{% for person in cast: %}
+						<div class = "series" class="card bg-light mb-3" style="width: 13rem;">
+							{% if person[2] != None : %}
+							<img class="card-img-top" alt="Card image cap" src={{person[2]}} style="width: 8rem;"></img>
+							{%else%}
+							<img class="card-img-top" alt="Card image cap" src=http://media.themalaymailonline.com/uploads/articles/2016-09/wechat_tuzki_21092016.jpg style="width: 8rem;"></img>
+							{%endif%}
+							<br>
+							<br>
+							{% if person[0] != None : %}
+							<p> {{person[0]}} </p>
+							{%endif%}
+							{% if person[1] != None : %}
+							<p>as {{person[1]}} </p>
+							{%endif%}
+						</div>
+					{%endfor%}
 				</div>
 				<hr>
 
@@ -49,12 +66,14 @@
 					<h3>Crew:</h3>
 					<div>
 					{% for person in crew: %}
-						<div class="col-sm-4">
+						<div class = "series" class="card bg-light mb-3" style="width: 13rem;">
 							{% if person[2] != None : %}
 							<img class="card-img-top" alt="Card image cap" src={{person[2]}} style="width: 8rem;"></img>
+							{%else%}
+							<img class="card-img-top" alt="Card image cap" src=http://media.themalaymailonline.com/uploads/articles/2016-09/wechat_tuzki_21092016.jpg style="width: 8rem;"></img>
 							{%endif%}
-						</div>
-						<div class="col-sm-8">
+							<br>
+							<br>
 							{% if person[0] != None : %}
 							<p> {{person[0]}} </p>
 							{%endif%}

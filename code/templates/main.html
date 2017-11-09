@@ -20,7 +20,7 @@
   	
 	{% block navigation %} <!-- Menu de navigation pour atteindre nos autres pages -->
 
-	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+	<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary">
 
   <a class="navbar-brand" href="{{ url_for('main')}}">
   	<img src="http://www.gratisskole.dk/sdata/minipic/008/00816-300.png" width="30" height="30" alt="">
@@ -33,9 +33,6 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="{{ url_for('main')}}">Home <span class="sr-only">(current)</span></a>
-      </li>
     </ul>
 
     {% block loginmenu %}
@@ -67,6 +64,7 @@
 	{% endblock %}
 	
 	<div class = "main_frame">
+	<div class="jumbotron jumbotron-fluid">
 	{% block message %}
 	<div class ="message">
 		{{message}}
@@ -75,7 +73,7 @@
 
 	{% block tagline %}
 	{% if not logged %}
-  <div class="jumbotron jumbotron-fluid">
+
     <blockquote class="blockquote text-center">
     		<h1 class="display-3">
   			<img src="http://www.gratisskole.dk/sdata/minipic/008/00816-300.png" width="70" height="70" alt=""></img>

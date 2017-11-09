@@ -175,7 +175,7 @@ class FullControler(WebSite,Controler):
         """ **routes**
             '/main'
         """
-
+        message = ""
         if not self.user.is_logged():
             return(redirect(url_for('login')))
         else:
@@ -188,7 +188,8 @@ class FullControler(WebSite,Controler):
 
             return(render_template('main.html',series_list=self.user.series,
                                    schedule=self.user.schedule,
-                                   logged=self.user.is_logged()))
+                                   logged=self.user.is_logged(),
+                                   message=message))
 
     def search_serie(self):
         """ **routes**
@@ -201,11 +202,16 @@ class FullControler(WebSite,Controler):
             except e.APIError:
                 message = " missing search field"
                 return(render_template('search.html',series_list = [],
-                                       message = message))
+                                       message = message,
+                                       logged = self.user.is_logged()))
         else:
             return(redirect(url_for('login')))
+<<<<<<< HEAD
 
 
+=======
+        
+>>>>>>> 2b1dce19db9dadbd79ae894e9cd4f67db59b6cee
     def login(self):
         """ **routes**
             '/login'
