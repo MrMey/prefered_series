@@ -206,12 +206,7 @@ class FullControler(WebSite,Controler):
                                        logged = self.user.is_logged()))
         else:
             return(redirect(url_for('login')))
-<<<<<<< HEAD
 
-
-=======
-        
->>>>>>> 2b1dce19db9dadbd79ae894e9cd4f67db59b6cee
     def login(self):
         """ **routes**
             '/login'
