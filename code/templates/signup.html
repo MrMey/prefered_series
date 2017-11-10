@@ -7,9 +7,9 @@
 		<br>
 		<form method=post>
 			<dl>
-				{{render_field(form.username)}}
-				{{render_field(form.email)}}
-				{{render_field(form.accept_tos)}}
+				{{render_field(self.form.username)}}
+				{{render_field(self.form.email)}}
+				{{render_field(self.form.accept_tos)}}
 			</dl>
 			<p><input type=submit value=Register></p>
 		</form>

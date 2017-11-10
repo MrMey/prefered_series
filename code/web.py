@@ -170,7 +170,8 @@ class FullControler(WebSite,Controler):
         Controler.__init__(self)
         WebSite.__init__(self)
         self.user = User()
-
+        self.form = RegistrationForm()
+        
     def main(self):
         """ **routes**
             '/main'
@@ -242,7 +243,7 @@ class FullControler(WebSite,Controler):
                                self.req_database.get_users_by_login('id',request.form["login"]))
             return(redirect(url_for('main')))
 
-        return(render_template('signup.html'))
+        return(render_template('signup.html'),self.form)
 
     def details(self, serie = ""):
         """ **routes**
