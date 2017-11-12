@@ -1,17 +1,26 @@
 {% extends "main.html" %}
 
+{% block navigation %}
+{% endblock %}
+
+{% block tagline %}
+{% endblock %}
+
+{% block login %}
+{% endblock %}
+
 {% block message %}
 
 	<div class = "container">
-		<h4>Register</h4>
+		<h4>Let's register you!</h4>
 		<br>
 		<form method=post>
 			<dl>
-				{{render_field(form.username)}}
-				{{render_field(form.email)}}
-				{{render_field(form.accept_tos)}}
+				{{ form.username.label }} {{ form.username }}
+				{{ form.email.label }} {{ form.email }}
+				{{ form.accept_tos.label }} {{ form.accept_tos }}
 			</dl>
-			<p><input type=submit value=Register></p>
+			<p><input type="submit" value="Register"></p>
 		</form>
 
 		{% if error %}

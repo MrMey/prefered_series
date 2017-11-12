@@ -4,13 +4,14 @@
 # -*- coding: utf-8 -*-
 
 
-from flask import Flask,request,render_template,session,redirect,url_for
+from flask import Flask,request,render_template,session,redirect,url_for, flash
 import datetime
 
 import request_database
 import request_api
 import series
 import exceptions as e
+
 from wtforms import Form, BooleanField, TextField, validators
 
 class WebSite(Flask):
@@ -148,7 +149,12 @@ class User:
                 return(True)
         return(False)
 
-class FullControler(WebSite,Controler):
+class RegistrationForm(Form):
+    username = TextField('Username',[validators.Length(min=4,max=20)])
+    email = TextField('Email Address',[validators.Length(min=6,max=50)])
+    accept_tos = BooleanField('I accept the <a href="/tos">Terms of Service</a>', [validators.Required()])
+
+class FullControler(WebSite,Controler,RegistrationForm):
     """class we use to manage all the objects.
 
     **Parameters**
@@ -169,6 +175,7 @@ class FullControler(WebSite,Controler):
     def __init__(self):
         Controler.__init__(self)
         WebSite.__init__(self)
+        RegistrationForm.__init__(self)
         self.user = User()
 
     def main(self):
@@ -224,25 +231,25 @@ class FullControler(WebSite,Controler):
             else:
                 self.user.log_out()
 
-
         return(render_template('login.html', message = "Please login or sign in"))
 
     def signup(self):
         """ **routes**
             '/signup'
         """
-        if request.method == 'POST':
-            if self.req_database.is_in_table("users","login",request.form["login"]):
-                return(render_template('signup.html',message = "Login not available"))
-            if request.form["login"] != request.form["login_confirmation"]:
-                return(render_template('signup.html',message = "Login confirmation does not match"))
+        form = RegistrationForm(request.form)
 
-            self.req_database.add_user(request.form['login'],request.form['last_name'])
-            self.user.log_in(request.form["login"],
-                               self.req_database.get_users_by_login('id',request.form["login"]))
+        print(form.errors)
+        if request.method == 'POST' and form.validate():
+            if self.req_database.is_in_table("users","login",request.form["username"]):
+                return(render_template('signup.html',message = "Login not available"))
+
+            self.req_database.add_user(request.form['login'],request.form['username'])
+            self.user.log_in(request.form["username"],
+                               self.req_database.get_users_by_login('id',request.form["username"]))
             return(redirect(url_for('main')))
 
-        return(render_template('signup.html'))
+        return(render_template('signup.html', form=form))
 
     def details(self, serie = ""):
         """ **routes**
@@ -281,11 +288,6 @@ class FullControler(WebSite,Controler):
                                logged = self.user.is_logged(),
                                subscribed = self.user.is_subscribed(serie),
                                message = message))
-
-class RegistrationForm(Form):
-    username = TextField('Username',[validators.Length(min=4,max=20)])
-    email = TextField('Email Address',[validators.Length(min=6,max=50)])
-    accept_tos = BooleanField('I accept the <a href="/tos">Terms of Service</a>', [validators.Required()])
 
 if __name__ == '__main__':
     app = FullControler()
