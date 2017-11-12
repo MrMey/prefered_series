@@ -177,6 +177,7 @@ class FullControler(WebSite,Controler,RegistrationForm):
         WebSite.__init__(self)
         RegistrationForm.__init__(self)
         self.user = User()
+        self.form = RegistrationForm()
 
     def main(self):
         """ **routes**
@@ -205,7 +206,8 @@ class FullControler(WebSite,Controler,RegistrationForm):
         if request.method == 'POST':
             try:
                 series_list = series.Series.missing_basic(request_api.RequestAPI.research(request.form['serie']))
-                return(render_template('search.html',series_list = series_list))
+                return(render_template('search.html',series_list = series_list,
+                                       logged = self.user.is_logged()))
             except e.APIError:
                 message = " missing search field"
                 return(render_template('search.html',series_list = [],

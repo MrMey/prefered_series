@@ -4,7 +4,8 @@
 # -*- coding: utf-8 -*-
 import requests
 import exceptions as e
-import re 
+import re
+import datetime
 
 class RequestAPI:
     """ Sends requests to the TV shows API tvmaze
@@ -236,7 +237,7 @@ class RequestAPI:
                 name = season['name']
                 if name == '':
                     name = None
-                summary = season['summary']
+                summary = re.sub("(?s)<[^>]*>|&#?\w+;", "", season['summary'])
                 if summary == '':
                     summary = None
                 beginning = season['premiereDate']
@@ -354,7 +355,67 @@ class RequestAPI:
 
         return schedule_dictionary
 
+    @staticmethod
+    def notification_schedule(list_ids, number_of_days):
+        """
+            For a list of series identified by their id in the API database, the schedule of the week is build.
 
+            **Parameters**
+                - list_ids : list of the series' id
+                - number_of_days : the number of days we want to look at
+
+            **Returns**
+                - list of the diffusion in the week with the date + the list of dictionaries of diffusion
+        """
+        list_dates = get_dates(number_of_days)
+        L = []
+        for date in list_dates:
+            l = [date, []]
+            for series in list_ids:
+                if not isinstance(series, int):
+                    raise e.SeriesIdAreIntegers("")
+                response = requests.get('http://api.tvmaze.com/shows/' + str(series) + '/episodesbydate?date=' + date)
+                # requests.get('http://api.tvmaze.com/shows/' + str(series) + '/episodesbydate?date=' + date)
+                try:
+                    assert response.status_code == 200
+                    response = response.json()
+
+                    name = None
+                    air_time = None
+                    season = None
+                    number = None
+                    summary = None
+                    image = None
+                    try:
+                        name = response['name']
+                        season = response['season']
+                        number = response['number']
+                        air_time = response['air_time']
+                        summary = response['summary']
+                        image = response['image']['medium']
+
+                        dict_series = {'name': name,
+                                       'time': air_time,
+                                       'season': season,
+                                       'episode': number,
+                                       'summary': summary,
+                                       'image': image}
+                        l[1].append(dict_series)
+                    except Exception:
+                        pass
+                except Exception:
+                    pass
+            L.append(l)
+        print(L)
+
+
+def get_dates(n = 7):
+    """returns a list of dates (y-m-d), starting with today's date and the other elements are the following days"""
+    today = datetime.date.today()
+    dates = [str(today)]
+    for d in range(1, n):
+        dates.append(str(today + datetime.timedelta(days = d)))
+    return(dates)
 
 if __name__ == '__main__':
     # RequestAPI.research('game')
@@ -363,5 +424,5 @@ if __name__ == '__main__':
     # RequestAPI.get_crew(120)
     # RequestAPI.get_seasons(568)
     # RequestAPI.get_episodes
-    RequestAPI.schedule([45, 49, 48, 43, 1])
+    RequestAPI.notification_schedule([1, 30, 450, 3500], 80)
 
