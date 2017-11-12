@@ -16,7 +16,7 @@
 
 
   <body>
-  	
+
 	{% block navigation %} <!-- Menu de navigation pour atteindre nos autres pages -->
 
 	<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary">
@@ -61,7 +61,7 @@
 </nav>
 
 	{% endblock %}
-	
+
 	<div class = "main_frame">
 	<div class="jumbotron jumbotron-fluid">
 	{% block message %}
@@ -88,7 +88,7 @@
 
 	{% endif %}
 	{% endblock tagline %}
-	
+
 	{% block login %}
 	{% endblock %}
 
@@ -109,12 +109,13 @@
 		{% endfor %}
 
 	</blockquote>
+ 
 
 	<h3> Calendar </h3>
 	<table class="timetable">
 	<thead class "timetable_header">
 	<tr>
-		{% for day in ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'] :%}
+		{% for day in schedule.keys() :%}
 		<th class = "timetable_header_cell">{{day}}</th>
 		{% endfor %}
 	</tr>
@@ -127,21 +128,21 @@
 		<ul>
 			{% for series in schedule[day] %}
 			<li>
-			{{series['time']}}
-			{{series['name']}}
+			{{series[6]}}
+			{{series[1]}}
 			</li>
 			{% endfor %}
 		</ul>
-		
+
 		</td>
 		{% endfor %}
 	</tr>
 	</tbody>
-	
+
 	</table>
-	
+
 	{% endblock %}
-	
+
 	</div>
 	</div>
 

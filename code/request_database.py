@@ -100,7 +100,9 @@ class RequestDB:
         self.__cursor = self.__connector.cursor()
         self.tables = {}
 
-        self.tables["series"] = Table(["name", "image", "id_api"])
+        self.tables["series"] = Table(["name", "image", "id_api","status",
+                   "episode","season","image_episode","next_date",
+                   "next_time"])
         self.tables["users"] = Table(["login", "name"])
         self.tables["users_series"] = Table(["user_id", "series_id"])
 
@@ -213,7 +215,13 @@ class RequestDB:
                              id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
                              name TEXT,
                              image TEXT,
-                             id_api INT
+                             id_api INT,
+                             status TEXT,
+                             episode TEXT,
+                             season TEXT,
+                             image_episode TEXT,
+                             next_date TEXT,
+                             next_time TEXT
                              )
                      """)
 
@@ -290,7 +298,9 @@ class RequestDB:
                      WHERE login = '{}'
                      """.format(login))
 
-    def add_series(self, name, image, id_api):
+    def add_series(self, name, image, id_api,status, episode ="",
+                   season = "", image_episode = "", next_date = "",
+                   next_time = ""):
         if not isinstance(name,str):
             raise(TypeError('name must be a string'))
         if not isinstance(image, str):
@@ -304,8 +314,34 @@ class RequestDB:
         if (self.is_in_table("series", "name", name)):
             raise (e.AlreadyExistingInstanceError("instance already in series table"))
         else:
-            self.insert("series", {"name": name, "image": image, "id_api": id_api})
+            self.insert("series", {"name": name, "image": image,
+                                   "id_api": id_api,"status":status,
+                                   "episode":episode, "season": season,
+                                   "image_episode":image_episode,
+                                   "next_date":next_date,
+                                   "next_time":next_time})
         return (self.__cursor.lastrowid)
+    
+    def update_series(self,name, dict_series):
+        if dict_series != None:
+            
+            dict_series['time'] = dict_series['time'].replace(':','-')
+            self.execute("""
+                         UPDATE series
+                         SET
+                         episode = '{}',
+                         season = '{}',
+                         image_episode = '{}',
+                         next_date = '{}',
+                         next_time = '{}'
+                         WHERE
+                         name = '{}'
+                         """.format(dict_series['episode'],
+                         dict_series['season'],
+                         dict_series['image'],
+                         dict_series['date'],
+                         dict_series['time'],
+                         name))
 
     def add_series_to_user(self, user_id, series_id):
         if not isinstance(user_id,int):
@@ -324,12 +360,49 @@ class RequestDB:
     def select_series_from_user(self, user_id):
         if not isinstance(user_id,int):
             raise(TypeError('user_id must be an int'))
-        self.execute("""SELECT S.id_api,S.name,S.image FROM 
-                     series S JOIN
+        self.execute("""SELECT S.id_api,
+                     S.name,
+                     S.image,
+                     S.status,
+                     S.episode,
+                     S.season,
+                     S.image_episode,
+                     S.next_date,
+                     S.next_time
+                     
+                     FROM series S JOIN
                      (SELECT * FROM users_series U WHERE U.user_id = {}) U
                      ON
                      U.series_id = S.id
                      """.format(user_id))
+        return (self.fetchall())
+    
+    def select_next_diff_series_from_user(self,user_id):
+        self.execute("""SELECT S.id_api,
+                     S.name,
+                     S.image,
+                     S.status,
+                     S.episode,
+                     S.season,
+                     S.image_episode,
+                     S.next_date,
+                     S.next_time
+                     FROM 
+                     (SELECT * FROM series S 
+                     WHERE S.status = "Running"
+                     AND S.episode <> "") S
+                     JOIN
+                     (SELECT * FROM users_series U WHERE U.user_id = {}) U
+                     ON
+                     U.series_id = S.id
+                     """.format(user_id))
+        return (self.fetchall())
+
+    def select_running_series(self):
+        self.execute("""SELECT S.id_api,S.name,S.image,S.status
+                     FROM 
+                     (SELECT * FROM series S WHERE S.status = "Running") S
+                     """)
         return (self.fetchall())
     
     def get_series_id_by_name(self,name):

@@ -12,6 +12,9 @@ import request_api
 import series
 import exceptions as e
 from wtforms import Form, BooleanField, TextField, validators
+from threading import Thread
+import time
+
 
 class WebSite(Flask):
     """ class which manages the web routes definition. It is basicially
@@ -29,6 +32,7 @@ class WebSite(Flask):
         self.add_url_rule(rule = '/signup',endpoint = 'signup',view_func = self.signup, methods=['GET','POST'])
         self.add_url_rule(rule = '/details/<serie>',endpoint = 'details',view_func = self.details, methods=['GET','POST'])
         self.add_url_rule(rule = '/search_serie',endpoint = 'search_serie',view_func = self.search_serie, methods=['POST'])
+
 
 class Controler():
     """ Class which creates and manages the non-web object (RequestDB, Series,
@@ -52,25 +56,26 @@ class Controler():
         Unbind a series from a user
      """
 
-    def __init__(self):
-        self.req_database = request_database.RequestDB()
+    def __init__(self,req_database):
+        self.req_database = req_database
         self.series = series.Series()
         self.user = User()
-
+        
     def act_series(self):
         self.user.series = self.req_database.select_series_from_user(self.user.id)
 
     def add_series(self,user_id):
-        [name,image,id] = self.series.get_basics()
+        [name,image,id,status] = self.series.get_basics()
         try:
-            serie_id = self.req_database.add_series(name,image,id)
+            serie_id = self.req_database.add_series(name,image,id,status)
         except e.AlreadyExistingInstanceError:
             serie_id = self.req_database.get_series_id_by_name(name)
-
         try:
             self.req_database.add_series_to_user(user_id,serie_id)
         except:
             True
+        if status == 'Running':
+            self.req_database.update_series(name,request_api.RequestAPI.get_next_diff(id,7))
 
     def remove_series(self,user_id):
         try:
@@ -78,6 +83,18 @@ class Controler():
             self.req_database.delete_users_series(user_id,serie_id)
         except:
             return(False)
+
+
+class ThreadDB(Thread):
+    def __init__(self,req_database):
+        Thread.__init__(self)
+        self.req_database = req_database
+        
+    def run(self):
+        for item in self.req_database.select_running_series():
+            self.req_database.update_series(item[1],request_api.RequestAPI.get_next_diff(item[0],7))
+            time.sleep(10)
+
 
 class User:
     """class we use to manage the session we settled in the user browser.
@@ -132,15 +149,25 @@ class User:
         return(self._schedule)
 
     def _set_schedule(self, schedule):
-        self._schedule = schedule
-        self.order_schedule()
+        self._schedule = {}
+        for d in range(0, 7):
+            date =str(datetime.date.today() + datetime.timedelta(days = d))
+            self._schedule[date] = []
+        
+        for diff in schedule:
+            self._schedule[diff[7]].append([diff[0],
+                                       diff[1],
+                                       diff[2],
+                                       diff[4],
+                                       diff[5],
+                                       diff[6],
+                                       diff[8]])
+        
+        for day in self._schedule.keys():
+            if len(self._schedule[day]) > 1:
+                self._schedule[day] = sorted(self._schedule[day], key = lambda k:k[6])
     schedule = property(_get_schedule,_set_schedule)
 
-    def order_schedule(self):
-        """ order schedule by hour
-        """
-        for day in self._schedule.keys():
-            self._schedule[day] = sorted(self._schedule[day],key = lambda k:datetime.datetime.strptime(k['time'],'%H:%M').time())
 
     def is_subscribed(self, api_id):
         for series in self._series:
@@ -166,11 +193,12 @@ class FullControler(WebSite,Controler):
     details :
     """
 
-    def __init__(self):
-        Controler.__init__(self)
+    def __init__(self,req_database):
+        Controler.__init__(self,req_database)
         WebSite.__init__(self)
         self.user = User()
         self.form = RegistrationForm()
+
         
     def main(self):
         """ **routes**
@@ -182,11 +210,8 @@ class FullControler(WebSite,Controler):
         else:
             self.user.series = self.req_database.select_series_from_user(self.user.user_id)
 
-            id_list = []
-            for item in self.user.series:
-                id_list.append(item[0])
-            self.user.schedule = request_api.RequestAPI.schedule(id_list)
-
+            self.user.schedule = self.req_database.select_next_diff_series_from_user(self.user.user_id)
+    
             return(render_template('main.html',series_list=self.user.series,
                                    schedule=self.user.schedule,
                                    logged=self.user.is_logged(),
@@ -213,10 +238,10 @@ class FullControler(WebSite,Controler):
         """ **routes**
             '/login'
         """
-
-
         if request.method == 'POST':
+            # if the 'login' button is activated we login else we try to logout
             if 'login' in request.form.keys():
+                #check if the login exists in the database
                 if self.req_database.is_in_table("users","login",request.form["login"]):
                     self.user.log_in(request.form["login"],
                                        self.req_database.get_users_by_login('id',request.form["login"]))
@@ -225,8 +250,6 @@ class FullControler(WebSite,Controler):
                     return(render_template('login.html', message = "Invalid login, try to login again or sign in"))
             else:
                 self.user.log_out()
-
-
         return(render_template('login.html', message = "Please login or sign in"))
 
     def signup(self):
@@ -234,17 +257,19 @@ class FullControler(WebSite,Controler):
             '/signup'
         """
         if request.method == 'POST':
-            if self.req_database.is_in_table("users","login",request.form["login"]):
-                return(render_template('signup.html',message = "Login not available"))
-            if request.form["login"] != request.form["login_confirmation"]:
-                return(render_template('signup.html',message = "Login confirmation does not match"))
+            #check in the database if the login is available
+            if self.req_database.is_in_table("users","login",request.form['login']):
+                return(render_template('signup.html',
+                                       message = "Login not available",
+                                       form = self.form))
 
-            self.req_database.add_user(request.form['login'],request.form['last_name'])
-            self.user.log_in(request.form["login"],
-                               self.req_database.get_users_by_login('id',request.form["login"]))
+            self.req_database.add_user(request.form['login'],request.form['lastname'])
+            self.user.log_in(request.form['login'],
+                               self.req_database.get_users_by_login('id',request.form['login']))
             return(redirect(url_for('main')))
 
-        return(render_template('signup.html'),self.form)
+        return(render_template('signup.html',
+               form = self.form))
 
     def details(self, serie = ""):
         """ **routes**
@@ -285,10 +310,13 @@ class FullControler(WebSite,Controler):
                                message = message))
 
 class RegistrationForm(Form):
-    username = TextField('Username',[validators.Length(min=4,max=20)])
-    email = TextField('Email Address',[validators.Length(min=6,max=50)])
+    login = TextField('Login',[validators.Length(min=4,max=20)])
+    lastname = TextField('Last Name',[validators.Length(min=6,max=50)])
     accept_tos = BooleanField('I accept the <a href="/tos">Terms of Service</a>', [validators.Required()])
 
 if __name__ == '__main__':
-    app = FullControler()
+    req_database = request_database.RequestDB()
+    thread = ThreadDB(req_database)
+    app = FullControler(req_database)
     app.run(debug=True)
+    thread.run()
