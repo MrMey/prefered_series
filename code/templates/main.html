@@ -109,26 +109,27 @@
 		{% endfor %}
 
 	</blockquote>
+ 
 
 	<h3> Calendar </h3>
 	<table class="timetable">
 	<thead class "timetable_header">
 	<tr>
-		{% for day in schedule :%}
-		<th class = "timetable_header_cell">{{day[0]}}</th>
+		{% for day in schedule.keys() :%}
+		<th class = "timetable_header_cell">{{day}}</th>
 		{% endfor %}
 	</tr>
 	</thead>
 	<tbody>
 		<!-- bloc de series -->
 	<tr class = "day">
-		{% for day in schedule :%}
+		{% for day in schedule.keys() :%}
 		<td class ="cell">
 		<ul>
-			{% for series in day[1] %}
+			{% for series in schedule[day] %}
 			<li>
-			{{series['time']}}
-			{{series['name']}}
+			{{series[6]}}
+			{{series[1]}}
 			</li>
 			{% endfor %}
 		</ul>

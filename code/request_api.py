@@ -409,6 +409,58 @@ class RequestAPI:
             L.append(l)
         return(L)
 
+    @staticmethod
+    def get_next_diff(id, number_of_days):
+        """
+            For a list of series identified by their id in the API database, the schedule of the week is build.
+
+            **Parameters**
+                - list_ids : list of the series' id
+                - number_of_days : the number of days we want to look at
+
+            **Returns**
+                - list of the diffusion in the week with the date + the list of dictionaries of diffusion
+        """
+        if not isinstance(id, int):
+            raise e.SeriesIdAreIntegers("")
+        today = datetime.date.today()
+        dict_series = None
+        for d in range(0, number_of_days):
+            date =str(today + datetime.timedelta(days = d))
+            response = requests.get('http://api.tvmaze.com/shows/' + str(id) + '/episodesbydate?date=' + date)
+            try:
+                assert response.status_code == 200
+                response = response.json()[0]
+                try:
+                    try:
+                        name = response['name']
+                        season = response['season']
+                        number = response['number']
+                        time = response['airtime']
+                    except:
+                        raise(Exception)
+                    try:     
+                        summary = response['summary']
+                        image = response['image']['medium']
+                    except:
+                        summary = ""
+                        image = ""
+                    
+                    dict_series = {'name': name,
+                                   'time': time,
+                                   'date': date,
+                                   'season': season,
+                                   'episode': number,
+                                   'summary': summary,
+                                   'image': image}
+                    return(dict_series)
+                except Exception:
+                    raise(Exception)
+            except Exception:
+                pass
+        return(dict_series)
+
+
 
 def get_dates(n = 7):
     """returns a list of dates (y-m-d), starting with today's date and the other elements are the following days"""
@@ -425,5 +477,5 @@ if __name__ == '__main__':
     # RequestAPI.get_crew(120)
     # RequestAPI.get_seasons(568)
     # RequestAPI.get_episodes
-    RequestAPI.notification_schedule([1859], 7)
+    RequestAPI.notification_schedule([5], 7)
 
