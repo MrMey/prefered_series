@@ -382,13 +382,22 @@ class RequestAPI:
                     air_time = None
                     season = None
                     number = None
+                    summary = None
+                    image = None
                     try:
                         name = response['name']
                         season = response['season']
                         number = response['number']
                         air_time = response['air_time']
+                        summary = response['summary']
+                        image = response['image']['medium']
 
-                        dict_series = {'name': name, 'time': air_time, 'season': season, 'episode': number}
+                        dict_series = {'name': name,
+                                       'time': air_time,
+                                       'season': season,
+                                       'episode': number,
+                                       'summary': summary,
+                                       'image': image}
                         l[1].append(dict_series)
                     except Exception:
                         pass
