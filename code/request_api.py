@@ -4,7 +4,8 @@
 # -*- coding: utf-8 -*-
 import requests
 import exceptions as e
-import re 
+import re
+import datetime
 
 class RequestAPI:
     """ Sends requests to the TV shows API tvmaze
@@ -355,17 +356,18 @@ class RequestAPI:
         return schedule_dictionary
 
     @staticmethod
-    def notification_schedule(list_ids, list_dates):
+    def notification_schedule(list_ids, number_of_days):
         """
             For a list of series identified by their id in the API database, the schedule of the week is build.
 
             **Parameters**
                 - list_ids : list of the series' id
-                - the dates
+                - number_of_days : the number of days we want to look at
 
             **Returns**
                 - list of the diffusion in the week with the date + the list of dictionaries of diffusion
         """
+        list_dates = get_dates(number_of_days)
         L = []
         for date in list_dates:
             l = [date, []]
@@ -407,6 +409,13 @@ class RequestAPI:
         print(L)
 
 
+def get_dates(n = 7):
+    """returns a list of dates (y-m-d), starting with today's date and the other elements are the following days"""
+    today = datetime.date.today()
+    dates = [str(today)]
+    for d in range(1, n):
+        dates.append(str(today + datetime.timedelta(days = d)))
+    return(dates)
 
 if __name__ == '__main__':
     # RequestAPI.research('game')
@@ -415,5 +424,5 @@ if __name__ == '__main__':
     # RequestAPI.get_crew(120)
     # RequestAPI.get_seasons(568)
     # RequestAPI.get_episodes
-    RequestAPI.notification_schedule([1, 30, 450, 3500], ['2017-07-01', '2017-07-02'])
+    RequestAPI.notification_schedule([1, 30, 450, 3500], 80)
 
