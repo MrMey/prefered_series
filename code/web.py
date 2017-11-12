@@ -235,17 +235,19 @@ class FullControler(WebSite,Controler):
             '/signup'
         """
         if request.method == 'POST':
-            if self.req_database.is_in_table("users","login",request.form["login"]):
-                return(render_template('signup.html',message = "Login not available"))
-            if request.form["login"] != request.form["login_confirmation"]:
-                return(render_template('signup.html',message = "Login confirmation does not match"))
+            #check in the database if the login is available
+            if self.req_database.is_in_table("users","login",request.form['login']):
+                return(render_template('signup.html',
+                                       message = "Login not available",
+                                       form = self.form))
 
-            self.req_database.add_user(request.form['login'],request.form['last_name'])
-            self.user.log_in(request.form["login"],
-                               self.req_database.get_users_by_login('id',request.form["login"]))
+            self.req_database.add_user(request.form['login'],request.form['lastname'])
+            self.user.log_in(request.form['login'],
+                               self.req_database.get_users_by_login('id',request.form['login']))
             return(redirect(url_for('main')))
 
-        return(render_template('signup.html'),self.form)
+        return(render_template('signup.html',
+               form = self.form))
 
     def details(self, serie = ""):
         """ **routes**
@@ -286,8 +288,8 @@ class FullControler(WebSite,Controler):
                                message = message))
 
 class RegistrationForm(Form):
-    username = TextField('Username',[validators.Length(min=4,max=20)])
-    email = TextField('Email Address',[validators.Length(min=6,max=50)])
+    login = TextField('Login',[validators.Length(min=4,max=20)])
+    lastname = TextField('Last Name',[validators.Length(min=6,max=50)])
     accept_tos = BooleanField('I accept the <a href="/tos">Terms of Service</a>', [validators.Required()])
 
 if __name__ == '__main__':
