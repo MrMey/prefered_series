@@ -87,12 +87,6 @@ class Series:
         return(self._website)
     website = property(_get_website)
 
- 
-    
-    def initiate_from_basics(self,params):
-        self._name = params[0]
-        self._image = params[1]
-
     def initiate_from_details(self,params):
         if(params[0] == None):
             self._name = 'missing name'
@@ -131,9 +125,8 @@ class Series:
         else:
             self._website = params[8]
 
-    
     def get_basics(self):
-        return([self._name,self._image,self._id])
+        return([self._name,self._image,self._id,self._status])
 
     def missing_basic(series_list):
         for series in series_list:

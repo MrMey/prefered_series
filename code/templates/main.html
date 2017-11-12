@@ -114,18 +114,18 @@
 	<table class="timetable">
 	<thead class "timetable_header">
 	<tr>
-		{% for day in ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'] :%}
-		<th class = "timetable_header_cell">{{day}}</th>
+		{% for day in schedule :%}
+		<th class = "timetable_header_cell">{{day[0]}}</th>
 		{% endfor %}
 	</tr>
 	</thead>
 	<tbody>
 		<!-- bloc de series -->
 	<tr class = "day">
-		{% for day in schedule.keys() :%}
+		{% for day in schedule :%}
 		<td class ="cell">
 		<ul>
-			{% for series in schedule[day] %}
+			{% for series in day[1] %}
 			<li>
 			{{series['time']}}
 			{{series['name']}}

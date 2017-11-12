@@ -12,6 +12,8 @@ import request_api
 import series
 import exceptions as e
 from wtforms import Form, BooleanField, TextField, validators
+from threading import Thread,RLock
+
 
 class WebSite(Flask):
     """ class which manages the web routes definition. It is basicially
@@ -61,9 +63,9 @@ class Controler():
         self.user.series = self.req_database.select_series_from_user(self.user.id)
 
     def add_series(self,user_id):
-        [name,image,id] = self.series.get_basics()
+        [name,image,id,status] = self.series.get_basics()
         try:
-            serie_id = self.req_database.add_series(name,image,id)
+            serie_id = self.req_database.add_series(name,image,id,status)
         except e.AlreadyExistingInstanceError:
             serie_id = self.req_database.get_series_id_by_name(name)
 
@@ -183,12 +185,11 @@ class FullControler(WebSite,Controler):
             self.user.series = self.req_database.select_series_from_user(self.user.user_id)
 
             id_list = []
-            for item in self.user.series:
+            for item in self.req_database.select_running_series_from_user(self.user.user_id):
                 id_list.append(item[0])
-            self.user.schedule = request_api.RequestAPI.schedule(id_list)
-
+            schedule=request_api.RequestAPI.notification_schedule(id_list, 7)
             return(render_template('main.html',series_list=self.user.series,
-                                   schedule=self.user.schedule,
+                                   schedule=schedule,
                                    logged=self.user.is_logged(),
                                    message=message))
 

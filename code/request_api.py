@@ -375,11 +375,11 @@ class RequestAPI:
                 if not isinstance(series, int):
                     raise e.SeriesIdAreIntegers("")
                 response = requests.get('http://api.tvmaze.com/shows/' + str(series) + '/episodesbydate?date=' + date)
+                
                 # requests.get('http://api.tvmaze.com/shows/' + str(series) + '/episodesbydate?date=' + date)
                 try:
                     assert response.status_code == 200
-                    response = response.json()
-
+                    response = response.json()[0]
                     name = None
                     air_time = None
                     season = None
@@ -390,23 +390,24 @@ class RequestAPI:
                         name = response['name']
                         season = response['season']
                         number = response['number']
-                        air_time = response['air_time']
+                        air_time = response['airtime']
                         summary = response['summary']
                         image = response['image']['medium']
-
+                        
                         dict_series = {'name': name,
                                        'time': air_time,
                                        'season': season,
                                        'episode': number,
                                        'summary': summary,
                                        'image': image}
+                        
                         l[1].append(dict_series)
                     except Exception:
                         pass
                 except Exception:
                     pass
             L.append(l)
-        print(L)
+        return(L)
 
 
 def get_dates(n = 7):
@@ -418,11 +419,11 @@ def get_dates(n = 7):
     return(dates)
 
 if __name__ == '__main__':
-    # RequestAPI.research('game')
+    #RequestAPI.research('game')
     # RequestAPI.get_details(48)
     # RequestAPI.get_cast(120)
     # RequestAPI.get_crew(120)
     # RequestAPI.get_seasons(568)
     # RequestAPI.get_episodes
-    RequestAPI.notification_schedule([1, 30, 450, 3500], 80)
+    RequestAPI.notification_schedule([1859], 7)
 
