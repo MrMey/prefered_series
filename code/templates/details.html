@@ -120,9 +120,9 @@
 				</div>
 			    <div>
 					{% for season in dict_episodes: %}
-					<h5>Season {{season}}</h5>
+					<h4>Season {{season}}</h4>
 					{% for episode in dict_episodes[season] %}
-						<p>Episode {{episode}} : {{dict_episodes[season][episode]['name']}} </p>
+						<h5>Episode {{episode}} : {{dict_episodes[season][episode]['name']}} </h5>
 						<p>{{dict_episodes[season][episode]['summary']}}</p>
 					{% endfor %}
 					<br>
