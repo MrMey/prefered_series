@@ -1,8 +1,5 @@
 {% extends "main.html" %}
 
-{% block navigation %}
-{% endblock %}
-
 {% block tagline %}
 {% endblock %}
 
@@ -10,6 +7,7 @@
 {% endblock %}
 
 {% block message %}
+<<<<<<< HEAD
 
 		<h4>Let's register you!</h4>
 		<br>
@@ -25,6 +23,19 @@
 					<input type="text" class="form-control" id="inlineFormInputGroup" name="email" placeholder="What's your email address?">
 				</div>
 				<br>
+=======
+	<div class = "message">
+	{{message}}
+	</div>
+	
+	<div class = "container">
+		<h4>Let's register you!</h4>
+		<br>
+		<form action = "" method=post>
+			<dl>
+				{{ form.login.label }} {{ form.login }}
+				{{ form.lastname.label }} {{ form.lastname }}
+>>>>>>> 4e372eeb28cc69fc222a9115685fd5c45de31b64
 				{{ form.accept_tos.label }} {{ form.accept_tos }}
 			</div>
 			<button type="submit" class="btn btn-info">Submit</button>

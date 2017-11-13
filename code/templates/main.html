@@ -63,6 +63,7 @@
 
   </header>
 
+<<<<<<< HEAD
   <body>
 
 	<div class = "col-xl-">
@@ -148,6 +149,95 @@
 
 	  </div>
   </div>
+=======
+</nav>
+
+	{% endblock %}
+
+	<div class = "main_frame">
+	<div class="jumbotron jumbotron-fluid">
+	{% block message %}
+	<div class ="message">
+		{{message}}
+	</div>
+	{% endblock message %}
+
+	{% block tagline %}
+	{% if not logged %}
+
+    <blockquote class="blockquote text-center">
+    		<h1 class="display-3">
+  			<img src="http://www.gratisskole.dk/sdata/minipic/008/00816-300.png" width="70" height="70" alt=""></img>
+  			Track.Series
+  		</h1>
+    		<p class="lead">Keeping track of your favorite shows just became much easier.</p>
+    		<hr class="my-3">
+    		<p class="lead">Gather your favorite TV shows and make sure to never miss an episode again.</p>
+    		<p class="lead">
+      		  <a class="btn btn-primary btn-lg" role="button" href="{{ url_for('signup')}}">Join Track.Series</a>
+    		</p>
+    </blockquote>
+
+	{% endif %}
+	{% endblock tagline %}
+
+	{% block login %}
+	{% endblock %}
+
+	{% block series %}
+
+	<h3> Favorite Series </h3>
+	<blockquote id = "blockquote text-center">
+		<!-- bloc de series -->
+		{% for series in series_list %}
+
+		<div class = "series" class="card bg-light mb-3" style="width: 13rem;">
+			<img class="card-img-top" alt="Card image cap" src = {{series[2]}}></img>
+			<div class = "serie" class="card-body">
+				<a id="title" class="card-title" href = {{ url_for('details',serie = series[0]) }}>{{series[1]}}</a>
+			</div>
+		</div>
+
+		{% endfor %}
+
+	</blockquote>
+ 
+
+	<h3> Calendar </h3>
+	<table class="timetable">
+	<thead class "timetable_header">
+	<tr>
+		{% for day in schedule.keys() :%}
+		<th class = "timetable_header_cell">{{day}}</th>
+		{% endfor %}
+	</tr>
+	</thead>
+	<tbody>
+		<!-- bloc de series -->
+	<tr class = "day">
+		{% for day in schedule.keys() :%}
+		<td class ="cell">
+		<ul>
+			{% for series in schedule[day] %}
+			<li>
+			{{series[6]}}
+			{{series[1]}}
+			</li>
+			{% endfor %}
+		</ul>
+
+		</td>
+		{% endfor %}
+	</tr>
+	</tbody>
+
+	</table>
+
+	{% endblock %}
+
+	</div>
+	</div>
+>>>>>>> 4e372eeb28cc69fc222a9115685fd5c45de31b64
 
 <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
