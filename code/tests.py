@@ -6,6 +6,7 @@
 import test_request_api as trapi
 import test_request_database as trdb
 
+# testing the API requests with Travis
 test_api = trapi.MyTestCase()
 test_api.test_request_api()
 

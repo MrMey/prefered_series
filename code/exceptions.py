@@ -14,12 +14,18 @@ class Error(Exception):
         return self.message
 
 
+# Errors linked to the Database:
 class DataBaseError(Error):
-    """ manages the database errors
-    """
+    """ manages the database errors"""
     pass
 
+class InvalidFieldError(DataBaseError):
+    pass
 
+class AlreadyExistingInstanceError(DataBaseError):
+    pass
+
+# Errors linked to the API requests:
 class APIError(Error):
     """ manages the errors linked to API requests"""
     pass
@@ -41,19 +47,11 @@ class SeriesIdAreIntegers(APIError):
     """error if functions are called with a series id that is not of type int"""
     pass
 
-
+# Errors linked to the User class:
 class UserError(Error):
-    """ manages the errors linked to API requests
-    """
+    """ manages the errors linked to API requests"""
     pass
 
 
 class UndefinedUserError(UserError):
-    pass
-
-
-class InvalidFieldError(DataBaseError):
-    pass
-
-class AlreadyExistingInstanceError(DataBaseError):
     pass

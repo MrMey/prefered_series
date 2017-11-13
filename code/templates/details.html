@@ -6,12 +6,14 @@
 
 		<div class="row">
  			<div class="col-sm-4" style="padding-left: 80px; padding-top: 20px; margin: 0px; width:10%;">
+				<!--left part of the screen,
+				with the image, the rating, the genre and a "add/remove from favorite" if logged-->
 				{% if logged :%}
 				<div style="position: fixed; padding: 0px; margin: 0px">
 				<img class="card-img-top" alt="Card image cap" src={{series.image}} style="width:100%;"></img>
 				<p>Ratings : {{series.rating}}</p>
 				<p> Genres :
-					{% for genre in series.genre: %}
+					{% for genre in series.genre: %} <!--series.genre is a list of genres-->
 					{{genre}}
 					{% endfor %}
 				</p>
@@ -39,19 +41,25 @@
 			</div>
 
   			<div class="col-sm-8" style="padding-right:10%;">
+				<!--right part of the screen,
+				with the title, the summary, the link to the official website, the cast, the crew,
+				details about he seasons and episodes-->
 				<div style="padding-left:0px;padding-right:20px;padding-top:30px;padding-bottom:20px" >
+					<!--title-->
 					<h1>{{series.name}}</h1>
 				</div>
+				<!--summary-->
 				<h3>Summary:</h3>
 				<p>{{series.summary}}</p>
-
-				<p><a href = "{{series.website}}"}>Lien externe </a></p>
-
+				<!--link-->
+				<p><a href = "{{series.website}}"}>Site officiel </a></p>
 				<hr>
 				<div>
+					<!--cast-->
 					<h3>Cast:</h3>
 					{% for person in cast: %}
 						<div class = "series" class="card bg-light mb-3" style="width: 13rem;">
+							<!--picture-->
 							{% if person[2] != None : %}
 							<img class="card-img-top" alt="Card image cap" src={{person[2]}} style="width: 12rem;"></img>
 							{%else%}
@@ -60,6 +68,7 @@
 							<br>
 							<br>
 							<p>
+							<!--name and role-->
 							{% if person[0] != None : %}
 							{{person[0]}}
 							{%endif%}
@@ -75,10 +84,12 @@
 				<hr>
 
 				<div>
+					<!--crew-->
 					<h3>Crew:</h3>
 					<div>
 					{% for person in crew: %}
 						<div class = "series" class="card bg-light mb-3" style="width: 13rem;">
+							<!--picture-->
 							{% if person[2] != None : %}
 							<img class="card-img-top" alt="Card image cap" src={{person[2]}} style="width: 12rem;"></img>
 							{%else%}
@@ -87,6 +98,7 @@
 							<br>
 							<br>
 							<p>
+							<!--name and job-->
 							{% if person[0] != None : %}
 							{{person[0]}}
 							{%endif%}
@@ -104,18 +116,22 @@
 				<hr>
 
 				<div>
+					<!--seasons-->
 					<h3>Seasons:</h3>
 					{% for season in seasons: %}
 					{% if season[1] != None : %}
+					<!--name of the season-->
 					<h5>Season {{season[0]}} : {{season[1]}}</h5>
 					{% else: %}
 					<h5>Season {{season[0]}} :</h5>
 				    {% endif %}
 					{% if season[2] != None : %}
+					<!--summary-->
 					<p>{{season[2]}}</p>
 					{% endif %}
 					{% if season[3] != None : %}
 					{% if season[4] != None : %}
+					<!--beginning and enddate-->
 					<p>beginning of the season : {{season[3]}}, end of the season : {{season[4]}}</p>
 					{% endif %}
 					{% endif %}
@@ -124,13 +140,17 @@
 				<hr>
 
 				<div>
+					<!--episodes-->
 					<h3>Episodes:</h3>
 				</div>
 			    <div>
 					{% for season in dict_episodes: %}
+					<!--season number-->
 					<h4>Season {{season}}</h4>
 					{% for episode in dict_episodes[season] %}
+						<!--number and name of the episode-->
 						<h5>Episode {{episode}} : {{dict_episodes[season][episode]['name']}} </h5>
+						<!--summary of the episode-->
 						<p>{{dict_episodes[season][episode]['summary']}}</p>
 					{% endfor %}
 					<br>
