@@ -242,7 +242,7 @@ class FullControler(WebSite,Controler,RegistrationForm):
         form = RegistrationForm(request.form)
 
         print(form.errors)
-        if request.method == 'POST' and form.validate():
+        if request.method == 'POST':
             if self.req_database.is_in_table("users","login",request.form["username"]):
                 return(render_template('signup.html',message = "Login not available"))
 
@@ -250,6 +250,11 @@ class FullControler(WebSite,Controler,RegistrationForm):
             self.user.log_in(request.form["username"],
                                self.req_database.get_users_by_login('id',request.form["username"]))
             return(redirect(url_for('main')))
+
+            if form.validate():
+                flash('Hello'+ username)
+            else:
+                flash('Error: All the fields must be filled.')
 
         return(render_template('signup.html', form=form))
 

@@ -14,136 +14,140 @@
 
   </head>
 
+  <header>
+
+  	{% block navigation %} <!-- Menu de navigation pour atteindre nos autres pages -->
+
+  	<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary">
+
+    <a class="navbar-brand" href="{{ url_for('main')}}">
+    	<img src="http://www.gratisskole.dk/sdata/minipic/008/00816-300.png" width="30" height="30" alt="">
+    	Track.Series
+    </a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+      </ul>
+
+      {% block loginmenu %}
+
+      {% if logged: %}
+  		<form class="form-inline my-2 my-lg-0" action="{{ url_for('login') }}" method = "Post">
+          	<button class="btn btn-primary" type="submit" name = "logout">Logout</button>
+  		</form>
+
+      {% else: %}
+  		<form class="form-inline my-2 my-lg-0" action="{{ url_for('login') }}" method = "Post">
+  			<input class="form-control mr-sm-2" placeholder="Input your login" type="password" name ="login">
+  			<button class="btn btn-primary" type="submit">Login</button>
+  		</form>
+
+      {% endif %}
+
+      {% endblock %}
+
+          <form class="form-inline my-2 my-lg-0" action="{{ url_for('search_serie') }}" method = "Post">
+  			<input class="form-control mr-sm-2" name ="serie" type="search" placeholder="Look for a TV show..." aria-label="Search">
+  			<button class="btn btn-primary" type="submit">Search</button>
+          </form>
+
+      </div>
+
+    </nav>
+
+  	{% endblock %}
+
+  </header>
 
   <body>
 
-	{% block navigation %} <!-- Menu de navigation pour atteindre nos autres pages -->
+	<div class = "col-xl-">
+    <div class="jumbotron jumbotron-fluid">
 
-	<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary">
+      {% block message %}
+      <div class ="message">
+        {{message}}
+      </div>
+      {% endblock message %}
 
-  <a class="navbar-brand" href="{{ url_for('main')}}">
-  	<img src="http://www.gratisskole.dk/sdata/minipic/008/00816-300.png" width="30" height="30" alt="">
-  	Track.Series
-  </a>
+    	{% block tagline %}
+    	{% if not logged %}
 
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+        <blockquote class="blockquote text-center">
+        		<h1 class="display-3">
+      			<img src="http://www.gratisskole.dk/sdata/minipic/008/00816-300.png" width="70" height="70" alt=""></img>
+      			Track.Series
+      		</h1>
+        		<p class="lead">Keeping track of your favorite shows just became much easier.</p>
+        		<hr class="my-3">
+        		<p class="lead">Gather your favorite TV shows and make sure to never miss an episode again.</p>
+        		<p class="lead">
+          		  <a class="btn btn-primary btn-lg" role="button" href="{{ url_for('signup')}}">Join Track.Series</a>
+        		</p>
+        </blockquote>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-    </ul>
+    	{% endif %}
+    	{% endblock tagline %}
 
-    {% block loginmenu %}
+    	{% block login %}
+    	{% endblock %}
 
-    {% if logged: %}
-		<form class="form-inline my-2 my-lg-0" action="{{ url_for('login') }}" method = "Post">
-        	<button class="btn btn-primary" type="submit" name = "logout">Logout</button>
-		</form>
+    	{% block series %}
 
-    {% else: %}
-		<form class="form-inline my-2 my-lg-0" action="{{ url_for('login') }}" method = "Post">
-			<input class="form-control mr-sm-2" placeholder="Input your login" type="password" name ="login">
-			<button class="btn btn-primary" type="submit">Login</button>
-		</form>
+    	<h3> Favorite Series </h3>
+    	<blockquote id = "blockquote text-center">
+    		<!-- bloc de series -->
+    		{% for series in series_list %}
 
-    {% endif %}
+    		<div class = "series" class="card bg-light mb-3" style="width: 13rem;">
+    			<img class="card-img-top" alt="Card image cap" src = {{series[2]}}></img>
+    			<div class = "serie" class="card-body">
+    				<a id="title" class="card-title" href = {{ url_for('details',serie = series[0]) }}>{{series[1]}}</a>
+    			</div>
+    		</div>
 
-    {% endblock %}
+    		{% endfor %}
 
-        <form class="form-inline my-2 my-lg-0" action="{{ url_for('search_serie') }}" method = "Post">
-			<input class="form-control mr-sm-2" name ="serie" type="search" placeholder="Look for a TV show..." aria-label="Search">
-			<button class="btn btn-primary" type="submit">Search</button>
-        </form>
+    	</blockquote>
 
+    	<h3> Calendar </h3>
+    	<table class="timetable">
+    	<thead class "timetable_header">
+    	<tr>
+    		{% for day in ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'] :%}
+    		<th class = "timetable_header_cell">{{day}}</th>
+    		{% endfor %}
+    	</tr>
+    	</thead>
+    	<tbody>
+    		<!-- bloc de series -->
+    	<tr class = "day">
+    		{% for day in schedule.keys() :%}
+    		<td class ="cell">
+    		<ul>
+    			{% for series in schedule[day] %}
+    			<li>
+    			{{series['time']}}
+    			{{series['name']}}
+    			</li>
+    			{% endfor %}
+    		</ul>
+
+    		</td>
+    		{% endfor %}
+    	</tr>
+    	</tbody>
+
+    	</table>
+
+    	{% endblock %}
+
+	  </div>
   </div>
-
-</nav>
-
-	{% endblock %}
-
-	<div class = "main_frame">
-	<div class="jumbotron jumbotron-fluid">
-	{% block message %}
-	<div class ="message">
-		{{message}}
-	</div>
-	{% endblock message %}
-
-	{% block tagline %}
-	{% if not logged %}
-
-    <blockquote class="blockquote text-center">
-    		<h1 class="display-3">
-  			<img src="http://www.gratisskole.dk/sdata/minipic/008/00816-300.png" width="70" height="70" alt=""></img>
-  			Track.Series
-  		</h1>
-    		<p class="lead">Keeping track of your favorite shows just became much easier.</p>
-    		<hr class="my-3">
-    		<p class="lead">Gather your favorite TV shows and make sure to never miss an episode again.</p>
-    		<p class="lead">
-      		  <a class="btn btn-primary btn-lg" role="button" href="{{ url_for('signup')}}">Join Track.Series</a>
-    		</p>
-    </blockquote>
-
-	{% endif %}
-	{% endblock tagline %}
-
-	{% block login %}
-	{% endblock %}
-
-	{% block series %}
-
-	<h3> Favorite Series </h3>
-	<blockquote id = "blockquote text-center">
-		<!-- bloc de series -->
-		{% for series in series_list %}
-
-		<div class = "series" class="card bg-light mb-3" style="width: 13rem;">
-			<img class="card-img-top" alt="Card image cap" src = {{series[2]}}></img>
-			<div class = "serie" class="card-body">
-				<a id="title" class="card-title" href = {{ url_for('details',serie = series[0]) }}>{{series[1]}}</a>
-			</div>
-		</div>
-
-		{% endfor %}
-
-	</blockquote>
-
-	<h3> Calendar </h3>
-	<table class="timetable">
-	<thead class "timetable_header">
-	<tr>
-		{% for day in ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'] :%}
-		<th class = "timetable_header_cell">{{day}}</th>
-		{% endfor %}
-	</tr>
-	</thead>
-	<tbody>
-		<!-- bloc de series -->
-	<tr class = "day">
-		{% for day in schedule.keys() :%}
-		<td class ="cell">
-		<ul>
-			{% for series in schedule[day] %}
-			<li>
-			{{series['time']}}
-			{{series['name']}}
-			</li>
-			{% endfor %}
-		</ul>
-
-		</td>
-		{% endfor %}
-	</tr>
-	</tbody>
-
-	</table>
-
-	{% endblock %}
-
-	</div>
-	</div>
 
 <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
