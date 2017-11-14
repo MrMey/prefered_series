@@ -91,9 +91,17 @@ class ThreadDB(Thread):
         self.req_database = req_database
         
     def run(self):
-        for item in self.req_database.select_running_series():
-            self.req_database.update_series(item[1],request_api.RequestAPI.get_next_diff(item[0],7))
-            time.sleep(10)
+        next_update = datetime.datetime(datetime.datetime.now().year,
+                                        datetime.datetime.now().month,
+                                        datetime.datetime.now().day)        
+        while True:
+            if datetime.datetime.now() >= next_update:
+                print('starting update')
+                for item in self.req_database.select_running_series():
+                    self.req_database.update_series(item[1],request_api.RequestAPI.get_next_diff(item[0],7))
+                    time.sleep(10)
+                next_update = next_update + datetime.timedelta('1 day')
+                print('update done')
 
 
 class User:
@@ -150,18 +158,20 @@ class User:
 
     def _set_schedule(self, schedule):
         self._schedule = {}
+        
         for d in range(0, 7):
             date =str(datetime.date.today() + datetime.timedelta(days = d))
             self._schedule[date] = []
         
         for diff in schedule:
-            self._schedule[diff[7]].append([diff[0],
-                                       diff[1],
-                                       diff[2],
-                                       diff[4],
-                                       diff[5],
-                                       diff[6],
-                                       diff[8]])
+            if diff[7] in self._schedule.keys():
+                self._schedule[diff[7]].append([diff[0],
+                                           diff[1],
+                                           diff[2],
+                                           diff[4],
+                                           diff[5],
+                                           diff[6],
+                                           diff[8]])
         
         for day in self._schedule.keys():
             if len(self._schedule[day]) > 1:
@@ -256,26 +266,7 @@ class FullControler(WebSite,Controler):
         """ **routes**
             '/signup'
         """
-<<<<<<< HEAD
-        form = RegistrationForm(request.form)
 
-        print(form.errors)
-        if request.method == 'POST':
-            if self.req_database.is_in_table("users","login",request.form["username"]):
-                return(render_template('signup.html',message = "Login not available"))
-
-            self.req_database.add_user(request.form['login'],request.form['username'])
-            self.user.log_in(request.form["username"],
-                               self.req_database.get_users_by_login('id',request.form["username"]))
-            return(redirect(url_for('main')))
-
-            if form.validate():
-                flash('Hello'+ username)
-            else:
-                flash('Error: All the fields must be filled.')
-
-        return(render_template('signup.html', form=form))
-=======
         if request.method == 'POST':
             #check in the database if the login is available
             if self.req_database.is_in_table("users","login",request.form['login']):
@@ -290,7 +281,7 @@ class FullControler(WebSite,Controler):
 
         return(render_template('signup.html',
                form = self.form))
->>>>>>> 4e372eeb28cc69fc222a9115685fd5c45de31b64
+
 
     def details(self, serie = ""):
         """ **routes**
@@ -339,5 +330,6 @@ if __name__ == '__main__':
     req_database = request_database.RequestDB()
     thread = ThreadDB(req_database)
     app = FullControler(req_database)
+    thread.start()
     app.run(debug=True)
-    thread.run()
+
