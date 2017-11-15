@@ -7,20 +7,25 @@
 {% endblock %}
 
 {% block message %}
-	<div class = "message">
-	{{message}}
-	</div>
-	
-	<div class = "container">
+
+
 		<h4>Let's register you!</h4>
 		<br>
-		<form action = "" method=post>
-			<dl>
-				{{ form.login.label }} {{ form.login }}
-				{{ form.lastname.label }} {{ form.lastname }}
+		<form method=post role="form">
+			<div class ="form-row align-items-center">
+				<div class="col-auto">
+					<label class="sr-only" for="inlineFormInput">Login:</label>
+					<input type="text" class="form-control mb-2 mb-sm-0" id="inlineFormInput" name="login" placeholder="Choose a Login">
+				</div>
+				<br>
+				<div class="col-auto">
+					<label class="sr-only" for="inlineFormInputGroup">Username:</label>
+					<input type="text" class="form-control" id="inlineFormInputGroup" name="username" placeholder="What's your username?">
+				</div>
+				<br>
 				{{ form.accept_tos.label }} {{ form.accept_tos }}
-			</dl>
-			<p><input type="submit" value="Register"></p>
+			</div>
+			<button type="submit" class="btn btn-info">Submit</button>
 		</form>
 
 		{% if error %}

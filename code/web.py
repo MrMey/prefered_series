@@ -91,9 +91,17 @@ class ThreadDB(Thread):
         self.req_database = req_database
         
     def run(self):
-        for item in self.req_database.select_running_series():
-            self.req_database.update_series(item[1],request_api.RequestAPI.get_next_diff(item[0],7))
-            time.sleep(10)
+        next_update = datetime.datetime(datetime.datetime.now().year,
+                                        datetime.datetime.now().month,
+                                        datetime.datetime.now().day)        
+        while True:
+            if datetime.datetime.now() >= next_update:
+                print('starting update')
+                for item in self.req_database.select_running_series():
+                    self.req_database.update_series(item[1],request_api.RequestAPI.get_next_diff(item[0],7))
+                    time.sleep(10)
+                next_update = next_update + datetime.timedelta('1 day')
+                print('update done')
 
 
 class User:
@@ -318,5 +326,6 @@ if __name__ == '__main__':
     req_database = request_database.RequestDB()
     thread = ThreadDB(req_database)
     app = FullControler(req_database)
+    thread.start()
     app.run(debug=True)
-    thread.run()
+

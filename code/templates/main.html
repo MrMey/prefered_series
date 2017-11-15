@@ -14,53 +14,54 @@
 
   </head>
 
+  <header>
 
-  <body>
+  	{% block navigation %} <!-- Menu de navigation pour atteindre nos autres pages -->
 
-	{% block navigation %} <!-- Menu de navigation pour atteindre nos autres pages -->
+  	<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary">
 
-	<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="{{ url_for('main')}}">
+    	<img src="http://www.gratisskole.dk/sdata/minipic/008/00816-300.png" width="30" height="30" alt="">
+    	Track.Series
+    </a>
 
-  <a class="navbar-brand" href="{{ url_for('main')}}">
-  	<img src="http://www.gratisskole.dk/sdata/minipic/008/00816-300.png" width="30" height="30" alt="">
-  	Track.Series
-  </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+      </ul>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-    </ul>
+      {% block loginmenu %}
 
-    {% block loginmenu %}
+      {% if logged: %}
+  		<form class="form-inline my-2 my-lg-0" action="{{ url_for('login') }}" method = "Post">
+          	<button class="btn btn-primary" type="submit" name = "logout">Logout</button>
+  		</form>
 
-    {% if logged: %}
-		<form class="form-inline my-2 my-lg-0" action="{{ url_for('login') }}" method = "Post">
-        	<button class="btn btn-primary" type="submit" name = "logout">Logout</button>
-		</form>
+      {% else: %}
+  		<form class="form-inline my-2 my-lg-0" action="{{ url_for('login') }}" method = "Post">
+  			<input class="form-control mr-sm-2" placeholder="Input your login" type="password" name ="login">
+  			<button class="btn btn-primary" type="submit">Login</button>
+  		</form>
 
-    {% else: %}
-		<form class="form-inline my-2 my-lg-0" action="{{ url_for('login') }}" method = "Post">
-			<input class="form-control mr-sm-2" placeholder="Input your login" type="password" name ="login">
-			<button class="btn btn-primary" type="submit">Login</button>
-		</form>
+      {% endif %}
 
-    {% endif %}
+      {% endblock %}
 
-    {% endblock %}
+          <form class="form-inline my-2 my-lg-0" action="{{ url_for('search_serie') }}" method = "Post">
+  			<input class="form-control mr-sm-2" name ="serie" type="search" placeholder="Look for a TV show..." aria-label="Search">
+  			<button class="btn btn-primary" type="submit">Search</button>
+          </form>
 
-        <form class="form-inline my-2 my-lg-0" action="{{ url_for('search_serie') }}" method = "Post">
-			<input class="form-control mr-sm-2" name ="serie" type="search" placeholder="Look for a TV show..." aria-label="Search">
-			<button class="btn btn-primary" type="submit">Search</button>
-        </form>
+      </div>
 
-  </div>
+    </nav>
 
-</nav>
+  	{% endblock %}
 
-	{% endblock %}
+  </header>
 
 	<div class = "main_frame">
 	<div class="jumbotron jumbotron-fluid">
@@ -109,31 +110,39 @@
 		{% endfor %}
 
 	</blockquote>
- 
+
 
 	<h3> Calendar </h3>
 	<table class="timetable">
 	<thead class "timetable_header">
-	<tr>
-		{% for day in schedule.keys() :%}
-		<th class = "timetable_header_cell">{{day}}</th>
-		{% endfor %}
-	</tr>
+		<tr>
+			{% for day in schedule.keys() :%}
+			<th class = "timetable_header_cell">{{day}}</th>
+			{% endfor %}
+		</tr>
 	</thead>
+	
 	<tbody>
 		<!-- bloc de series -->
 	<tr class = "day">
 		{% for day in schedule.keys() :%}
 		<td class ="cell">
 		<ul>
+		{% if schedule[day] != [] %}
+		
 			{% for series in schedule[day] %}
 			<li>
 			{{series[6]}}
 			{{series[1]}}
 			</li>
 			{% endfor %}
+		
+		{% else %}
+			<li>
+			No series
+			</li>
+		{% endif %}
 		</ul>
-
 		</td>
 		{% endfor %}
 	</tr>
