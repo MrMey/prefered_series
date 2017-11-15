@@ -158,18 +158,20 @@ class User:
 
     def _set_schedule(self, schedule):
         self._schedule = {}
+        
         for d in range(0, 7):
             date =str(datetime.date.today() + datetime.timedelta(days = d))
             self._schedule[date] = []
         
         for diff in schedule:
-            self._schedule[diff[7]].append([diff[0],
-                                       diff[1],
-                                       diff[2],
-                                       diff[4],
-                                       diff[5],
-                                       diff[6],
-                                       diff[8]])
+            if diff[7] in self._schedule.keys():
+                self._schedule[diff[7]].append([diff[0],
+                                           diff[1],
+                                           diff[2],
+                                           diff[4],
+                                           diff[5],
+                                           diff[6],
+                                           diff[8]])
         
         for day in self._schedule.keys():
             if len(self._schedule[day]) > 1:
@@ -264,6 +266,7 @@ class FullControler(WebSite,Controler):
         """ **routes**
             '/signup'
         """
+
         if request.method == 'POST':
             #check in the database if the login is available
             if self.req_database.is_in_table("users","login",request.form['login']):
@@ -278,6 +281,7 @@ class FullControler(WebSite,Controler):
 
         return(render_template('signup.html',
                form = self.form))
+
 
     def details(self, serie = ""):
         """ **routes**
