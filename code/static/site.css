@@ -1,11 +1,16 @@
 .main_frame{
 	margin : 0%;
-	background-color:DodgerBlue;
+	background-color:#581845;
 }
 
 h3{
 	padding: 1%;
 }
+
+a {
+    color: #900c3f;
+}
+
 
 #title:link {
 	color:#3366ff ;

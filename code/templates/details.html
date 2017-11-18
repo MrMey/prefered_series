@@ -4,8 +4,8 @@
 
 	<blockquote class="blockquote">
 
-		<div class="row">
- 			<div class="col-sm-4" style="padding-left: 80px; padding-top: 20px; margin: 0px; width:10%;">
+		<div class="row" style="background:white;">
+ 			<div class="col-sm-4" style="padding-left: 80px; padding-top: 20px; margin: 0px; width:10%; background:#ff5733; color:white;">
 				<!--left part of the screen,
 				with the image, the rating, the genre and a "add/remove from favorite" if logged-->
 				{% if logged :%}
@@ -19,11 +19,11 @@
 				</p>
 				{% if subscribed %}
 					<form class="form-inline my-2 my-lg-0" action="{{ url_for('details',serie = series.id) }}" method = "Post">
-		  			<input class="form-control mr-sm-2" type="submit" name = "submit" value="Remove from favorites">
+		  			<input class="form-control mr-sm-2" style="background:#ffc300; color: black;" type="submit" name = "submit" value="Remove from favorites">
 					</form>
 				{% else %}
 					<form class="form-inline my-2 my-lg-0" action="{{ url_for('details',serie = series.id) }}" method = "Post">
-			  			<input class="form-control mr-sm-2" type="submit" name = "submit" value="Add to favorites">
+			  			<input class="form-control mr-sm-2" style="background:#ffc300; color: black;" type="submit" name = "submit" value="Add to favorites">
 					</form>
 				{% endif %}
 				</div>
@@ -46,17 +46,17 @@
 				details about he seasons and episodes-->
 				<div style="padding-left:0px;padding-right:20px;padding-top:30px;padding-bottom:20px" >
 					<!--title-->
-					<h1>{{series.name}}</h1>
+					<h1 style="color: #581845;">{{series.name}}</h1>
 				</div>
 				<!--summary-->
-				<h3>Summary:</h3>
+				<h3 style="color: #900c3f">Summary:</h3>
 				<p>{{series.summary}}</p>
 				<!--link-->
-				<p><a href = "{{series.website}}"}>Site officiel </a></p>
+				<p><a style="color: #900c3f" href = "{{series.website}}"}>Site officiel </a></p>
 				<hr>
 				<div>
 					<!--cast-->
-					<h3>Cast:</h3>
+					<h3 style="color: #900c3f">Cast:</h3>
 					{% for person in cast: %}
 						<div class = "series" class="card bg-light mb-3" style="width: 13rem;">
 							<!--picture-->
@@ -85,7 +85,7 @@
 
 				<div>
 					<!--crew-->
-					<h3>Crew:</h3>
+					<h3 style="color: #900c3f">Crew:</h3>
 					<div>
 					{% for person in crew: %}
 						<div class = "series" class="card bg-light mb-3" style="width: 13rem;">
@@ -117,13 +117,13 @@
 
 				<div>
 					<!--seasons-->
-					<h3>Seasons:</h3>
+					<h3 style="color: #900c3f">Seasons:</h3>
 					{% for season in seasons: %}
 					{% if season[1] != None : %}
 					<!--name of the season-->
-					<h5>Season {{season[0]}} : {{season[1]}}</h5>
+					<h5 style="color: #c70039;">Season {{season[0]}} : {{season[1]}}</h5>
 					{% else: %}
-					<h5>Season {{season[0]}} :</h5>
+					<h5 style="color: #c70039;">Season {{season[0]}} :</h5>
 				    {% endif %}
 					{% if season[2] != None : %}
 					<!--summary-->
@@ -141,15 +141,15 @@
 
 				<div>
 					<!--episodes-->
-					<h3>Episodes:</h3>
+					<h3 style="color: #900c3f">Episodes:</h3>
 				</div>
 			    <div>
 					{% for season in dict_episodes: %}
 					<!--season number-->
-					<h4>Season {{season}}</h4>
+					<h4 style="color: #c70039;">Season {{season}}</h4>
 					{% for episode in dict_episodes[season] %}
 						<!--number and name of the episode-->
-						<h5>Episode {{episode}} : {{dict_episodes[season][episode]['name']}} </h5>
+						<h5 style="color: #ff5733;">Episode {{episode}} : {{dict_episodes[season][episode]['name']}} </h5>
 						<!--summary of the episode-->
 						<p>{{dict_episodes[season][episode]['summary']}}</p>
 					{% endfor %}
