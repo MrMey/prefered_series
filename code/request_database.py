@@ -129,7 +129,6 @@ class RequestDB:
         """
         if(not isinstance(instruction,str)):
             raise(e.DataBaseError("instruction must be a sql string in execute"))
-        print(instruction)
         self.__cursor.execute(instruction)
         self.__commit()
 

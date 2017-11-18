@@ -100,8 +100,9 @@ class ThreadDB(Thread):
                 for item in self.req_database.select_running_series():
                     self.req_database.update_series(item[1],request_api.RequestAPI.get_next_diff(item[0],7))
                     time.sleep(10)
-                next_update = next_update + datetime.timedelta('1 day')
+                next_update = next_update + datetime.timedelta(days = 1)
                 print('update done')
+            time.sleep(3600)
 
 
 class User:
@@ -274,7 +275,7 @@ class FullControler(WebSite,Controler):
                                        message = "Login not available",
                                        form = self.form))
 
-            self.req_database.add_user(request.form['login'],request.form['lastname'])
+            self.req_database.add_user(request.form['login'],request.form['username'])
             self.user.log_in(request.form['login'],
                                self.req_database.get_users_by_login('id',request.form['login']))
             return(redirect(url_for('main')))
@@ -324,7 +325,6 @@ class FullControler(WebSite,Controler):
 class RegistrationForm(Form):
     login = TextField('Login',[validators.Length(min=4,max=20)])
     lastname = TextField('Last Name',[validators.Length(min=6,max=50)])
-    accept_tos = BooleanField('I accept the <a href="/tos">Terms of Service</a>', [validators.Required()])
 
 if __name__ == '__main__':
     req_database = request_database.RequestDB()

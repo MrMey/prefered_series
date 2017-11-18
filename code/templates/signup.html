@@ -11,7 +11,7 @@
 		<div style="background: #ff5733; margin-left: 30%; margin-right: 30%; padding: 40px">
 		<h4 style="color: white; text-align: center;">Let's register you!</h4>
 		<br>
-		<form method=post role="form" style="text-align: center;">
+		<form action = "" method="Post" role="form" style="text-align: center;">
 			<div class="col-auto" style="margin : auto; width : 360px;">
 				<label class="sr-only" for="inlineFormInput">Login:</label>
 				<input type="text" class="form-control mb-2 mb-sm-0" id="inlineFormInput" name="login" placeholder="Choose a Login">
@@ -22,9 +22,7 @@
 				<input type="text" class="form-control" id="inlineFormInputGroup" name="username" placeholder="What's your username?">
 			</div>
 			<br>
-			<div class="col-auto" style="margin : auto;">
-			{{ form.accept_tos.label }} {{ form.accept_tos }}
-			</div>
+
 			<button type="submit" class="btn" style="margin-top: 20px; background: #ffc300">Submit</button>
 		</form>
 
