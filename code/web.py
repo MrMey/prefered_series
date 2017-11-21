@@ -289,21 +289,24 @@ class FullControler(WebSite,Controler):
         """ **routes**
             '/signup'
         """
-
+        message = "Please signup"
         if request.method == 'POST':
             #check in the database if the login is available
-            if self.req_database.is_in_table("users","login",request.form['login']):
-                return(render_template('signup.html',
-                                       message = "Login not available",
-                                       form = self.form))
-
-            self.req_database.add_user(request.form['login'],request.form['username'])
-            self.user.log_in(request.form['login'],
-                               self.req_database.get_users_by_login('id',request.form['login']))
-            return(redirect(url_for('main')))
+            if len(request.form['login']) < 3:
+                message = "Enter a login with at least 4 characters"
+            elif len(request.form['username']) < 3:
+                message = "Enter a username with at least 4 characters"
+            elif self.req_database.is_in_table("users","login",request.form['login']):
+                message = "Login not available"
+            else:
+                self.req_database.add_user(request.form['login'],request.form['username'])
+                self.user.log_in(request.form['login'],
+                                   self.req_database.get_users_by_login('id',request.form['login']))
+                return(redirect(url_for('main')))
 
         return(render_template('signup.html',
-               form = self.form))
+                               message = message,
+                               form = self.form))
 
 
     def details(self, serie = ""):
