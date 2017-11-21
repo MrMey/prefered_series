@@ -132,8 +132,8 @@
 		
 			{% for series in schedule[day] %}
 			<li>
-			{{series[6]}}
-			{{series[1]}}
+				{{series[6]}}
+				<a href="#" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-content="{{series[1]}} : season {{series[4]}} episode {{series[3]}}" style="color: white;">{{series[1]}}</a>
 			</li>
 			{% endfor %}
 		
@@ -162,5 +162,11 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 
   </body>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover();
+});
+</script>
 
 </html>
