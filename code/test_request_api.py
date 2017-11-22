@@ -90,15 +90,3 @@ class MyTestCase(unittest.TestCase):
                 self.assertTrue((isinstance(episode[4], str)) or (episode[4] is None))
                 self.assertTrue((isinstance(episode[5], int)) or (episode[5] is None))
                 self.assertTrue((isinstance(episode[6], str)) or (episode[6] is None))
-
-        print("Test 7: method schedule")
-        dict_schedule = r_api.RequestAPI.schedule([45, 49, 48, 43])
-        self.assertTrue(isinstance(dict_schedule, dict))
-        for key in dict_schedule:
-            self.assertTrue(key in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
-            self.assertTrue(isinstance(dict_schedule[key], list))
-            for series in dict_schedule[key]:
-                self.assertTrue(isinstance(series, dict))
-                for key_series in series:
-                    self.assertTrue(key_series in ["name", "time"])
-                    self.assertTrue(isinstance(series[key_series], str))
