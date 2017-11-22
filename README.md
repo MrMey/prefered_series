@@ -21,4 +21,7 @@ it will install all the libraries you need.
 pip install -r requirements.txt
 
 # Run :
-Run web.py
+Run web.py and go to http://127.0.0.1:5000/main
+
+# Example :
+If you want to see a user account with some series already selected, you can try "paul" as a login
