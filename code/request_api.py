@@ -257,7 +257,7 @@ class RequestAPI:
         id_series is the id of the series in the API database (int)
 
         **Returns**
-        a list of the episodes of a series described by a list with
+        a dictionary of the episodes of a series described by a list with
         - the number of the season
         - the number of the episode
         - the name

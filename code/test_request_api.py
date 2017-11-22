@@ -78,15 +78,16 @@ class MyTestCase(unittest.TestCase):
                 self.assertTrue((isinstance(season[4], str)) or (season[4] is None))
 
         print("Test 6: method get_episodes")
-        self.assertTrue(isinstance(r_api.RequestAPI.get_episodes(12), list))
+        self.assertTrue(isinstance(r_api.RequestAPI.get_episodes(12), dict))
         test_series = [r_api.RequestAPI.get_episodes(27845), r_api.RequestAPI.get_episodes(120)]
         for series in test_series:
-            for episode in series:
-                self.assertEquals(len(episode), 7)
-                self.assertTrue(isinstance(episode[0], int))
-                self.assertTrue(isinstance(episode[1], int))
-                self.assertTrue((isinstance(episode[2], str)) or (episode[2] is None))
-                self.assertTrue((isinstance(episode[3], str)) or (episode[3] is None))
-                self.assertTrue((isinstance(episode[4], str)) or (episode[4] is None))
-                self.assertTrue((isinstance(episode[5], int)) or (episode[5] is None))
-                self.assertTrue((isinstance(episode[6], str)) or (episode[6] is None))
+            for season in series:
+                for episode in series[season]:
+                    for key in series[season][episode]:
+                        self.assertTrue(key in ["name", "summary", "airdate", "runtime", "image"])
+                        if key =="runtime":
+                            self.assertTrue(
+                                isinstance(series[season][episode][key], int) or (series[season][episode][key] is None))
+                        else:
+                            self.assertTrue(isinstance(series[season][episode][key], str) or (series[season][episode][key] is None))
+
