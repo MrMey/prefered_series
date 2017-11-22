@@ -369,13 +369,3 @@ def get_dates(n = 7):
     for d in range(1, n):
         dates.append(str(today + datetime.timedelta(days = d)))
     return(dates)
-
-if __name__ == '__main__':
-    #RequestAPI.research('game')
-    # RequestAPI.get_details(48)
-    # RequestAPI.get_cast(120)
-    # RequestAPI.get_crew(120)
-    # RequestAPI.get_seasons(568)
-    # RequestAPI.get_episodes
-    RequestAPI.notification_schedule([5], 7)
-

@@ -474,6 +474,3 @@ class Table:
         if(not(isinstance(columns,list))):
             raise(e.DataBaseError("columns must be a list in is_same_columns parameters"))
         return (sorted(columns) == sorted(self._columns))
-
-if __name__ == '__main__':
-    a = RequestDB()
