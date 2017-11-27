@@ -129,7 +129,6 @@ class RequestDB:
         """
         if(not isinstance(instruction,str)):
             raise(e.DataBaseError("instruction must be a sql string in execute"))
-        print(instruction)
         self.__cursor.execute(instruction)
         self.__commit()
 
@@ -475,6 +474,3 @@ class Table:
         if(not(isinstance(columns,list))):
             raise(e.DataBaseError("columns must be a list in is_same_columns parameters"))
         return (sorted(columns) == sorted(self._columns))
-
-if __name__ == '__main__':
-    a = RequestDB()

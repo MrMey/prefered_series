@@ -257,7 +257,7 @@ class RequestAPI:
         id_series is the id of the series in the API database (int)
 
         **Returns**
-        a list of the episodes of a series described by a list with
+        a dictionary of the episodes of a series described by a list with
         - the number of the season
         - the number of the episode
         - the name
@@ -308,106 +308,6 @@ class RequestAPI:
             except Exception:
                 pass
         return dict_episodes
-
-    @staticmethod
-    def schedule(list_ids):
-        """
-        For a list of series identified by their id in the API database, the schedule of the week is build.
-
-        **Parameters**
-            - list_ids : list of the series' id
-
-        **Returns**
-            - dictionary of the diffusion in the week : {"monday" : [{"name": "Bones", "time" : "22:00"}, ... ], ...}
-        """
-        schedule_dictionary = {"Monday": [],
-                               "Tuesday": [],
-                               "Wednesday": [],
-                               "Thursday": [],
-                               "Friday": [],
-                               "Saturday": [],
-                               "Sunday": []}
-        for series in list_ids:
-            if not isinstance(series, int):
-                raise e.SeriesIdAreIntegers("")
-            response = requests.get('http://api.tvmaze.com/shows/' + str(series))
-            assert response.status_code == 200
-            response = response.json()
-
-            name = None
-            status = None
-            schedule_days = None
-            schedule_time = None
-            try:
-                name = response['name']
-                status = response['status']
-                if status == "Running":
-                    if len(response['schedule']['time'])>0:
-                        schedule_days = response['schedule']['days']  # it's a list
-                        schedule_time = response['schedule']['time']
-
-                        dict_series = {'name': name, 'time': schedule_time}
-    
-                        for day in schedule_days:
-                            schedule_dictionary[day].append(dict_series)
-            except Exception:
-                pass
-
-        return schedule_dictionary
-
-    @staticmethod
-    def notification_schedule(list_ids, number_of_days):
-        """
-            For a list of series identified by their id in the API database, the schedule of the week is build.
-
-            **Parameters**
-                - list_ids : list of the series' id
-                - number_of_days : the number of days we want to look at
-
-            **Returns**
-                - list of the diffusion in the week with the date + the list of dictionaries of diffusion
-        """
-        list_dates = get_dates(number_of_days)
-        L = []
-        for date in list_dates:
-            l = [date, []]
-            for series in list_ids:
-                if not isinstance(series, int):
-                    raise e.SeriesIdAreIntegers("")
-                response = requests.get('http://api.tvmaze.com/shows/' + str(series) + '/episodesbydate?date=' + date)
-                
-                # requests.get('http://api.tvmaze.com/shows/' + str(series) + '/episodesbydate?date=' + date)
-                try:
-                    assert response.status_code == 200
-                    response = response.json()[0]
-                    name = None
-                    air_time = None
-                    season = None
-                    number = None
-                    summary = None
-                    image = None
-                    try:
-                        name = response['name']
-                        season = response['season']
-                        number = response['number']
-                        air_time = response['airtime']
-                        summary = response['summary']
-                        image = response['image']['medium']
-                        
-                        dict_series = {'name': name,
-                                       'time': air_time,
-                                       'season': season,
-                                       'episode': number,
-                                       'summary': summary,
-                                       'image': image}
-                        
-                        l[1].append(dict_series)
-                    except Exception:
-                        pass
-                except Exception:
-                    pass
-            L.append(l)
-        return(L)
 
     @staticmethod
     def get_next_diff(id, number_of_days):
@@ -469,13 +369,3 @@ def get_dates(n = 7):
     for d in range(1, n):
         dates.append(str(today + datetime.timedelta(days = d)))
     return(dates)
-
-if __name__ == '__main__':
-    #RequestAPI.research('game')
-    # RequestAPI.get_details(48)
-    # RequestAPI.get_cast(120)
-    # RequestAPI.get_crew(120)
-    # RequestAPI.get_seasons(568)
-    # RequestAPI.get_episodes
-    RequestAPI.notification_schedule([5], 7)
-

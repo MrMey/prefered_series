@@ -18,7 +18,11 @@
 
   	{% block navigation %} <!-- Menu de navigation pour atteindre nos autres pages -->
 
+<<<<<<< HEAD
   <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary">
+=======
+  	<nav class="navbar sticky-top navbar-expand-lg navbar-dark" style="background:#581845; position: fixed; width: 100%">
+>>>>>>> d13d1cbcf3287f9e12ccb3ec49839e8753d2f53e
 
     <a class="navbar-brand" href="{{ url_for('main')}}">
     	<img src="http://www.gratisskole.dk/sdata/minipic/008/00816-300.png" width="30" height="30" alt="">
@@ -37,13 +41,13 @@
 
       {% if logged: %}
   		<form class="form-inline my-2 my-lg-0" action="{{ url_for('login') }}" method = "Post">
-          	<button class="btn btn-primary" type="submit" name = "logout">Logout</button>
+          	<button class="btn" type="submit" name = "logout" style="background:#ffc300; margin-right:20px;">Logout</button>
   		</form>
 
       {% else: %}
   		<form class="form-inline my-2 my-lg-0" action="{{ url_for('login') }}" method = "Post">
   			<input class="form-control mr-sm-2" placeholder="Input your login" type="password" name ="login">
-  			<button class="btn btn-primary" type="submit">Login</button>
+  			<button class="btn" type="submit" style="background:#ffc300; margin-right:20px;">Login</button>
   		</form>
 
       {% endif %}
@@ -52,7 +56,7 @@
 
           <form class="form-inline my-2 my-lg-0" action="{{ url_for('search_serie') }}" method = "Post">
   			<input class="form-control mr-sm-2" name ="serie" type="search" placeholder="Look for a TV show..." aria-label="Search">
-  			<button class="btn btn-primary" type="submit">Search</button>
+  			<button class="btn" type="submit" style="background:#ffc300">Search</button>
           </form>
 
       </div>
@@ -63,6 +67,7 @@
 
   </header>
 
+<<<<<<< HEAD
   <body>
 
 	<div class = "col-xl-">
@@ -153,8 +158,10 @@
 
 	{% endblock %}
 
+=======
+>>>>>>> d13d1cbcf3287f9e12ccb3ec49839e8753d2f53e
 	<div class = "main_frame">
-	<div class="jumbotron jumbotron-fluid">
+	<div class="jumbotron jumbotron-fluid" style="background: white;">
 	{% block message %}
 	<div class ="message">
 		{{message}}
@@ -164,7 +171,7 @@
 	{% block tagline %}
 	{% if not logged %}
 
-    <blockquote class="blockquote text-center">
+    <blockquote class="blockquote text-center" style="background-image: url(http://htmlcolorcodes.com/assets/images/html-color-codes-color-tutorials-903ea3cb.jpg); margin-left: 20%; margin-right: 20%; padding-top: 40px; padding-bottom: 50px; color: white;">
     		<h1 class="display-3">
   			<img src="http://www.gratisskole.dk/sdata/minipic/008/00816-300.png" width="70" height="70" alt=""></img>
   			Track.Series
@@ -173,7 +180,7 @@
     		<hr class="my-3">
     		<p class="lead">Gather your favorite TV shows and make sure to never miss an episode again.</p>
     		<p class="lead">
-      		  <a class="btn btn-primary btn-lg" role="button" href="{{ url_for('signup')}}">Join Track.Series</a>
+      		  <a class="btn btn-lg" role="button" href="{{ url_for('signup')}}" style="background:#ffc300; color:#581845">Join Track.Series</a>
     		</p>
     </blockquote>
 
@@ -185,15 +192,15 @@
 
 	{% block series %}
 
-	<h3> Favorite Series </h3>
-	<blockquote id = "blockquote text-center">
+	<h3 style="color: #c70039"> Favorite Series </h3>
+	<blockquote id = "blockquote text-center" style="width:90%; margin:auto">
 		<!-- bloc de series -->
 		{% for series in series_list %}
 
 		<div class = "series" class="card bg-light mb-3" style="width: 13rem;">
 			<img class="card-img-top" alt="Card image cap" src = {{series[2]}}></img>
 			<div class = "serie" class="card-body">
-				<a id="title" class="card-title" href = {{ url_for('details',serie = series[0]) }}>{{series[1]}}</a>
+				<a id="title" class="card-title" style="color:  #900c3f" href = {{ url_for('details',serie = series[0]) }}>{{series[1]}}</a>
 			</div>
 		</div>
 
@@ -202,29 +209,37 @@
 	</blockquote>
 
 
-	<h3> Calendar </h3>
-	<table class="timetable">
-	<thead class "timetable_header">
-	<tr>
-		{% for day in schedule.keys() :%}
-		<th class = "timetable_header_cell">{{day}}</th>
-		{% endfor %}
-	</tr>
+	<h3 style="color: #c70039"> Calendar </h3>
+	<table class="timetable" style="width:90%; margin: auto;">
+	<thead class="timetable_header">
+		<tr>
+			{% for day in schedule.keys() :%}
+			<th class = "timetable_header_cell"  style="background:#c70039; color:white;">{{day}}</th>
+			{% endfor %}
+		</tr>
 	</thead>
+	
 	<tbody>
 		<!-- bloc de series -->
 	<tr class = "day">
 		{% for day in schedule.keys() :%}
-		<td class ="cell">
+		<td class ="cell" style="background-image: url(http://htmlcolorcodes.com/assets/images/html-color-codes-color-tutorials-903ea3cb.jpg); color:white;">
 		<ul>
+		{% if schedule[day] != [] %}
+		
 			{% for series in schedule[day] %}
 			<li>
-			{{series[6]}}
-			{{series[1]}}
+				{{series[6]}}
+				<a href="#" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-content="{{series[1]}} : season {{series[4]}} episode {{series[3]}}" style="color: white;">{{series[1]}}</a>
 			</li>
 			{% endfor %}
+		
+		{% else %}
+			<p>
+			No airing planned
+			</p>
+		{% endif %}
 		</ul>
-
 		</td>
 		{% endfor %}
 	</tr>
@@ -244,5 +259,11 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 
   </body>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover();
+});
+</script>
 
 </html>

@@ -4,25 +4,24 @@ By Jessica Cohen, Romain Meynard, and Elodie Ikkache
 
 Website to check out your favorite TV shows : overview, next episode, cast...!
 
-# Installing
 
-We are using SQLite. The module is included for Python 3+.
-If you need to install it, use the command line:
-pip install pysqlite
+# Main functionalities:
 
-# Main functionalities
   1/ create your personal account
-  2/ chose some series you like
+  
+  2/ chose your favorite series
+  
   3/ know when the next episodes will be aired
-  4/ get more information about a specific series :
-    - the name of the series
-    - an image to be displayed (url)
-    - the global summary
-    - rating
-    - the main genres of the series
-    - the status for example 'ended'
-    - the average runtime for episodes
-    - the year of the first diffusion
-    - the official website
-    
-    and more!
+  
+  4/ get more information about a specific series : suumary, rating, genres, episodes and more!
+
+# Setup :
+In the project folder, there is a requirements.txt file, if you type in the command interface below,
+it will install all the libraries you need.
+pip install -r requirements.txt
+
+# Run :
+Run web.py and go to http://127.0.0.1:5000/main
+
+# Example :
+If you want to see a user account with some series already selected, you can try "paul" as a login

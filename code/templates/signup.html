@@ -8,28 +8,26 @@
 
 {% block message %}
 
-
-		<h4>Let's register you!</h4>
+		<div style="background: #ff5733; margin-left: 30%; margin-right: 30%; padding: 40px">
+		<h4 style="color: white; text-align: center;">Let's register you!</h4>
 		<br>
-		<form method=post role="form">
-			<div class ="form-row align-items-center">
-				<div class="col-auto">
-					<label class="sr-only" for="inlineFormInput">Username:</label>
-					<input type="text" class="form-control mb-2 mb-sm-0" id="inlineFormInput" name="username" placeholder="Choose a Username">
-				</div>
-				<br>
-				<div class="col-auto">
-					<label class="sr-only" for="inlineFormInputGroup">Email:</label>
-					<input type="text" class="form-control" id="inlineFormInputGroup" name="email" placeholder="What's your email address?">
-				</div>
-				<br>
-				{{ form.accept_tos.label }} {{ form.accept_tos }}
+		<form action = "" method="Post" role="form" style="text-align: center;">
+			<div class="col-auto" style="margin : auto; width : 360px;">
+				<label class="sr-only" for="inlineFormInput">Login:</label>
+				<input type="text" class="form-control mb-2 mb-sm-0" id="inlineFormInput" name="login" placeholder="Choose a Login">
 			</div>
-			<button type="submit" class="btn btn-info">Submit</button>
+			<br>
+			<div class="col-auto" style="margin : auto; width : 360px;">
+				<label class="sr-only" for="inlineFormInputGroup">Username:</label>
+				<input type="text" class="form-control" id="inlineFormInputGroup" name="username" placeholder="What's your username?">
+			</div>
+			<br>
+
+			<button type="submit" class="btn" style="margin-top: 20px; background: #ffc300">Submit</button>
 		</form>
 
-		{% if error %}
-			<p class="error"><strong>Error:</strong>{{error}}</p>
+		{% if True %}
+			<p class="error"><strong>Error:</strong>{{message}}</p>
 		{% endif %}
 
 	</div>
