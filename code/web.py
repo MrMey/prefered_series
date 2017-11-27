@@ -60,7 +60,7 @@ class Controler():
         self.req_database = req_database
         self.series = series.Series()
         self.user = User()
-        
+
     def act_series(self):
         self.user.series = self.req_database.select_series_from_user(self.user.id)
 
@@ -89,7 +89,7 @@ class ThreadDB(Thread):
     def __init__(self,req_database):
         Thread.__init__(self)
         self.req_database = req_database
-        
+
     def run(self):
         for item in self.req_database.select_running_series():
             self.req_database.update_series(item[1],request_api.RequestAPI.get_next_diff(item[0],7))
@@ -153,7 +153,7 @@ class User:
         for d in range(0, 7):
             date =str(datetime.date.today() + datetime.timedelta(days = d))
             self._schedule[date] = []
-        
+
         for diff in schedule:
             self._schedule[diff[7]].append([diff[0],
                                        diff[1],
@@ -162,7 +162,7 @@ class User:
                                        diff[5],
                                        diff[6],
                                        diff[8]])
-        
+
         for day in self._schedule.keys():
             if len(self._schedule[day]) > 1:
                 self._schedule[day] = sorted(self._schedule[day], key = lambda k:k[6])
@@ -199,7 +199,7 @@ class FullControler(WebSite,Controler):
         self.user = User()
         self.form = RegistrationForm()
 
-        
+
     def main(self):
         """ **routes**
             '/main'
@@ -211,7 +211,7 @@ class FullControler(WebSite,Controler):
             self.user.series = self.req_database.select_series_from_user(self.user.user_id)
 
             self.user.schedule = self.req_database.select_next_diff_series_from_user(self.user.user_id)
-    
+
             return(render_template('main.html',series_list=self.user.series,
                                    schedule=self.user.schedule,
                                    logged=self.user.is_logged(),
@@ -256,7 +256,7 @@ class FullControler(WebSite,Controler):
         """ **routes**
             '/signup'
         """
-<<<<<<< HEAD
+
         form = RegistrationForm(request.form)
 
         print(form.errors)
@@ -275,7 +275,7 @@ class FullControler(WebSite,Controler):
                 flash('Error: All the fields must be filled.')
 
         return(render_template('signup.html', form=form))
-=======
+
         if request.method == 'POST':
             #check in the database if the login is available
             if self.req_database.is_in_table("users","login",request.form['login']):
@@ -288,9 +288,7 @@ class FullControler(WebSite,Controler):
                                self.req_database.get_users_by_login('id',request.form['login']))
             return(redirect(url_for('main')))
 
-        return(render_template('signup.html',
-               form = self.form))
->>>>>>> 4e372eeb28cc69fc222a9115685fd5c45de31b64
+        return(render_template('signup.html', form = self.form))
 
     def details(self, serie = ""):
         """ **routes**
